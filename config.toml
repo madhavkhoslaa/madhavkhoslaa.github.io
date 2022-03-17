@@ -1,4 +1,4 @@
-baseURL = 'http://madhavkhoslaa.github.io/blog/'
+baseURL = 'https://madhavkhoslaa.github.io/blog/'
 languageCode = 'en-us'
 title = 'Madhav Khosla'
 theme = "archie"
