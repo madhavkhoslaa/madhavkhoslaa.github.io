@@ -64,6 +64,7 @@ _*Hence*_, as a thumb of rule caching high up the call stack is the best approch
 
 # When to expire cache ?
 
+**Scenario 1**:
 Assume you have a User A and you have a system where you have multiple inputs such as User A's Height, User A's Age, User A's Major and you have an heuristic algorithm where you determine if User A uses Arch Linux or not. And also look at a key-value cache as an example running sideways
 
 Imagine two scenarios in this case.
@@ -96,17 +97,30 @@ _**Algorithm predicts that User A uses MacOS.**_
 
 Now, we know that the user will be using MacOS but the cache will return _**Arch Linux.**_ to the front end.
 
-So, we take a lesson that cache is always a side effect of the inputs that you put in a system, if you change the inputs you have to update the cache to the most recent result.
+_**So, we take a lesson that cache is always a side effect of the inputs that you put in a system, if you change the inputs you have to update the cache to the most recent result.**_
+
+**Scenario 2**:
+Assume you make a really cool and hyped application and there are alot of new users logging in. You are caching some value ELABORATE HERE for every user. You have a large cache key. But for some reason the older users are not logging in anymore and the hype is dead. You are still storing cache of the old users and the current users that are still using the platform. Caching on RAM is expensive and useless cache means still bills from cloud providers.
+
+Solution: You delete the cache for the users that are inactive and are not using the platform anymore; Thankfully for this kinf of invalidation you do not have to worry. Most caching technologies for example: redis support LRU iviction for deleting unused caches and keeping your cache hit ratio high.
 
 # Types of caching technologies
+
+1. Browser Cache
+2. Caching Proxies
+3. Reverse Proxies
+4. CDN
 
 # Caching for different use cases
 
 1. Read Intensive
 2. Write Intensive
+3. Distributing content to users
 
 # Read Trough and write through cache
 
 ![image](https://i.imgur.com/QVYG6WC.jpeg)
+
+# Using a CDN
 
 ---
