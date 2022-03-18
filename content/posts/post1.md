@@ -1,62 +1,112 @@
 ---
-title: "Primer: When You Have Too Much to Do"
-date: 2020-04-01T02:01:58+05:30
-description: "You have a to-do list that scrolls on for days. You are managing multiple projects, getting lots of email and messages on different messaging systems, managing finances and personal health habits and so much more."
-tags: [Primer, todo]
+title: "Caching: My lessons on it"
+date: 2022-03-18T02:01:58+05:30
+description: "Caching is a cheap way to scale a system's performance in very less time. Being cheap and easy it also brings some problems such as invalidation and infrastructure for setting up the cache itself. Here I plan to talk about some lessons on caching that I've learnt in a few months."
+tags: [Caching, Redis, Memcached]
 ---
 
-You have a to-do list that scrolls on for days. You are managing multiple projects, getting lots of email and messages on different messaging systems, managing finances and personal health habits and so much more.
+Caching is a cheap way to scale a system's performance in very less time. Being cheap and easy to implement over a system it also brings some problems such as invalidation and infrastructure for setting up the cache itself. Here I plan to talk about some lessons on caching that I've learnt in a few months.
 
-It all keeps piling up, and it can feel overwhelming.
+<!-- ![image](https://i.imgur.com/1TQhmvt.jpeg) -->
 
-How do you keep up with it all? How do you find focus and peace and get stuff accomplished when you have too much on your plate?
+# Philosophy of Caching
 
-In this primer, I’ll look at some key strategies and tactics for taking on an overloaded life with an open heart, lots of energy, and a smile on your face.
+_The supreme art of war is to subdue the enemy without fighting it - Sun Tzu_
 
-## The First Step: Triage
+# Caching
 
-Whether you’re just starting your day, or you’re in the middle of the chaos and just need to find some sanity … the first step is to get into triage mode.
+Caching in a pure function system is when you store the arguments to a particular function and use the result stored instead of actually invoking the function and for a good approach to caching you might want to design your caching scheme in such a way that for most responses the cache is actually used instead of performing a expensive operation again.
+This need of reusability of cache is called increasing the "Cache-Hit Ratio". We will talk about "Cache-Hit Ratio" now and ways to maximise it.
 
-Triage, as you probably know, is sorting through the chaos to prioritize: what needs to be done now, what needs to be done today, what needs to be done this week, and what can wait? You’re looking at urgency, but also what’s meaningful and important.
+# Cache-Hit Ratio
 
-Here’s what you might do:
+In mathematical is the ration of cache used to total objects cached in your system; But what does it convey to you ?
+A high cache hit ratio means that your cache was used for most objects that were cached and hence you saved alot of CPU time for logic that was already computed. So how do you achieve a high Cache-Hit Ratio ?
 
-- Pick out the things that need to be done today. Start a Short List for things you’re going to do today. That might be important tasks for big projects, urgent tasks that could result in damage if you don’t act, smaller admin tasks that you really should take care of today, and responding to important messages. I would recommend being ruthless and cutting out as much as you can, having just 5 things on your plate if that’s at all possible. Not everything needs to be done today, and not every email needs to be responded to.
-- Push some things to tomorrow and the rest of the week. If you have deadlines that can be pushed back (or renegotiated), do that. Spread the work out over the week, even into next week. What needs to be done tomorrow? What can wait a day or two longer?
-- Eliminate what you can. That might mean just not replying to some messages that aren’t that important and don’t really require a reply. It might mean telling some people that you can’t take on this project after all, or that you need to get out of the commitment that you said you’d do. Yes, this is uncomfortable. For now, just put them on a list called, “To Not Do,” and plan to figure out how to get out of them later.
+# Methodlogies for increasing the "Cache-Hit Ratio"
 
-OK, you have some breathing room and a manageable list now! Let’s shrink that down even further and just pick one thing.
+1. **Cache Key Space** - Describes the number of keys in your cache if you have a key value based cache sysem.
+2. **Average TTL** - How long a particular object is cached for, you just don't want to store objects forever since storage costs $$, Longer the TTL the better, You do not have to worry alot since algoritms like LRU and so on manage this for you.
+3. **Average size of cached object** - This affects the first object in this list due to hardware constricts you can obviously store a certain amount of objects depending upon their size. The larger the size of the object the lesser the Cache Key Space it, Hence it might lead to a lower Cache-Hit Ratio
 
-## Next: Focus on One Thing
+## How to achieve a large Cache Key Space ?
 
-With a lot on your plate, it’s hard to pick one thing to focus on. But that’s exactly what I’m going to ask you to do.
+1. Choosing a scheme in which cache is common among users
+2. Keeping the size of the cached object such that more objects could be stored and hardware is not a construct.
 
-Pick one thing, and give it your focus. Yes, there are a lot of other things you can focus on. Yes, they’re stressing you out and making it hard to focus. But think about it this way: if you allow it all to be in your head all the time, that will always be your mode of being. You’ll always be thinking about everything, stressing out about it all, with a frazzled mind … unless you start shifting.
+# Where to cache ?
 
-The shift:
+![image](https://i.imgur.com/xIFu5IS.jpeg)
+In this scenario imagine you have 3 functions calling each other in the call stack and the result is produced by calling them all.
+Assume you call f(a) and inside the implementation it passes the value to f(f(a)) and so on.
+I am assuming the cost of each operation likewise in the table.
+| Function | Time |
+| ----------- | ----------- |
+| f(a) | 15 ms |
+| f(f(a)) | 10 ms |
+| f(f(f(a))) | 5 ms |
+| Time to fetch cache | 1 ms |
 
-- Pick something to focus on. Look at the triaged list from the first section … if you have 5-6 things on this Short List, you can assess whether there’s any super urgent, time-sensitive things you need to take care of. If there are, pick one of them. If not, pick the most important one — probably the one you have been putting off doing.
-- Clear everything else away. Just for a little bit. Close all browser tabs, turn off notifications, close open applications, put your phone away.
-- Put that one task before you, and allow yourself to be with it completely. Pour yourself into it. Think of it as a practice, of letting go (of everything else), of focus, of radical simplicity.
+Let's assume the following scenarios for caching the call stack.
 
-When you’re done (or after 15-20 minutes have gone by at least), you can switch to something else. But don’t allow yourself to switch until then.
+| Function Cached | Time                        | Time(ms) |
+| --------------- | --------------------------- | -------- |
+| No Cache        | f(a) + f(f(a)) + f(f(f(a))) | 30 ms    |
+| f(f(a))         | f(a) + f(f(a)) + Cache Time | 26 ms    |
+| f(f(f(a)))      | f(a) + Cache Time           | 16ms     |
+| f(a)            | Cache Time                  | 1ms      |
 
-By closing off all exits, by choosing one thing, by giving yourself completely to that thing … you’re now in a different mode that isn’t so stressful or spread thin. You’ve started a shift that will lead to focus and sanity.
+_Observation_ : The higher we cache up the call stack the lesser functions are called and the time for resolving the function is reduced.
 
-## Third: Schedule Time to Simplify
+_*Hence*_, as a thumb of rule caching high up the call stack is the best approch for caching in a system where function calls are chained and are a bottlneck in terms of time.
 
-Remember the To Not Do list above? Schedule some time this week to start reducing your projects, saying no to people, getting out of commitments, crossing stuff off your task list … so that you can have some sanity back.
+# Cache rule of thumb
 
-There are lots of little things that you’ve said “yes” to that you probably shouldn’t have. That’s why you’re overloaded. Protect your more important work, and your time off, and your peace of mind, by saying “no” to things that aren’t as important.
+# When to expire cache ?
 
-Schedule the time to simplify — you don’t have to do it today, but sometime soon — and you can then not have to worry about the things on your To Not Do list until then.
+Assume you have a User A and you have a system where you have multiple inputs such as User A's Height, User A's Age, User A's Major and you have an heuristic algorithm where you determine if User A uses Arch Linux or not. And also look at a key-value cache as an example running sideways
 
-## Fourth: Practice Mindful Focus
+Imagine two scenarios in this case.
 
-Go through the rest of the day with an attitude of “mindful focus.” That means that you are doing one thing at a time, being as present as you can, switching as little as you can.
+_**at T0**_
 
-Think of it as a settling of the mind. A new mode of being. A mindfulness practice (which means you won’t be perfect at it).
+| Inputs | Time    |
+| ------ | ------- |
+| Age    | 22      |
+| Height | 175 cms |
+| Major  | CS      |
 
-As you practice mindful focus, you’ll learn to practice doing things with an open heart, with curiosity and gratitude, and even joy. Try these one at a time as you get to do each task on your Short List.
+_**Algorithm predicts that User A uses Arch Linux.**_
 
-You’ll find that you’re not so overloaded, but that each task is just perfect for that moment. And that’s a completely new relationship with the work that you do, and a new relationship with life.
+Diagram here (t0 run and cache value)
+
+_**at T1**_
+
+User A changes his major to design and now for some reason uses MacOS.
+
+| Inputs | Time    |
+| ------ | ------- |
+| Age    | 22      |
+| Height | 175 cms |
+| Major  | Design  |
+
+Diagram here (t1 value)
+
+_**Algorithm predicts that User A uses MacOS.**_
+
+Now, we know that the user will be using MacOS but the cache will return _**Arch Linux.**_ to the front end.
+
+So, we take a lesson that cache is always a side effect of the inputs that you put in a system, if you change the inputs you have to update the cache to the most recent result.
+
+# Types of caching technologies
+
+# Caching for different use cases
+
+1. Read Intensive
+2. Write Intensive
+
+# Read Trough and write through cache
+
+![image](https://i.imgur.com/QVYG6WC.jpeg)
+
+---
