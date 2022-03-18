@@ -14,10 +14,10 @@ theme = "archie"
 # icon = "github"
 # url = "https://github.com/athul/archie"
 
-# [[params.social]]
-# name = "Twitter"
-# icon = "twitter"
-# url = "https://twitter.com/athulcajay/"
+[[params.social]]
+name = "Twitter"
+icon = "twitter"
+url = "https://twitter.com/HiMadhavHere"
 
 # [[params.social]]
 # name = "GitLab"
