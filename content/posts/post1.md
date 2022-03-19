@@ -137,12 +137,12 @@ Solution: You delete the cache for the users that are inactive and are not using
 
 ## Read through cache
 
-The usecase if for a read intensive application
+The use case if for a read intensive application
 ![image](https://i.imgur.com/QVYG6WC.jpeg)
 
 ## Write through cache
 
-The usecase if for a write intensive application
+The use case if for a write intensive application
 ![image](https://i.imgur.com/3qtgsNd.jpeg)
 
 ---
