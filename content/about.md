@@ -6,4 +6,13 @@ aliases = ["about-us","about-hugo","contact"]
 author = "Hugo Authors"
 +++
 
-Hey, I'm Madhav, I like tech and programming also I'm lazy.
+Hey, I'm Madhav
+
+# Skills
+
+idk programming
+
+# When bored
+
+- lift
+- yt consumption
