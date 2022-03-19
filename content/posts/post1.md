@@ -7,8 +7,6 @@ tags: [Caching, Redis, Memcached]
 
 Caching is a cheap way to scale a system's performance in very less time. Being cheap and easy to implement over a system it also brings some problems such as invalidation and infrastructure for setting up the cache itself. Here I plan to talk about some lessons on caching that I've learnt in a few months.
 
-<!-- ![image](https://i.imgur.com/1TQhmvt.jpeg) -->
-
 # Philosophy of Caching
 
 _The supreme art of war is to subdue the enemy without fighting it - Sun Tzu_
@@ -34,7 +32,12 @@ A high cache hit ratio means that your cache was used for most objects that were
 1. Choosing a scheme in which cache is common among users
 2. Keeping the size of the cached object such that more objects could be stored and hardware is not a construct.
 
-# Where to cache ?
+# Cache rule of thumb
+
+1. Cache high up the call stack
+2. Reuse cache among users
+
+# Where to cache (Cache high up the call stack)?
 
 ![image](https://i.imgur.com/xIFu5IS.jpeg)
 In this scenario imagine you have 3 functions calling each other in the call stack and the result is produced by calling them all.
@@ -60,8 +63,6 @@ _Observation_ : The higher we cache up the call stack the lesser functions are c
 
 _*Hence*_, as a thumb of rule caching high up the call stack is the best approch for caching in a system where function calls are chained and are a bottlneck in terms of time.
 
-# Cache rule of thumb
-
 # When to expire cache ?
 
 **Scenario 1**:
@@ -79,7 +80,10 @@ _**at T0**_
 
 _**Algorithm predicts that User A uses Arch Linux.**_
 
-Diagram here (t0 run and cache value)
+Cache looks like this at the moment.
+| UserId | OS |
+| ------ | ------- |
+| UserA | ArchLinux |
 
 _**at T1**_
 
@@ -91,36 +95,54 @@ User A changes his major to design and now for some reason uses MacOS.
 | Height | 175 cms |
 | Major  | Design  |
 
-Diagram here (t1 value)
+If the cache looks like T0 then we will get a stale value for the OS of the user.
 
-_**Algorithm predicts that User A uses MacOS.**_
+| UserId | OS        |
+| ------ | --------- |
+| UserA  | ArchLinux |
+
+_**Algorithm predicts that User A uses MacOS but according the the cache it's Arch.**_
 
 Now, we know that the user will be using MacOS but the cache will return _**Arch Linux.**_ to the front end.
 
 _**So, we take a lesson that cache is always a side effect of the inputs that you put in a system, if you change the inputs you have to update the cache to the most recent result.**_
 
+You need to make sure to detect any inputs that the cache is a side effect of, if they change; update the cache. After the updation the cache looks like this
+| UserId | OS |
+| ------ | --------- |
+| UserA | MacOS |
+
 **Scenario 2**:
-Assume you make a really cool and hyped application and there are alot of new users logging in. You are caching some value ELABORATE HERE for every user. You have a large cache key. But for some reason the older users are not logging in anymore and the hype is dead. You are still storing cache of the old users and the current users that are still using the platform. Caching on RAM is expensive and useless cache means still bills from cloud providers.
+Assume you make a really cool and hyped application and there are alot of new users logging in. You are caching some value for every user that get's calculated of user inputs. You have a large cache key. But for some reason the older users are not logging in anymore and the hype is dead. You are still storing cache of the old users and the current users that are still using the platform. Caching on RAM is expensive and useless cache means still bills from cloud providers.
 
 Solution: You delete the cache for the users that are inactive and are not using the platform anymore; Thankfully for this kinf of invalidation you do not have to worry. Most caching technologies for example: redis support LRU iviction for deleting unused caches and keeping your cache hit ratio high.
 
 # Types of caching technologies
 
-1. Browser Cache
-2. Caching Proxies
-3. Reverse Proxies
-4. CDN
+1. Browser Cache - The first and the most common type of caching layer built in the modern browsers is the browser cache.
+   Browser caches have ability to not send requests if the data is already cached. This can be seen in the request times even on sdplus.io site loading.
+
+2. Caching Proxies - By an ISP. It is a read through cache that could cache traffic. THe larger the network the larger the potential cache hits.
+   Now they don't happen because of SSL the proxies do not have permissions to decrypt the payload and also bandwidth is much cheaper.
+
+3. Reverse Proxies - This works like caching proxies only and is a read through cache, instead it is installed at the datacenter side (your server). They are an excellent way to scale and to speed up the service layer.
+4. CDN (Content Delivery Network) - A group of distributed servers based of geolocation hosting content to users in different parts of globe.
 
 # Caching for different use cases
 
-1. Read Intensive
-2. Write Intensive
-3. Distributing content to users
+1. Read Intensive - When you have a application where the front end requires alot of data to be displayed from the multiple parameters.
+2. Write Intensive - When you have an application where a large amounts of inputs are taken, computed and stored in the DB. (Something like a MBTI test ? Where you put multiple inputs and get a MBTI value.)
 
 # Read Trough and write through cache
 
+## Read through cache
+
+The usecase if for a read intensive application
 ![image](https://i.imgur.com/QVYG6WC.jpeg)
 
-# Using a CDN
+## Write through cache
+
+The usecase if for a write intensive application
+![image](https://i.imgur.com/3qtgsNd.jpeg)
 
 ---
