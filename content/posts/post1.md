@@ -1,11 +1,11 @@
 ---
 title: "Caching: My lessons on it"
-date: 2022-03-18T02:01:58+05:30
+date: 2022-03-19T02:01:58+05:30
 description: "Caching is a cheap way to scale a system's performance in very less time. Being cheap and easy it also brings some problems such as invalidation and infrastructure for setting up the cache itself. Here I plan to talk about some lessons on caching that I've learnt in a few months."
 tags: [Caching, Redis, Memcached]
 ---
 
-Caching is a cheap way to scale a system's performance in very less time. Being cheap and easy to implement over a system it also brings some problems such as invalidation and infrastructure for setting up the cache itself. Here I plan to talk about some lessons on caching that I've learnt in a few months.
+Caching is a cheap way to scale a system's performance in very less time. Being cheap and easy to implement on the top of a existing system it also brings some problems such as invalidation and infrastructure for setting up the cache itself. Here I plan to talk about some lessons on caching that I've learnt in a few months.
 
 # Philosophy of Caching
 
@@ -13,8 +13,8 @@ _The supreme art of war is to subdue the enemy without fighting it - Sun Tzu_
 
 # Caching
 
-Caching in a pure function system is when you store the arguments to a particular function and use the result stored instead of actually invoking the function and for a good approach to caching you might want to design your caching scheme in such a way that for most responses the cache is actually used instead of performing a expensive operation again.
-This need of reusability of cache is called increasing the "Cache-Hit Ratio". We will talk about "Cache-Hit Ratio" now and ways to maximise it.
+Caching in a pure function system is when you store the arguments and the result to a particular function and use the result stored instead of actually invoking the function this comes with a prerequisite that the function for those arguments is already invoked and stored in the cache. For a good approach to caching you might want to design your caching scheme in such a way that for most responses the cache is actually used instead of performing a expensive computation again and delaying the response from your service.
+This need of reusability of cache from cached objects is called increasing the "Cache-Hit Ratio". We will talk about "Cache-Hit Ratio" now and ways to maximise it.
 
 # Cache-Hit Ratio
 
@@ -59,14 +59,14 @@ Let's assume the following scenarios for caching the call stack.
 | f(f(f(a)))      | f(a) + Cache Time           | 16ms     |
 | f(a)            | Cache Time                  | 1ms      |
 
-_Observation_ : The higher we cache up the call stack the lesser functions are called and the time for resolving the function is reduced.
+_Observation_ : The higher we cache up the call stack the less functions are called and the time for resolving the function is reduced.
 
-_*Hence*_, as a thumb of rule caching high up the call stack is the best approch for caching in a system where function calls are chained and are a bottlneck in terms of time.
+_*Hence*_, as a rule of thumb caching high up the call stack is the best approch for caching in a system where function calls are chained and are a bottleneck in terms of time.
 
 # When to expire cache ?
 
 **Scenario 1**:
-Assume you have a User A and you have a system where you have multiple inputs such as User A's Height, User A's Age, User A's Major and you have an heuristic algorithm where you determine if User A uses Arch Linux or not. And also look at a key-value cache as an example running sideways
+Assume you have a User A and you have a system where you have multiple inputs such as User A's Height, User A's Age, User A's Major and you have an heuristic algorithm where you determine what operating system the user uses. And also look at a key-value cache as an example running sideways
 
 Imagine two scenarios in this case.
 
@@ -80,7 +80,7 @@ _**at T0**_
 
 _**Algorithm predicts that User A uses Arch Linux.**_
 
-Cache looks like this at the moment.
+_Cache looks like this at the moment._
 | UserId | OS |
 | ------ | ------- |
 | UserA | ArchLinux |
@@ -95,7 +95,7 @@ User A changes his major to design and now for some reason uses MacOS.
 | Height | 175 cms |
 | Major  | Design  |
 
-If the cache looks like T0 then we will get a stale value for the OS of the user.
+_If the cache looks like T0 then we will get a stale value for the OS of the user._
 
 | UserId | OS        |
 | ------ | --------- |
@@ -107,15 +107,15 @@ Now, we know that the user will be using MacOS but the cache will return _**Arch
 
 _**So, we take a lesson that cache is always a side effect of the inputs that you put in a system, if you change the inputs you have to update the cache to the most recent result.**_
 
-You need to make sure to detect any inputs that the cache is a side effect of, if they change; update the cache. After the updation the cache looks like this
+You need to make sure to detect any inputs that the cache is a side effect of and if they change there is a need update the cache value aswell. After the updation the cache looks like this which is a accurate and consistent representation of the application result.
 | UserId | OS |
 | ------ | --------- |
 | UserA | MacOS |
 
 **Scenario 2**:
-Assume you make a really cool and hyped application and there are alot of new users logging in. You are caching some value for every user that get's calculated of user inputs. You have a large cache key. But for some reason the older users are not logging in anymore and the hype is dead. You are still storing cache of the old users and the current users that are still using the platform. Caching on RAM is expensive and useless cache means still bills from cloud providers.
+Assume you make a cool and hyped application and there are alot of new users logging in. You are caching some value for every user that get's calculated of user inputs. You have a large cache key. But for some reason the older users are not logging in anymore and the hype is dead. You are still storing cache of the old users and the current users that are still using the platform. Caching on hardware is expensive and not utilised cache means still bills from cloud providers.
 
-Solution: You delete the cache for the users that are inactive and are not using the platform anymore; Thankfully for this kinf of invalidation you do not have to worry. Most caching technologies for example: redis support LRU iviction for deleting unused caches and keeping your cache hit ratio high.
+Solution: You delete the cache for the users that are inactive and are not using the platform anymore; Thankfully for this kind of invalidation you do not have to worry. Most caching technologies for example: redis support LRU iviction for deleting unused caches and keeping your cache hit ratio high.
 
 # Types of caching technologies
 
