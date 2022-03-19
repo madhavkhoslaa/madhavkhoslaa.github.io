@@ -18,7 +18,7 @@ This need of reusability of cache is called increasing the "Cache-Hit Ratio". We
 
 # Cache-Hit Ratio
 
-In mathematical is the ration of cache used to total objects cached in your system; But what does it convey to you ?
+Mathematically it is the ratio of cache used to total objects cached in your system; But what does it convey to you ?
 A high cache hit ratio means that your cache was used for most objects that were cached and hence you saved alot of CPU time for logic that was already computed. So how do you achieve a high Cache-Hit Ratio ?
 
 # Methodlogies for increasing the "Cache-Hit Ratio"
