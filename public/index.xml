@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Madhav Khosla</title>
+    <link>https://madhavkhoslaa.github.io/</link>
+    <description>Recent content on Madhav Khosla</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sat, 19 Mar 2022 02:01:58 +0530</lastBuildDate><atom:link href="https://madhavkhoslaa.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Caching: My lessons on it</title>
+      <link>https://madhavkhoslaa.github.io/posts/post1/</link>
+      <pubDate>Sat, 19 Mar 2022 02:01:58 +0530</pubDate>
+      
+      <guid>https://madhavkhoslaa.github.io/posts/post1/</guid>
+      <description>Caching is a cheap way to scale a system&amp;rsquo;s performance in very less time. Being cheap and easy to implement on the top of a existing system it also brings some problems such as invalidation and infrastructure for setting up the cache itself. Here I plan to talk about some lessons on caching that I&amp;rsquo;ve learnt in a few months.
+Philosophy of Caching The supreme art of war is to subdue the enemy without fighting it - Sun Tzu</description>
+    </item>
+    
+    <item>
+      <title>About</title>
+      <link>https://madhavkhoslaa.github.io/about/</link>
+      <pubDate>Thu, 28 Feb 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://madhavkhoslaa.github.io/about/</guid>
+      <description>Hey, I&amp;rsquo;m Madhav
+Skills idk programming
+When bored  lift yt consumption  </description>
+    </item>
+    
+  </channel>
+</rss>
