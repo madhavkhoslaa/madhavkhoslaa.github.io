@@ -9,10 +9,10 @@ theme = "archie"
 
 # Social Tags
 
-# [[params.social]]
-# name = "GitHub"
-# icon = "github"
-# url = "https://github.com/athul/archie"
+[[params.social]]
+name = "GitHub"
+icon = "github"
+url = "https://github.com/madhavkhoslaa"
 
 [[params.social]]
 name = "Twitter"

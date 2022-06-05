@@ -6,7 +6,7 @@ aliases = ["about-us","about-hugo","contact"]
 author = "Hugo Authors"
 +++
 
-Hey, I'm Madhav
+Hey, I'm Madhav. Writing stuff for myself to build a general software engineering thought process. 
 
 # Skills
 

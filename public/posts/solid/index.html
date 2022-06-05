@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html><head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge"><title>SOLID Patterns: My lessons on it - Madhav Khosla</title><meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="SOLID Patterns are a general guideline and reccomended pattenrns that you can use in your codebase to be extensable, easy to modify in future and easy to fix. These aren&#39;t hard bound rules just general reccomendations. Here, I&#39;ll talk about them in detail." />
+	<meta property="og:image" content=""/>
+	<meta property="og:title" content="SOLID Patterns: My lessons on it" />
+<meta property="og:description" content="SOLID Patterns are a general guideline and reccomended pattenrns that you can use in your codebase to be extensable, easy to modify in future and easy to fix. These aren&#39;t hard bound rules just general reccomendations. Here, I&#39;ll talk about them in detail." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://madhavkhoslaa.github.io/posts/solid/" />
+<meta property="article:published_time" content="2022-05-03T04:01:25+05:30" />
+<meta property="article:modified_time" content="2022-05-03T04:01:25+05:30" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="SOLID Patterns: My lessons on it"/>
+<meta name="twitter:description" content="SOLID Patterns are a general guideline and reccomended pattenrns that you can use in your codebase to be extensable, easy to modify in future and easy to fix. These aren&#39;t hard bound rules just general reccomendations. Here, I&#39;ll talk about them in detail."/>
+<script src="https://madhavkhoslaa.github.io/js/feather.min.js"></script>
+	
+	
+        <link href="https://madhavkhoslaa.github.io/css/fonts.7fa06c2792c8589768ffcdaf014e4bfc7f2ccbfba059f8e87131158970c23ed3.css" rel="stylesheet">
+	
+
+	
+	<link rel="stylesheet" type="text/css" media="screen" href="https://madhavkhoslaa.github.io/css/main.e7dc685303f6fab24c3877106a68b21b214009579260db2aad12404393df1ae1.css" />
+		<link id="darkModeStyle" rel="stylesheet" type="text/css" href="https://madhavkhoslaa.github.io/css/dark.c95c5dcf5f32f8b67bd36f7dab66680e068fce2b303087294114aabf7a7c080b.css"   />
+	
+	
+	
+</head>
+<body>
+        <div class="content"><header>
+	<div class="main">
+		<a href="https://madhavkhoslaa.github.io/">Madhav Khosla</a>
+	</div>
+	<nav>
+		
+		<a href="/">Home</a>
+		
+		<a href="/posts">All posts</a>
+		
+		<a href="/about">About</a>
+		
+		<a href="/tags">Tags</a>
+		
+		
+	</nav>
+</header>
+
+<main>
+	<article>
+		<div class="title">
+			<h1 class="title">SOLID Patterns: My lessons on it</h1>
+			<div class="meta">Posted on May 3, 2022</div>
+		</div>
+		
+
+		<section class="body">
+			<p>SOLID is just an acronym for a few principles that Robert C. Martin. SOLID Design princples aim to make your code base extensible, easy to modify in future, easy to debug and fix. They are not RULES just a bunch of thought ideas of seggregation of logic and how to organise your code.</p>
+<p><strong>S</strong> =&gt; <a href="#Single-Responsibility-Principle">Single Responsibility Principle</a><br>
+<strong>O</strong> =&gt; <a href="#Open-Close-Princple">Open Close Princple</a><br>
+<strong>L</strong> =&gt; <a href="#Liskov-Substitution-Principle">Liskov Substitution Principle</a><br>
+<strong>I</strong> =&gt; <a href="#Interface-Segregation-Principle">Interface Segregation Principle</a><br>
+<strong>D</strong> =&gt; <a href="#Dependency-Injection">Dependency Injection</a></p>
+<h1 id="single-responsibility-principle">Single Responsibility Principle</h1>
+<p>According to the defination SRP is:</p>
+<blockquote>
+<p>A class should have one and only one reason to change, meaning that a class should have only one job.</p>
+</blockquote>
+<p>But, what does it actually mean ??</p>
+<p>It means that if you have multiple functionalities in your application, then there should be a seperate class or an entity for them, this leads to seperation of concerns and fixing a bug related to a feature will be changes in the respective entity. 
+For Example you have a program to write a diary and have options to store it to JSON, to S3 and what not.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-typescript" data-lang="typescript"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">NoteBook</span> {
+    <span style="color:#a6e22e">pageCount</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+    <span style="color:#a6e22e">pages</span> <span style="color:#f92672">=</span> []
+    <span style="color:#66d9ef">constructor</span>(<span style="color:#66d9ef">public</span> <span style="color:#a6e22e">name</span>){}
+    <span style="color:#a6e22e">writePage</span>(<span style="color:#a6e22e">contents</span>: <span style="color:#66d9ef">string</span>){
+        <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">pages</span>.<span style="color:#a6e22e">push</span>(<span style="color:#a6e22e">contents</span>)
+        <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">pageCount</span> <span style="color:#f92672">+=</span><span style="color:#ae81ff">1</span>
+    }
+    <span style="color:#a6e22e">getPage</span>(<span style="color:#a6e22e">idx</span>: <span style="color:#66d9ef">number</span>){
+        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">pages</span>[<span style="color:#a6e22e">idx</span>];
+    }
+    <span style="color:#a6e22e">getPages</span>(){
+        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">pageCount</span>
+    }
+    <span style="color:#a6e22e">toString</span>(){
+        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">pages</span>.<span style="color:#a6e22e">toString</span>()
+    }
+    <span style="color:#a6e22e">toJSON</span>(){
+        <span style="color:#66d9ef">return</span> {<span style="color:#a6e22e">contents</span>: <span style="color:#66d9ef">this.toString</span>()}
+    }
+    <span style="color:#a6e22e">toS3</span>(){
+        <span style="color:#a6e22e">aws</span>.<span style="color:#a6e22e">S3</span>.<span style="color:#a6e22e">uploadBucketData</span>(<span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">toJSON</span>())
+    }
+
+}
+</code></pre></div><p>What is the issue with this code ?</p>
+<p>A better implementation</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-typescript" data-lang="typescript"><span style="color:#66d9ef">abstract</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Writeable</span>{
+    <span style="color:#a6e22e">toString</span>(){}
+    <span style="color:#a6e22e">toJSON</span>(){}
+    <span style="color:#a6e22e">toS3</span>(){}
+}
+
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Notebook</span> <span style="color:#66d9ef">extends</span> <span style="color:#a6e22e">Writeable</span> {}
+
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Diary</span> <span style="color:#66d9ef">extends</span> <span style="color:#a6e22e">Writeable</span> {}
+</code></pre></div><h1 id="open-close-princple">Open Close Princple</h1>
+<h1 id="liskov-substitution-principle">Liskov Substitution Principle</h1>
+<h1 id="interface-segregation-principle">Interface Segregation Principle</h1>
+<h1 id="dependency-injection">Dependency Injection</h1>
+
+		</section>
+
+		<div class="post-tags">
+			
+			
+			<nav class="nav tags">
+				<ul class="tags">
+					
+					<li><a href="/tags/solid">SOLID</a></li>
+					
+					<li><a href="/tags/design-patterns">Design Patterns</a></li>
+					
+					<li><a href="/tags/uncle-bob">Uncle Bob</a></li>
+					
+				</ul>
+			</nav>
+			
+			
+		</div>
+	</article>
+</main>
+<footer>
+  <div style="display:flex"><a class="soc" href="https://twitter.com/HiMadhavHere" title="Twitter"><i data-feather="twitter"></i></a></div>
+  <div class="footer-info">
+    2022  <a
+      href="https://github.com/athul/archie">Archie Theme</a> | Built with <a href="https://gohugo.io">Hugo</a>
+  </div>
+</footer>
+
+
+<script>
+  feather.replace()
+</script></div>
+    </body>
+</html>
