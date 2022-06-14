@@ -148,7 +148,7 @@ Here the two responsibilities of creation, writing of a notebook and the storage
 
 Thinking of responsibilities and features similar to each other to be in a similar object that can apply the desired functionality to any other object that requires it.
 
-# Open Close Princple
+# 2 Open Close Princple
 
 According to the definations OCP is
 > Software entities (classes, modules, functions, etc.) should be open for extension, but closed for modification.”
@@ -202,7 +202,7 @@ Class Triangle extends Polygon{
 
 ```
 
-# Liskov Substitution Principle
+# 3 Liskov Substitution Principle
 
 > Let Φ(x) be a property provable about objects x of type T. Then Φ(y) should be true for objects y of type S where S is a subtype of T.
 
@@ -262,7 +262,7 @@ Hence we see that both parent and child instances are passes to the same class w
 
 This is essentially what LSP is.
 
-# Interface Segregation Principle
+# 4 Interface Segregation Principle
 
 > Clients should not be forced to depend upon interfaces that they do not use.”
 
@@ -287,7 +287,7 @@ interface dog extends Animal {
 }
 ```
 
-# Dependency Inversion
+# 5 Dependency Inversion
 
 > high level modules should not depend on low level modules; both should depend on abstractions. Abstractions should not depend on details.  Details should depend upon abstractions.
 
@@ -318,7 +318,9 @@ studentdio.getStudentbyName("Bob")
 //
 ```
 
-But what if you have to test this code ? And connect to a different database ?
+# 5.1 What is the issue with the code ? 
+
+The `StudentDao` class is thightly coupled with the production session. If we want to use the class in out test enviorment, this would be hard since we want to run the class on a DB session instance which is not present. Hence we can pass in the instance of the Database session where we instanciate the class.
 
 ```TypeScript
 class StudentDao{
