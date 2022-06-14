@@ -8,11 +8,12 @@ author = "Hugo Authors"
 
 Hey, I'm Madhav. Writing stuff for myself to build a general software engineering thought process. 
 
+ Other than technical interests, I like lifting and playing guitar(miserably).
+ 
+  If you're reading this, welcome to my blog ! :D
+
 # Skills
-
-idk programming
-
-# When bored
-
-- lift
-- yt consumption
+* Lifting weights 
+* Programming
+* Ranting
+* Playing Guitar
