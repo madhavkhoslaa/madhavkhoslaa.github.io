@@ -5,7 +5,7 @@ description: "SOLID Patterns are a general guideline and recommended patterns th
 tags: [SOLID, Design Patterns, Uncle Bob]
 ---
 
-SOLID is just an acronym for a few principles that Robert C. Martin compiled together. SOLID Design principles aim to make your code base extensible, easy to modify in the future, and easy to debug and fix. They are not RULES just a bunch of thought ideas of segregation of logic and how to organize your code.
+SOLID is just an acronym for a few principles that Robert C. Martin compiled together. SOLID Design principles aim to make your code base extensible, easy to modify in the future, and easy to debug and fix. They are *not rules* just a bunch of thought ideas of segregation of logic and how to organize your code.
 
 
 **S** => [Single Responsibility Principle](#1-Single-Responsibility-Principle) 
