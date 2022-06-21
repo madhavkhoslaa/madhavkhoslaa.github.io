@@ -6,14 +6,4 @@ aliases = ["about-us","about-hugo","contact"]
 author = "Hugo Authors"
 +++
 
-Hey, I'm Madhav. Writing stuff for myself to build a general software engineering thought process. 
-
- Other than technical interests, I like lifting and playing guitar(miserably).
- 
-  If you're reading this, welcome to my blog ! :D
-
-# Skills
-* Lifting weights 
-* Programming
-* Ranting
-* Playing Guitar
+Hey, I’m Madhav; Join me in the pursuit of becoming a better software engineer. I plan to write here about what I learned and what seems to me to be the core of what you need to know as someone who is writing code and web applications.
