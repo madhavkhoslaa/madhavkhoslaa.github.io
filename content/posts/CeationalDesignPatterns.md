@@ -63,7 +63,11 @@ class Car{
     }
 }
 
-const RedFerrari: Car = Car.setColor("Red").setPistons(12).setLength(2100).setWheelbase(40).getCar();
+const RedFerrari: Car = Car.setColor("Red")
+                        .setPistons(12)
+                        .setLength(2100)
+                        .setWheelbase(40)
+                        .getCar();
 console.log(RedFerrari)
 /**
 Car: {
