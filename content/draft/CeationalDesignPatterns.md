@@ -195,6 +195,7 @@ Here there is a single interface called the `Button` and two classes `MacOS` and
 
 ## Real life example
 
+In india alot of restaurants have different types of cuisines and then they are divided by the region and then by the type. The first layer of selection(the cuisine) provides the second layer of selection(the type of dish) and then comes the dishes itself. This is an example of the abstract factory design pattern.
 ![image](https://i.imgur.com/cIbQG0p.png)
 
 **_The Problem_**: Now in the above example of buttons, there was a separation based on OS. But imagine in a case of a framework, where there are buttons, alerts, input boxes, and so many things. The call can differ based on the OS they are on. Now imagine you as a developer instantiating a MacOS button, Alert and Windows button, Alert from the class itself; it would be tedious, wouldn't it? To tackle this problem of
