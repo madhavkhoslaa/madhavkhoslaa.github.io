@@ -3,92 +3,91 @@
 <a href=/posts>All posts</a>
 <a href=/about>About</a>
 <a href=/tags>Tags</a></nav></header><main><article><div class=title><h1 class=title>SOLID Patterns: My lessons on it</h1><div class=meta>Posted on Jun 7, 2022</div></div><section class=body><p>SOLID is just an acronym for a few principles that Robert C. Martin compiled together. SOLID Design principles aim to make your code base extensible, easy to modify in the future, and easy to debug and fix. They are <em>not rules</em> just a bunch of thought ideas of segregation of logic and how to organize your code.</p><p><strong>S</strong> => <a href=#1-Single-Responsibility-Principle>Single Responsibility Principle</a></p><p><strong>O</strong> => <a href=#Open-Close-Princple>Open Close Princple</a></p><p><strong>L</strong> => <a href=#Liskov-Substitution-Principle>Liskov Substitution Principle</a></p><p><strong>I</strong> => <a href=#Interface-Segregation-Principle>Interface Segregation Principle</a></p><p><strong>D</strong> => <a href=#Dependency-Injection>Dependency Injection</a></p><h1 id=1-single-responsibility-principle>1 Single Responsibility Principle</h1><p>According to the definition, SRP is:</p><blockquote><p>A class should have one and only one reason to change, meaning that a class should have only one job.</p></blockquote><p>But, what does it mean ??</p><p>It means that if you have multiple functionalities in your application, then there should be a separate class or an entity for them, this leads to the separation of concerns, and fixing a bug related to a feature will be changed in the respective entity.</p><p>For Example, you have a program to write a diary and have options to store it to JSON, toS3, and whatnot.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-typescript data-lang=typescript><span style=display:flex><span><span style=color:#66d9ef>class</span> <span style=color:#a6e22e>NoteBook</span> {
-</span></span><span style=display:flex><span> <span style=color:#a6e22e>pageCount</span> <span style=color:#f92672>=</span> <span style=color:#ae81ff>0</span>;
-</span></span><span style=display:flex><span> <span style=color:#a6e22e>pages</span> <span style=color:#f92672>=</span> []
-</span></span><span style=display:flex><span> <span style=color:#66d9ef>constructor</span>(<span style=color:#66d9ef>public</span> <span style=color:#a6e22e>name</span>){}
-</span></span><span style=display:flex><span> <span style=color:#a6e22e>writePage</span>(<span style=color:#a6e22e>contents</span>: <span style=color:#66d9ef>string</span>){
-</span></span><span style=display:flex><span> <span style=color:#66d9ef>this</span>.<span style=color:#a6e22e>pages</span>.<span style=color:#a6e22e>push</span>(<span style=color:#a6e22e>contents</span>)
-</span></span><span style=display:flex><span> <span style=color:#66d9ef>this</span>.<span style=color:#a6e22e>pageCount</span> <span style=color:#f92672>+=</span><span style=color:#ae81ff>1</span>
-</span></span><span style=display:flex><span> }
-</span></span><span style=display:flex><span> <span style=color:#a6e22e>getPage</span>(<span style=color:#a6e22e>idx</span>: <span style=color:#66d9ef>number</span>){
-</span></span><span style=display:flex><span> <span style=color:#66d9ef>return</span> <span style=color:#a6e22e>pages</span>[<span style=color:#a6e22e>idx</span>];
-</span></span><span style=display:flex><span> }
-</span></span><span style=display:flex><span> <span style=color:#a6e22e>getPages</span>(){
-</span></span><span style=display:flex><span> <span style=color:#66d9ef>return</span> <span style=color:#a6e22e>pageCount</span>
-</span></span><span style=display:flex><span> }
-</span></span><span style=display:flex><span> <span style=color:#a6e22e>toString</span>(){
-</span></span><span style=display:flex><span> <span style=color:#66d9ef>return</span> <span style=color:#a6e22e>pages</span>.<span style=color:#a6e22e>toString</span>()
-</span></span><span style=display:flex><span> }
-</span></span><span style=display:flex><span> <span style=color:#a6e22e>toJSON</span>(){
-</span></span><span style=display:flex><span> <span style=color:#66d9ef>return</span> {<span style=color:#a6e22e>contents</span>: <span style=color:#66d9ef>this.toString</span>()}
-</span></span><span style=display:flex><span> }
-</span></span><span style=display:flex><span> <span style=color:#a6e22e>toS3</span>(){
-</span></span><span style=display:flex><span> <span style=color:#a6e22e>aws</span>.<span style=color:#a6e22e>S3</span>.<span style=color:#a6e22e>uploadBucketData</span>(<span style=color:#66d9ef>this</span>.<span style=color:#a6e22e>toJSON</span>())
-</span></span><span style=display:flex><span> }
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>pageCount</span> <span style=color:#f92672>=</span> <span style=color:#ae81ff>0</span>;
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>pages</span> <span style=color:#f92672>=</span> [];
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>constructor</span>(<span style=color:#66d9ef>public</span> <span style=color:#a6e22e>name</span>) {}
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>writePage</span>(<span style=color:#a6e22e>contents</span>: <span style=color:#66d9ef>string</span>) {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>this</span>.<span style=color:#a6e22e>pages</span>.<span style=color:#a6e22e>push</span>(<span style=color:#a6e22e>contents</span>);
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>this</span>.<span style=color:#a6e22e>pageCount</span> <span style=color:#f92672>+=</span> <span style=color:#ae81ff>1</span>;
+</span></span><span style=display:flex><span>  }
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>getPage</span>(<span style=color:#a6e22e>idx</span>: <span style=color:#66d9ef>number</span>) {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> <span style=color:#a6e22e>pages</span>[<span style=color:#a6e22e>idx</span>];
+</span></span><span style=display:flex><span>  }
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>getPages() {</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> <span style=color:#a6e22e>pageCount</span>;
+</span></span><span style=display:flex><span>  }
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>toString() {</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> <span style=color:#a6e22e>pages</span>.<span style=color:#a6e22e>toString</span>();
+</span></span><span style=display:flex><span>  }
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>toJSON() {</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> { <span style=color:#a6e22e>contents</span>: <span style=color:#66d9ef>this.toString</span>() };
+</span></span><span style=display:flex><span>  }
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>toS3() {</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>aws</span>.<span style=color:#a6e22e>S3</span>.<span style=color:#a6e22e>uploadBucketData</span>(<span style=color:#66d9ef>this</span>.<span style=color:#a6e22e>toJSON</span>());
+</span></span><span style=display:flex><span>  }
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><h2 id=11-what-is-the-issue-with-this-code>1.1 What is the issue with this code?</h2><p>Let&rsquo;s observe the behavior of the class in the above code.</p><ol><li>Handles the logic for notebooks. Such as adding pages, deleting pages, and getting page count.</li><li>Parsing the code to JSON, String.</li><li>Saving the Code to S3 or some file.</li></ol><p>If we observe functions like toS3(), there might be other classes that require the same functionality as well, such as a Diary Class? We might write the same code for the other class that might require the same functionality.</p><p>Do you see the problem here? There is no code reusability a single class has too many functions and writing and persisting are tightly coupled to each other in this implementation.</p><p>This implementation over time will lead to the formation of a &ldquo;God Class&rdquo;, where a single class is doing too much work. This leads to difficulty in fixing bugs, specialized implementations for every single class, and not generic implementations.</p><p>We can fix these issues by thinking of different functionalities as different classes or different responsibilities, that handle only that set of related functionalities. Like a persistence class, a different class to create Notebook objects.</p><h3 id=12-a-better-implementation>1.2 A Better Implementation</h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-typescript data-lang=typescript><span style=display:flex><span><span style=color:#66d9ef>abstract</span> <span style=color:#66d9ef>class</span> <span style=color:#a6e22e>Persistance</span> {
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>toString() {</span>}
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>toJSON() {</span>}
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>toS3() {</span>}
+</span></span><span style=display:flex><span>}
 </span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>class</span> <span style=color:#a6e22e>NotebookPersistance</span> <span style=color:#66d9ef>extends</span> <span style=color:#a6e22e>Persistance</span> {
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>notebook</span>: <span style=color:#66d9ef>Notebook</span>;
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>constructor</span>(<span style=color:#a6e22e>_notebook</span>: <span style=color:#66d9ef>Notebook</span>) {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>this</span>.<span style=color:#a6e22e>notebook</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>_notebook</span>;
+</span></span><span style=display:flex><span>  }
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>toS3() {</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// Some Logic to S3
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>  }
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>toJSON() {</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// Some Logic to JSON
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>  }
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>toString() {</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// Some Logic to String
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>  }
 </span></span><span style=display:flex><span>}
-</span></span></code></pre></div><h2 id=11-what-is-the-issue-with-this-code>1.1 What is the issue with this code?</h2><p>Let&rsquo;s observe the behavior of the class in the above code.</p><ol><li>Handles the logic for notebooks. Such as adding pages, deleting pages, and getting page count.</li><li>Parsing the code to JSON, String.</li><li>Saving the Code to S3 or some file.</li></ol><p>If we observe functions like toS3(), there might be other classes that require the same functionality as well, such as a Diary Class? We might write the same code for the other class that might require the same functionality.</p><p>Do you see the problem here? There is no code reusability a single class has too many functions and writing and persisting are tightly coupled to each other in this implementation.</p><p>This implementation over time will lead to the formation of a &ldquo;God Class&rdquo;, where a single class is doing too much work. This leads to difficulty in fixing bugs, specialized implementations for every single class, and not generic implementations.</p><p>We can fix these issues by thinking of different functionalities as different classes or different responsibilities, that handle only that set of related functionalities. Like a persistence class, a different class to create Notebook objects.</p><h3 id=12-a-better-implementation>1.2 A Better Implementation</h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-typescript data-lang=typescript><span style=display:flex><span><span style=color:#66d9ef>abstract</span> <span style=color:#66d9ef>class</span> <span style=color:#a6e22e>Persistance</span>{
-</span></span><span style=display:flex><span> <span style=color:#a6e22e>toString</span>(){}
-</span></span><span style=display:flex><span> <span style=color:#a6e22e>toJSON</span>(){}
-</span></span><span style=display:flex><span> <span style=color:#a6e22e>toS3</span>(){}
+</span></span><span style=display:flex><span><span style=color:#66d9ef>class</span> <span style=color:#a6e22e>DiaryPersistance</span> <span style=color:#66d9ef>extends</span> <span style=color:#a6e22e>Persistance</span> {
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>diary</span>: <span style=color:#66d9ef>Diary</span>;
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>constructor</span>(<span style=color:#a6e22e>_diary_</span>: <span style=color:#66d9ef>Notebook</span>) {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>this</span>.<span style=color:#a6e22e>diary</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>_diary</span>;
+</span></span><span style=display:flex><span>  }
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>toS3() {</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// Some Logic to S3
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>  }
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>toJSON() {</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// Some Logic to JSON
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>  }
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>toString() {</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// Some Logic to String
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>  }
 </span></span><span style=display:flex><span>}
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#66d9ef>class</span> <span style=color:#a6e22e>NotebookPersistance</span> <span style=color:#66d9ef>extends</span> <span style=color:#a6e22e>Persistance</span>{
-</span></span><span style=display:flex><span> <span style=color:#a6e22e>notebook</span>: <span style=color:#66d9ef>Notebook</span>
-</span></span><span style=display:flex><span> <span style=color:#66d9ef>constructor</span>(<span style=color:#a6e22e>_notebook</span>: <span style=color:#66d9ef>Notebook</span>){
-</span></span><span style=display:flex><span> <span style=color:#66d9ef>this</span>.<span style=color:#a6e22e>notebook</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>_notebook</span>
-</span></span><span style=display:flex><span> }
-</span></span><span style=display:flex><span> <span style=color:#a6e22e>toS3</span>(){
-</span></span><span style=display:flex><span> <span style=color:#75715e>// Some Logic to S3
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span> }
-</span></span><span style=display:flex><span> <span style=color:#a6e22e>toJSON</span>(){
-</span></span><span style=display:flex><span> <span style=color:#75715e>// Some Logic to JSON
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span> }
-</span></span><span style=display:flex><span> <span style=color:#a6e22e>toString</span>(){
-</span></span><span style=display:flex><span> <span style=color:#75715e>// Some Logic to String
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span> }
-</span></span><span style=display:flex><span>}
-</span></span><span style=display:flex><span><span style=color:#66d9ef>class</span> <span style=color:#a6e22e>DiaryPersistance</span> <span style=color:#66d9ef>extends</span> <span style=color:#a6e22e>Persistance</span>{
-</span></span><span style=display:flex><span> <span style=color:#a6e22e>diary</span>: <span style=color:#66d9ef>Diary</span>
-</span></span><span style=display:flex><span> <span style=color:#66d9ef>constructor</span>(<span style=color:#a6e22e>_diary_</span>: <span style=color:#66d9ef>Notebook</span>){
-</span></span><span style=display:flex><span> <span style=color:#66d9ef>this</span>.<span style=color:#a6e22e>diary</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>_diary</span>
-</span></span><span style=display:flex><span> }
-</span></span><span style=display:flex><span> <span style=color:#a6e22e>toS3</span>(){
-</span></span><span style=display:flex><span> <span style=color:#75715e>// Some Logic to S3
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span> }
-</span></span><span style=display:flex><span> <span style=color:#a6e22e>toJSON</span>(){
-</span></span><span style=display:flex><span> <span style=color:#75715e>// Some Logic to JSON
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span> }
-</span></span><span style=display:flex><span> <span style=color:#a6e22e>toString</span>(){
-</span></span><span style=display:flex><span> <span style=color:#75715e>// Some Logic to String
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span> }
-</span></span><span style=display:flex><span>}
-</span></span><span style=display:flex><span><span style=color:#66d9ef>abstract</span> <span style=color:#66d9ef>class</span> <span style=color:#a6e22e>Writeable</span>{
-</span></span><span style=display:flex><span> <span style=color:#a6e22e>pageCount</span>: <span style=color:#66d9ef>number</span> <span style=color:#f92672>=</span> <span style=color:#ae81ff>0</span>;
-</span></span><span style=display:flex><span> <span style=color:#a6e22e>pages</span>: <span style=color:#66d9ef>number</span> <span style=color:#f92672>=</span> []
-</span></span><span style=display:flex><span> <span style=color:#a6e22e>writePage</span>(<span style=color:#a6e22e>contents</span>: <span style=color:#66d9ef>string</span>){
-</span></span><span style=display:flex><span> <span style=color:#66d9ef>this</span>.<span style=color:#a6e22e>pages</span>.<span style=color:#a6e22e>push</span>(<span style=color:#a6e22e>contents</span>)
-</span></span><span style=display:flex><span> <span style=color:#66d9ef>this</span>.<span style=color:#a6e22e>pageCount</span> <span style=color:#f92672>+=</span><span style=color:#ae81ff>1</span>
-</span></span><span style=display:flex><span> }
-</span></span><span style=display:flex><span> <span style=color:#a6e22e>getPage</span>(<span style=color:#a6e22e>idx</span>: <span style=color:#66d9ef>number</span>){
-</span></span><span style=display:flex><span> <span style=color:#66d9ef>return</span> <span style=color:#a6e22e>pages</span>[<span style=color:#a6e22e>idx</span>];
-</span></span><span style=display:flex><span> }
-</span></span><span style=display:flex><span> <span style=color:#a6e22e>getPagesCount</span>(){
-</span></span><span style=display:flex><span> <span style=color:#66d9ef>return</span> <span style=color:#a6e22e>pageCount</span>
-</span></span><span style=display:flex><span> }
-</span></span><span style=display:flex><span> <span style=color:#a6e22e>deletePage</span>(<span style=color:#a6e22e>idx</span>: <span style=color:#66d9ef>number</span>){
-</span></span><span style=display:flex><span> <span style=color:#66d9ef>delete</span> <span style=color:#a6e22e>pages</span>[<span style=color:#a6e22e>idx</span>]
-</span></span><span style=display:flex><span> }
+</span></span><span style=display:flex><span><span style=color:#66d9ef>abstract</span> <span style=color:#66d9ef>class</span> <span style=color:#a6e22e>Writeable</span> {
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>pageCount</span>: <span style=color:#66d9ef>number</span> <span style=color:#f92672>=</span> <span style=color:#ae81ff>0</span>;
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>pages</span>: <span style=color:#66d9ef>number</span> <span style=color:#f92672>=</span> [];
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>writePage</span>(<span style=color:#a6e22e>contents</span>: <span style=color:#66d9ef>string</span>) {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>this</span>.<span style=color:#a6e22e>pages</span>.<span style=color:#a6e22e>push</span>(<span style=color:#a6e22e>contents</span>);
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>this</span>.<span style=color:#a6e22e>pageCount</span> <span style=color:#f92672>+=</span> <span style=color:#ae81ff>1</span>;
+</span></span><span style=display:flex><span>  }
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>getPage</span>(<span style=color:#a6e22e>idx</span>: <span style=color:#66d9ef>number</span>) {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> <span style=color:#a6e22e>pages</span>[<span style=color:#a6e22e>idx</span>];
+</span></span><span style=display:flex><span>  }
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>getPagesCount() {</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> <span style=color:#a6e22e>pageCount</span>;
+</span></span><span style=display:flex><span>  }
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>deletePage</span>(<span style=color:#a6e22e>idx</span>: <span style=color:#66d9ef>number</span>) {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>delete</span> <span style=color:#a6e22e>pages</span>[<span style=color:#a6e22e>idx</span>];
+</span></span><span style=display:flex><span>  }
 </span></span><span style=display:flex><span>}
 </span></span><span style=display:flex><span>
 </span></span><span style=display:flex><span><span style=color:#66d9ef>class</span> <span style=color:#a6e22e>Notebook</span> <span style=color:#66d9ef>extends</span> <span style=color:#a6e22e>Writeable</span> {}
 </span></span><span style=display:flex><span><span style=color:#66d9ef>class</span> <span style=color:#a6e22e>Diary</span> <span style=color:#66d9ef>extends</span> <span style=color:#a6e22e>Writeable</span> {}
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#66d9ef>const</span> <span style=color:#a6e22e>RedNoteBook</span> <span style=color:#f92672>=</span> <span style=color:#66d9ef>new</span> <span style=color:#a6e22e>NoteBook</span>()
-</span></span><span style=display:flex><span><span style=color:#a6e22e>RedNoteBook</span>.<span style=color:#a6e22e>writePage</span>(<span style=color:#e6db74>&#34;Java Notes&#34;</span>)
-</span></span><span style=display:flex><span><span style=color:#a6e22e>RedNoteBook</span>.<span style=color:#a6e22e>writePage</span>(<span style=color:#e6db74>&#34;Python Notes&#34;</span>)
-</span></span><span style=display:flex><span><span style=color:#66d9ef>const</span> <span style=color:#a6e22e>NoteBookSavingHandler</span> <span style=color:#f92672>=</span> <span style=color:#66d9ef>new</span> <span style=color:#a6e22e>NotebookPersistance</span>(<span style=color:#a6e22e>RedNoteBook</span>)
-</span></span><span style=display:flex><span><span style=color:#a6e22e>NoteBookSavingHandler</span>.<span style=color:#a6e22e>toS3</span>()
+</span></span><span style=display:flex><span><span style=color:#66d9ef>const</span> <span style=color:#a6e22e>RedNoteBook</span> <span style=color:#f92672>=</span> <span style=color:#66d9ef>new</span> <span style=color:#a6e22e>NoteBook</span>();
+</span></span><span style=display:flex><span><span style=color:#a6e22e>RedNoteBook</span>.<span style=color:#a6e22e>writePage</span>(<span style=color:#e6db74>&#34;Java Notes&#34;</span>);
+</span></span><span style=display:flex><span><span style=color:#a6e22e>RedNoteBook</span>.<span style=color:#a6e22e>writePage</span>(<span style=color:#e6db74>&#34;Python Notes&#34;</span>);
+</span></span><span style=display:flex><span><span style=color:#66d9ef>const</span> <span style=color:#a6e22e>NoteBookSavingHandler</span> <span style=color:#f92672>=</span> <span style=color:#66d9ef>new</span> <span style=color:#a6e22e>NotebookPersistance</span>(<span style=color:#a6e22e>RedNoteBook</span>);
+</span></span><span style=display:flex><span><span style=color:#a6e22e>NoteBookSavingHandler</span>.<span style=color:#a6e22e>toS3</span>();
 </span></span></code></pre></div><h3 id=121-observatations-from-the-implementation-above>1.2.1 Observatations from the implementation above.</h3><ol><li>There are two abstract classes one being <code>Writeable</code> and the other one being <code>Persistence</code></li><li>The <code>Notebook</code> and <code>Diary</code> classes extend the <code>Writeable</code> abstract class</li><li>The <code>NotebookPersistance</code> and <code>DiaryPersistance</code> classes extend the <code>Persistance</code> abstract class
 Here the writing implementation and the saving of the writing implementations are loosely coupled and not in a single class coupled together.</li></ol><h3 id=122-how-is-this-implementation-better-than-the-one-above>1.2.2 How is this implementation better than the one above?</h3><p>Here the two responsibilities of creation, the writing of a notebook and the storage of it are loosely coupled and are written separately.</p><h2 id=lessons>Lessons</h2><p>Thinking of responsibilities and features similar to each other to be in a similar object that can apply the desired functionality to any other object that requires it.</p><h1 id=2-open-close-principle>2 Open Close Principle</h1><p>According to the definition, OCP is</p><blockquote><p>Software entities (classes, modules, functions, etc.) should be open for extension, but closed for modification.”</p></blockquote><p>The idea is to write your code in such a way that to add the functionality you do not have to fiddle with the existing code. The idea sounds great but when one of your classes has to change and you have to reflect on changes in all other classes. For example, a method from class A returns a value x and after the change, it returns an instance of a class y. You have to change your logic every place where that function is called.</p><p>So how do you solve this problem of a changing class being a dependency?</p><p>Bertrand Mayer proposes to use inheritance to achieve this goal since, in his words</p><blockquote><p>A class is closed, since it may be compiled, stored in a library, baselined, and used by client classes. But it is also open, since any new class may use it as a parent, adding new features. When a descendant class is defined, there is no need to change the original or to disturb its clients.</p></blockquote><p>let us see this principle in an example.</p><p>Suppose you have an API where you and multiple engineers are working together in different teams. And the product calculates the area of polygons. You have a class for squares in your codebase already, you get an immediate requirement where you have to add support for rectangles, what do you do? Overload Area and Perimeter in the square class itself? Or do you extend a class for polygons and create new implementations of rectangle logic?</p><p>The latter option, since it brings no changes to the place where square logic is used, it is logically separated from the square class and you did not have to change the existing codebase.</p><p>This is a vague code for the situation.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-TypeScript data-lang=TypeScript><span style=display:flex><span><span style=color:#66d9ef>abstract</span> <span style=color:#a6e22e>Class</span> <span style=color:#a6e22e>Polygon</span>{
 </span></span><span style=display:flex><span> <span style=color:#a6e22e>Area</span>(){}
@@ -291,4 +290,4 @@ These characters can Attack, Walk, Breathe and do a few activities that they do 
 </span></span><span style=display:flex><span> <span style=color:#66d9ef>const</span> <span style=color:#a6e22e>studentdio</span> <span style=color:#f92672>=</span> <span style=color:#66d9ef>new</span> <span style=color:#a6e22e>StudentDao</span>(<span style=color:#66d9ef>new</span> <span style=color:#a6e22e>ProdMongoSession</span>())
 </span></span><span style=display:flex><span><span style=color:#a6e22e>studentdio</span>.<span style=color:#a6e22e>getStudentbyName</span>(<span style=color:#e6db74>&#34;Bob&#34;</span>)
 </span></span><span style=display:flex><span>}
-</span></span></code></pre></div><h2 id=lessons-3>Lessons</h2><p>DI is just an implementation of <a href=https://stackoverflow.com/questions/3058/what-is-inversion-of-control>Inversion of Control</a>. It is when you let outside of the class choose what generic implementation should be used in an instance. This makes it easy to create pluggable implementations. It also helps in testing where you want a certain class to use a certain instance while testing and a different one while being run in production.</p></section><div class=post-tags><nav class="nav tags"><ul class=tags><li><a href=/tags/solid>SOLID</a></li><li><a href=/tags/design-patterns>Design Patterns</a></li><li><a href=/tags/uncle-bob>Uncle Bob</a></li></ul></nav></div></article></main><footer><div style=display:flex><a class=soc href=https://bit.ly/3Qyr87Y title=GitHub><i data-feather=github></i></a><a class=soc href=https://bit.ly/3Qtgn6y title=Twitter><i data-feather=twitter></i></a></div><div class=footer-info>2022 <a href=https://github.com/athul/archie>Archie Theme</a> | Built with <a href=https://gohugo.io>Hugo</a></div></footer><script>feather.replace()</script></div></body></html>
+</span></span></code></pre></div><h2 id=lessons-3>Lessons</h2><p>DI is just an implementation of <a href=https://stackoverflow.com/questions/3058/what-is-inversion-of-control>Inversion of Control</a>. It is when you let outside of the class choose what generic implementation should be used in an instance. This makes it easy to create pluggable implementations. It also helps in testing where you want a certain class to use a certain instance while testing and a different one while being run in production.</p><hr></section><div class=post-tags><nav class="nav tags"><ul class=tags><li><a href=/tags/solid>SOLID</a></li><li><a href=/tags/design-patterns>Design Patterns</a></li><li><a href=/tags/uncle-bob>Uncle Bob</a></li></ul></nav></div></article></main><footer><div style=display:flex><a class=soc href=https://bit.ly/3Qyr87Y title=GitHub><i data-feather=github></i></a><a class=soc href=https://bit.ly/3Qtgn6y title=Twitter><i data-feather=twitter></i></a></div><div class=footer-info>2022 <a href=https://github.com/athul/archie>Archie Theme</a> | Built with <a href=https://gohugo.io>Hugo</a></div></footer><script>feather.replace()</script></div></body></html>
