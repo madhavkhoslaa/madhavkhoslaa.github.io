@@ -344,7 +344,6 @@ console.log(d);
 console.log(d2);
 console.log(d3);
 
-
 /**
  *
  * OutPut
@@ -355,9 +354,10 @@ DB { ARR: [ '-1', '2' ] }
 { ARR: [ '1', '2' ] }
 *
 **/
-
 ```
 
 ## Code Explanation
+
+Here the base abstract class provides a `DeepCopy` and a `ShallowCopy` methods and the classes that extends them can use these methods to copy objects to other variables.
 
 ---
