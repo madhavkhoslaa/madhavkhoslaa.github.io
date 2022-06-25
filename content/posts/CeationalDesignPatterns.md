@@ -259,13 +259,13 @@ You could also argue if the UI factory should be returning a `MacOSFactory` and 
 
 The Problem: In some scenarios you only want one instance of a class to be present, for example, you have a class that opens a session to the DB and you pass in query strings to it to receive objects. If this object were to be instantiated multiple times in a lifecycle of a program then there will be many connections open in the DB.
 
-Proposal: You create a instance of the class and an abstraction to get the instance of the class. That abstraction only returns a single instance of the class always.
+Proposal: You create an instance of the class and abstraction to get the instance of the class. That abstraction only returns a single instance of the class always.
 
-How: You create a class with a private constructor, you create a static methods called `getInstance` or something similar. On invoking that function set a static variable of the class with the new instance and return the same instance every time that function is called.
+How: You create a class with a private constructor, and you create a static method called `getInstance` or something similar. On invoking that function set a static variable of the class with the new instance and return the same instance every time that function is called.
 
 ## Code Example
 
-Example you want to log events in a log file, You want to log a string when some function is called or when some event occours. Yo
+For example, you want to log events in a log file, You want to log a string when some function is called or when some event occurs. Yo
 
 ```TypeScript
 
@@ -302,19 +302,19 @@ console.log(Logger == Logger2)
 
 ## Code Explanation
 
-The `getLogger` method on the first call creates the instance of `LogFileWriter` class and sets it to the static variable. This on the other runs is then returned from the static class variable it is saved in.
+The `getLogger` method on the first call creates the instance of the `LogFileWriter` class and sets it to the static variable. This on the other runs is then returned from the static class variable it is saved in.
 
-However in a multithreaded enviorment, this can create multiple instances if a single thread has a different execution context than the corrent one.
+However, in a multithreaded environment, this can create multiple instances if a single thread has a different execution context than the current one.
 
 # Prototype Design Pattern
 
 > Prototype is a creational design pattern that lets you copy existing objects without making your code dependent on their classes.
 
-The Problem: For example everytime you create a instance of a class, there is a large blocking operation that takes place in the constructor of the class(Maybe a DB call or a large file read) that happens everytime you create an instance, it's better the next time you create the isntance, you could somehow use the same data from the old instance. Prototype design pattern solves this problem by providing objects with a clone method, to copy their values to other objects.
+The Problem: For example every time you create an instance of a class, there is a large blocking operation that takes place in the constructor of the class(Maybe a DB call or a large file read) that happens every time you create an instance, it's better the next time you create the instance, you could somehow use the same data from the old instance. The prototype design pattern solves this problem by providing objects with a clone method, to copy their values to other objects.
 
-Proposal: Provide a objectt cloning methods to the class so that a `.clone()` method will return the copy of the object. I have here created a shallow and deep clone for shallow and deep copies.
+Proposal: Provide an object cloning method to the class so that a `.clone()` method will return the copy of the object. I have here created a shallow and deep clone for shallow and deep copies.
 
-How: Create a abstract class for prototype design pattern, create a generic logic for cloning and extend all the classes with that abstract class where you want them to have cloning methods.
+How: Create an abstract class for the prototype design pattern, create a generic logic for cloning and extend all the classes with that abstract class where you want them to have cloning methods.
 
 ## Code Example
 
@@ -358,6 +358,6 @@ DB { ARR: [ '-1', '2' ] }
 
 ## Code Explanation
 
-Here the base abstract class provides a `DeepCopy` and a `ShallowCopy` methods and the classes that extends them can use these methods to copy objects to other variables.
+Here the base abstract class provides a `DeepCopy` and a `ShallowCopy` methods and the classes that extend them can use these methods to copy objects to other variables.
 
 ---
