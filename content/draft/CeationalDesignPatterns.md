@@ -19,9 +19,9 @@ tags:
 
 > [Creational design patterns provide various object creation mechanisms, which increase flexibility and reuse of existing code](https://refactoring.guru/design-patterns/creational-patterns).
 
-# Why were they made and why should you care reading them ?
+# Why were they made and why should you care about reading them?
 
-You must have noticed in a larger code base where there are multiple clases that dealing with the class instantiation becomes too hard, infact in the case of languages like java where the ecosystem expects everything to be a class; a framework called spring had been developed to solve the problem of instantiating classes(and so much more). So you get scope of the problem of just creation of objects.
+You must have noticed in a larger code base where multiple classes dealing with the class instantiation becomes too hard, in fact in the case of languages like java where the ecosystem expects everything to be a class; a framework called spring had been developed to solve the problem of instantiating classes(and so much more). So you get the scope of the problem of just the creation of objects.
 
 Creational design patterns aid in the instantiation of objects by providing suitable abstractions and make the systems independent of how objects are created composed and represented.
 
@@ -35,9 +35,9 @@ They are important when a system grows large and require how objects are constru
 
 > Builder is a creational design pattern that lets you construct complex objects step by step. The pattern allows you to produce different types and representations of an object using the same construction code.
 
-## Real life example
+## Real-life example
 
-Have you ever been to a ice cream parlour where you are handed a sheet of paper and you tick on stuff and the create that ice cream for you ? Or if not it's similar to a subway shop where you select what you want in the sandwhich. The kind of bread you want, the kind of sauce are just the parameters you pass onto the sandwhich class or the ice cream class.
+Have you ever been to an ice cream parlor where you are handed a sheet of paper and you tick on stuff and then create that ice cream for you? Or if not it's similar to a subway shop where you select what you want in the sandwich. The kind of bread you want, and the kind of sauce are just the parameters you pass onto the sandwhich class or the ice cream class.
 
 ![image](https://i.imgur.com/Zh02EM4.png)
 
@@ -128,9 +128,9 @@ While studying builder design patterns, I was able to create methods to generate
 
 > Factory Method is a creational design pattern that provides an interface for creating objects in a superclass but allows subclasses to alter the type of objects that will be created.
 
-## Real life example
+## Real-life example
 
-Remeber how we had the options to create a custom ice cream in the builder design pattern ? It might be daunting for you to think what you want at the store or maybe seeing so many options makes you anxious ? If that's so; you order something from the menu itself, you dont have to talk to the server and just tell him what you want without telling the specifics of what you want. An example of this is just the menu.
+Remember how we had the option to create a custom ice cream in the builder design pattern? It might be daunting for you to think about what you want at the store or maybe seeing so many options makes you anxious? If that's so; you order something from the menu itself, you don't have to talk to the server and just tell him what you want without telling him the specifics of what you want. An example of this is just the menu.
 
 ![image](https://i.imgur.com/NGvd6bS.png)
 
@@ -193,9 +193,9 @@ Here there is a single interface called the `Button` and two classes `MacOS` and
 
 > Abstract Factory is a creational design pattern that lets you produce families of related objects without specifying their concrete classes.
 
-## Real life example
+## Real-life example
 
-In india alot of restaurants have different types of cuisines and then they are divided by the region and then by the type. The first layer of selection(the cuisine) provides the second layer of selection(the type of dish) and then comes the dishes itself. This is an example of the abstract factory design pattern.
+In India, a lot of restaurants have different types of cuisines and then they are divided by the region and then the type. The first layer of selection(the cuisine) provides the second layer of selection(the type of dish) and then comes to the dishes themselves. This is an example of the abstract factory design pattern.
 ![image](https://i.imgur.com/cIbQG0p.png)
 
 **_The Problem_**: Now in the above example of buttons, there was a separation based on OS. But imagine in a case of a framework, where there are buttons, alerts, input boxes, and so many things. The call can differ based on the OS they are on. Now imagine you as a developer instantiating a MacOS button, Alert and Windows button, Alert from the class itself; it would be tedious, wouldn't it? To tackle this problem of
@@ -287,9 +287,9 @@ You could also argue if the UI factory should be returning a `MacOSFactory` and 
 
 > Singleton is a creational design pattern, which ensures that only one object of its kind exists and provides a single point of access to it for any other code.
 
-## Real life example
+## Real-life example
 
-Imagine a situation you and your friends order a really large sundae and eat it together. Throughout the lifecycle of that icecream(until it melts or you eat it) it remains a singular and you and your friends consume it. This single large sundae is a singleton.
+Imagine a situation you and your friends order a really large sundae and eat it together. Throughout the lifecycle of that ice cream (until it melts or you eat it), it remains singular and you and your friends consume it. This single large sundae is a singleton.
 ![image](https://i.imgur.com/Pm4Nqsy.png)
 
 **_The Problem_**: In some scenarios you only want one instance of a class to be present, for example, you have a class that opens a session to the DB and you pass in query strings to it to receive objects. If this object were to be instantiated multiple times in a lifecycle of a program then there will be many connections open in the DB.
@@ -300,7 +300,7 @@ Imagine a situation you and your friends order a really large sundae and eat it 
 
 ## Code Example
 
-For example, you want to log events in a log file, You want to log a string when some function is called or when some event occurs. You create instance of logger at different places and log the events. All these events will be logged in a single file.
+For example, you want to log events in a log file, You want to log a string when some function is called or when some event occurs. You create instances of logger at different places and log the events. All these events will be logged in a single file.
 
 ```TypeScript
 
@@ -347,7 +347,9 @@ However, in a multithreaded environment, this can create multiple instances if a
 
 > Prototype is a creational design pattern that lets you copy existing objects without making your code dependent on their classes.
 
-## Real life example
+## Real-life example
+
+Ever been to a restaurant you do not go to and you see someone order something that looks delicious and you tell the server that you want the same thing? You don't know what's it details are, it just looks delicious to you and you ask the server to make the same dish for you. This is similar to a prototype design pattern.
 
 ![image](https://i.imgur.com/ZMlqkN7.png)
 
