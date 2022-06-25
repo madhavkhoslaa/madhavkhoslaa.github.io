@@ -1,7 +1,7 @@
 ---
 title: "Creational Design Patterns: My lessons on it"
 date: 2022-06-24T02:01:58+05:30
-draft: true
+draft: false
 description: "Creational design patterns aid in the instantiation of objects by providing suitable abstractions and make the systems independent of how objects are created composed and represented."
 tags:
   [
@@ -19,21 +19,33 @@ tags:
 
 > [Creational design patterns provide various object creation mechanisms, which increase flexibility and reuse of existing code](https://refactoring.guru/design-patterns/creational-patterns).
 
+# Why were they made and why should you care about reading them?
+
+You must have noticed in a larger code base where multiple classes dealing with the class instantiation becomes too hard, in fact in the case of languages like java where the ecosystem expects everything to be a class; a framework called spring had been developed to solve the problem of instantiating classes(and so much more). So you get the scope of the problem of just the creation of objects.
+
 Creational design patterns aid in the instantiation of objects by providing suitable abstractions and make the systems independent of how objects are created composed and represented.
 
 They are important when a system grows large and require how objects are constructed rather than what objects are constructed. They are a step above a normal hardcoded instantiation like `const instance = new SomeClass()`
 
 ![image](https://i.imgur.com/dmLLnXo.jpeg)
 
+---
+
 # The Builder Design Pattern
 
 > Builder is a creational design pattern that lets you construct complex objects step by step. The pattern allows you to produce different types and representations of an object using the same construction code.
 
-The Problem: Have you encountered a situation where a class requires so many arguments to be instantiated and some of them are optional too? The instantiation usually goes something like this `const instance = new ClassA(arg1, arg2? arg3, arg4, arg5, arg6)`; and you can relate how easy it is to forget the order of the arguments and what arguments the class requires in the first place. So there is a clear problem of the constructor being too large and complex, there can also be situations where the constructors are overloaded many times as well leading to even more confusion.
+## Real-life example
 
-Proposal: How about you create a method where you pass in arguments in a more visual way, such that you are aware of what you are passing and such that they provide an easy way to construct objects.
+Have you ever been to an ice cream parlor where you are handed a sheet of paper and you tick on stuff and then create that ice cream for you? Or if not it's similar to a subway shop where you select what you want in the sandwich. The kind of bread you want, and the kind of sauce are just the parameters you pass onto the sandwhich class or the ice cream class.
 
-How: You create multiple static variables holding values for the variables you are going to pass in the constructor, you create setter methods for these static variables with static methods, and create a `getInstance` method where you pass in the static variables and return an instance of the class. You can also choose to keep the constructor private if you want your instantiation only from the builder static methods.
+![image](https://i.imgur.com/Zh02EM4.png)
+
+**_The Problem_**: Have you encountered a situation where a class requires so many arguments to be instantiated and some of them are optional too? The instantiation usually goes something like this `const instance = new ClassA(arg1, arg2? arg3, arg4, arg5, arg6)`; and you can relate how easy it is to forget the order of the arguments and what arguments the class requires in the first place. So there is a clear problem of the constructor being too large and complex, there can also be situations where the constructors are overloaded many times as well leading to even more confusion.
+
+**_Proposal_**: How about you create a method where you pass in arguments in a more visual way, such that you are aware of what you are passing and such that they provide an easy way to construct objects.
+
+**_How_**: You create multiple static variables holding values for the variables you are going to pass in the constructor, you create setter methods for these static variables with static methods, and create a `getInstance` method where you pass in the static variables and return an instance of the class. You can also choose to keep the constructor private if you want your instantiation only from the builder static methods.
 
 > Builder methods provide a piecewise construction of an object
 
@@ -110,15 +122,23 @@ While studying builder design patterns, I was able to create methods to generate
 
 ![image](https://i.imgur.com/zurY13J.png)
 
+---
+
 # Factory Design Pattern
 
 > Factory Method is a creational design pattern that provides an interface for creating objects in a superclass but allows subclasses to alter the type of objects that will be created.
 
-The Problem: Sometimes there are a lot of objects of the same type and kind that have to be created and sometimes those objects can be builder classes too and the instantiation of a builder object is too ceremonial, piecewise, and takes time. To tackle this problem of creating objects piecewise; factory design patterns were made to create objects in a wholesale manner. You just invoke a particular function with a verbose name of what object you want and get the instance of the object. For example, if you have a builder class for cars, you gave call a lot of methods to just create an instance, but in the case of a factory design, you can create a function with an appropriate name that returns the same object every time you invoke it.
+## Real-life example
 
-Proposal: You create an abstraction where you receive objects of the same type base on what function you call, this abstraction sends the same interface but different implementations of the same interface, so you are not aware of all of the exact classes, just the interfaces.
+Remember how we had the option to create a custom ice cream in the builder design pattern? It might be daunting for you to think about what you want at the store or maybe seeing so many options makes you anxious? If that's so; you order something from the menu itself, you don't have to talk to the server and just tell him what you want without telling him the specifics of what you want. An example of this is just the menu.
 
-How: You create a class "called the factory class" and static methods. These static methods have to be verbose enough to tell you what kind of an object they are returning, and that's how you build a factory class.
+![image](https://i.imgur.com/NGvd6bS.png)
+
+**_The Problem_**: Sometimes there are a lot of objects of the same type and kind that have to be created and sometimes those objects can be builder classes too and the instantiation of a builder object is too ceremonial, piecewise, and takes time. To tackle this problem of creating objects piecewise; factory design patterns were made to create objects in a wholesale manner. You just invoke a particular function with a verbose name of what object you want and get the instance of the object. For example, if you have a builder class for cars, you gave call a lot of methods to just create an instance, but in the case of a factory design, you can create a function with an appropriate name that returns the same object every time you invoke it.
+
+**_Proposal_**: You create an abstraction where you receive objects of the same type base on what function you call, this abstraction sends the same interface but different implementations of the same interface, so you are not aware of all of the exact classes, just the interfaces.
+
+**_How_**: You create a class "called the factory class" and static methods. These static methods have to be verbose enough to tell you what kind of an object they are returning, and that's how you build a factory class.
 
 ## Code Example
 
@@ -167,15 +187,22 @@ console.log(WinButton.click())
 
 Here there is a single interface called the `Button` and two classes `MacOS` and `Windows` implement that interface. Depending on what instance you want from the factory interface you can get it from the factory class. For Example `const MacButton = ButtonFactory.getMacOsButton("Called from factory")`
 
+---
+
 # Abstract Factory Design Pattern
 
 > Abstract Factory is a creational design pattern that lets you produce families of related objects without specifying their concrete classes.
 
-The Problem: Now in the above example of buttons, there was a separation based on OS. But imagine in a case of a framework, where there are buttons, alerts, input boxes, and so many things. The call can differ based on the OS they are on. Now imagine you as a developer instantiating a MacOS button, Alert and Windows button, Alert from the class itself; it would be tedious, wouldn't it? To tackle this problem of
+## Real-life example
 
-Proposal: Provide abstraction of creation of classes without exposing the classes themselves. Provide interfaces to provide factories then build objects through them.
+In India, a lot of restaurants have different types of cuisines and then they are divided by the region and then the type. The first layer of selection(the cuisine) provides the second layer of selection(the type of dish) and then comes to the dishes themselves. This is an example of the abstract factory design pattern.
+![image](https://i.imgur.com/cIbQG0p.png)
 
-How: Create a top factory class, and create methods to return sub-factory classes that return the final objects.
+**_The Problem_**: Now in the above example of buttons, there was a separation based on OS. But imagine in a case of a framework, where there are buttons, alerts, input boxes, and so many things. The call can differ based on the OS they are on. Now imagine you as a developer instantiating a MacOS button, Alert and Windows button, Alert from the class itself; it would be tedious, wouldn't it? To tackle this problem of
+
+**_Proposal_**: Provide abstraction of creation of classes without exposing the classes themselves. Provide interfaces to provide factories then build objects through them.
+
+**_How_**: Create a top factory class, and create methods to return sub-factory classes that return the final objects.
 
 ## Code Example
 
@@ -254,19 +281,26 @@ Here we wanted to create an alert on the macOS, hence from the `UIFactory`, we c
 
 You could also argue if the UI factory should be returning a `MacOSFactory` and `WindowsFactory` with their respective implementations, which is a correct implementation too.
 
+---
+
 # Singleton Design Pattern
 
 > Singleton is a creational design pattern, which ensures that only one object of its kind exists and provides a single point of access to it for any other code.
 
-The Problem: In some scenarios you only want one instance of a class to be present, for example, you have a class that opens a session to the DB and you pass in query strings to it to receive objects. If this object were to be instantiated multiple times in a lifecycle of a program then there will be many connections open in the DB.
+## Real-life example
 
-Proposal: You create an instance of the class and abstraction to get the instance of the class. That abstraction only returns a single instance of the class always.
+Imagine a situation you and your friends order a really large sundae and eat it together. Throughout the lifecycle of that ice cream (until it melts or you eat it), it remains singular and you and your friends consume it. This single large sundae is a singleton.
+![image](https://i.imgur.com/Pm4Nqsy.png)
 
-How: You create a class with a private constructor, and you create a static method called `getInstance` or something similar. On invoking that function set a static variable of the class with the new instance and return the same instance every time that function is called.
+**_The Problem_**: In some scenarios you only want one instance of a class to be present, for example, you have a class that opens a session to the DB and you pass in query strings to it to receive objects. If this object were to be instantiated multiple times in a lifecycle of a program then there will be many connections open in the DB.
+
+**_Proposal_**: You create an instance of the class and abstraction to get the instance of the class. That abstraction only returns a single instance of the class always.
+
+**_How_**: You create a class with a private constructor, and you create a static method called `getInstance` or something similar. On invoking that function set a static variable of the class with the new instance and return the same instance every time that function is called.
 
 ## Code Example
 
-For example, you want to log events in a log file, You want to log a string when some function is called or when some event occurs. Yo
+For example, you want to log events in a log file, You want to log a string when some function is called or when some event occurs. You create instances of logger at different places and log the events. All these events will be logged in a single file.
 
 ```TypeScript
 
@@ -276,7 +310,7 @@ class LogFileWriter{
     private __dirname: string = "./logs"
     private filename: string = "log.txr"
     private constructor(){
-        session =
+        session = open.file(__dirname, filename)
     }
     write(log: string){
         writeFileSync(join(this.__dirname, this.filename), log, {
@@ -307,15 +341,23 @@ The `getLogger` method on the first call creates the instance of the `LogFileWri
 
 However, in a multithreaded environment, this can create multiple instances if a single thread has a different execution context than the current one.
 
+---
+
 # Prototype Design Pattern
 
 > Prototype is a creational design pattern that lets you copy existing objects without making your code dependent on their classes.
 
-The Problem: For example every time you create an instance of a class, there is a large blocking operation that takes place in the constructor of the class(Maybe a DB call or a large file read) that happens every time you create an instance, it's better the next time you create the instance, you could somehow use the same data from the old instance. The prototype design pattern solves this problem by providing objects with a clone method, to copy their values to other objects.
+## Real-life example
 
-Proposal: Provide an object cloning method to the class so that a `.clone()` method will return the copy of the object. I have here created a shallow and deep clone for shallow and deep copies.
+Ever been to a restaurant you do not go to and you see someone order something that looks delicious and you tell the server that you want the same thing? You don't know what's it details are, it just looks delicious to you and you ask the server to make the same dish for you. This is similar to a prototype design pattern.
 
-How: Create an abstract class for the prototype design pattern, create a generic logic for cloning and extend all the classes with that abstract class where you want them to have cloning methods.
+![image](https://i.imgur.com/ZMlqkN7.png)
+
+**_The Problem_**: For example every time you create an instance of a class, there is a large blocking operation that takes place in the constructor of the class(Maybe a DB call or a large file read) that happens every time you create an instance, it's better the next time you create the instance, you could somehow use the same data from the old instance. The prototype design pattern solves this problem by providing objects with a clone method, to copy their values to other objects.
+
+**_Proposal_**: Provide an object cloning method to the class so that a `.clone()` method will return the copy of the object. I have here created a shallow and deep clone for shallow and deep copies.
+
+**_How_**: Create an abstract class for the prototype design pattern, create a generic logic for cloning and extend all the classes with that abstract class where you want them to have cloning methods.
 
 ## Code Example
 
@@ -360,5 +402,7 @@ DB { ARR: [ '-1', '2' ] }
 ## Code Explanation
 
 Here the base abstract class provides a `DeepCopy` and a `ShallowCopy` methods and the classes that extend them can use these methods to copy objects to other variables.
+
+---
 
 ---
