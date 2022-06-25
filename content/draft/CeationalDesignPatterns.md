@@ -310,7 +310,7 @@ class LogFileWriter{
     private __dirname: string = "./logs"
     private filename: string = "log.txr"
     private constructor(){
-        session =
+        session = open.file(__dirname, filename)
     }
     write(log: string){
         writeFileSync(join(this.__dirname, this.filename), log, {
