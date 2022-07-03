@@ -89,7 +89,7 @@ fn main(){
 ```rust
 fn main(){
     let madhav = String::from("Madhav's Laptop");
-    // Madhav is the owner and he owns the string value";
+    // Madhav is the owner and he owns the string "Madhav's Laptop";
     let diya = madhav;
     println!("Diya = {}, Madhav = {}", madhav, diya);
 }
@@ -135,7 +135,7 @@ in other languages, b might copy the value of a or point to the same location as
 ```rust
 fn main(){
     let madhav = String::from("Madhav's Laptop");
-    // Madhav is the owner and he owns the string value";
+    // Madhav is the owner and he owns the string "Madhav's Laptop";
     let diya = &madhav;
     println!("Diya = {}, Madhav = {}", madhav, diya);
 }
@@ -160,7 +160,7 @@ Diya = Madhav's Laptop, Madhav = Madhav's Laptop
 ```rust
 fn main(){
     let madhav = String::from("Madhav's Laptop");
-    // Madhav is the owner and he owns the string value";
+    // Madhav is the owner and he owns the string "Madhav's Laptop";
     let madhav = overclock_laptop(madhav);
     println!("{}", madhav)
 
