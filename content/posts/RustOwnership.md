@@ -17,8 +17,6 @@ tags:
   ]
 ---
 
-![image](images/153703460-abef6aa8-3c79-42e5-99e1-db02876f4c68.png)
-
 Ownership is one of the features that make it different than so many programming languages and what makes it memory safe and a good language for concurrent programming. It solves problems like null pointers, dangling pointers and data races without a garbage collector at the run time.
 
 # Understanding Rust Ownership
