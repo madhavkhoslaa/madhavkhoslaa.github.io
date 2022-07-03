@@ -180,7 +180,7 @@ Madhav's Cat's Trimmed
 
 This code works fine, but there's a tiny inconvenience here. The inconvenience is that we have to pass around ownership from functions to variables again and again at our point you will have to return tuples and it can get messy.
 
-## Borrowing in function
+### Borrowing in function
 
 Here we create a mutable variable `madhav` we pass in the mutable reference to the function `trim_cat`, where the variable is mutated, Notice here we did not have to switch ownership multiple times, since the function borrowed the value once and it got reflected in the variable in the function main.
 
