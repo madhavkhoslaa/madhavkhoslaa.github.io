@@ -2,7 +2,7 @@
 title: "Understanding Rust Ownership"
 date: 2022-07-03T02:01:58+05:30
 draft: false
-description: "Ownership is one of the features that make it different than so many programming languages and what makes it memory safe and a good language for concurrent programming. It solves problems like null pointers, dangling pointers and data races."
+description: "Ownership is one of the features that make it different than so many programming languages and what makes it memory safe and a good language for concurrent programming. It solves problems like null pointers, dangling pointers, and data races."
 tags:
   [
     "Rust",
@@ -17,7 +17,7 @@ tags:
   ]
 ---
 
-Ownership is one of the features that make it different than so many programming languages and what makes it memory safe and a good language for concurrent programming. It solves problems like null pointers, dangling pointers and data races without a garbage collector at the run time.
+Ownership is one of the features that make it different than so many programming languages and what makes it memory safe and a good language for concurrent programming. It solves problems like null pointers, dangling pointers, and data races without a garbage collector at the run time.
 
 # Understanding Rust Ownership
 
@@ -205,6 +205,6 @@ Cat's Trimmed
 
 1. String
 2. Vector
-3. Structs - A `struct` could have alot of fields and making a decision to copy the values would be cost inefficient and a borrowed reference will be better..
+3. Structs - A `struct` could have a lot of fields and deciding to copy the values would be cost-inefficient and a borrowed reference will be better.
 
 ---
