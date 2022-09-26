@@ -1,5 +1,5 @@
 ---
-title: "Functional Programming in Rust"
+title: "Functional Programming in Rust 1: Closures"
 date: 2022-09-14T02:01:58+05:30
 draft: false
 description: ""
@@ -226,5 +226,24 @@ After calling closure: [1, 2, 3, 4]
 ---
 
 
-# Moving capured values ouu of fn traits
+# Moving capured values out of fn traits
 
+So, once a value or a refrence has been passed to the closure, The closure decides what happens with it.
+It could use the value once and drop it, mutate the value or can take refrences to a value and do all of these.
+
+Why do we have to do this ?
+Since Rust has this philosophy of all errors being compile time errors and not runtime errors, we need to know how the values are being handled inside the closure so that in the runtime we do not get any UBs.
+
+This defines three types of closures traits when they are passes in functions or in structs.
+1. `FnOnce` -> Uses the value which is passed in it and drops it
+2. `FnMut` -> It can modify the passed values
+3. `Fn` -> Can take any refrence
+
+
+## Example of `FnOnce`
+
+
+## Example of `FnMut`
+
+
+## Example of `Fn`
