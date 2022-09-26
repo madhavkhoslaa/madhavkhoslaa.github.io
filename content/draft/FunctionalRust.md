@@ -14,7 +14,7 @@ tags:
     Blazingly Fast
   ]
 ---
-![image](https://i.imgur.com/B6XmCCS.png)
+![image](https://i.imgur.com/y0nqC0G.jpg)
 
 
 # What is Functional Programming ?
@@ -127,4 +127,104 @@ We cacn observe here that variable b is accessable inside of closure a, so we ca
 ## Phew, alot of stuff to learn. Let's break down what I wrote down
 1. Closures are funtions that are inside a function and hence share the same scope as the parent function.
 2. The are "Pythonic" in a way that they do not need type signatures but instead the compiler gives it a signature based off the type of arguments on the first call.
+
+# Moving values inside closures.
+
+If you're reading this blog I expect you to know what a move in rust is. If you don't you can read [this](https://doc.rust-lang.org/book/ch04-00-understanding-ownership.html).
+
+So there are three ways of moving values into closues.
+
+1. Immutable immutable
+2. Mutable argument
+3. Borrowing
+
+## Example of Immutable arguments
+```rust
+fn main() {
+    let list = vec![1, 2, 3];
+    let only_borrows = |list| println!("From closure: {:?}", list);
+    println!("Before calling closure: {:?}", list);
+    only_borrows(list);
+    println!("After calling closure: {:?}", list);
+}
+```
+Output 
+
+```
+   Compiling playground v0.0.1 (/playground)
+error[E0382]: borrow of moved value: `list`
+ --> src/main.rs:8:45
+  |
+2 |     let list = vec![1, 2, 3];
+  |         ---- move occurs because `list` has type `Vec<i32>`, which does not implement the `Copy` trait
+...
+7 |     only_borrows(list);
+  |                  ---- value moved here
+8 |     println!("After calling closure: {:?}", list);
+  |                                             ^^^^ value borrowed here after move
+  |
+  = note: this error originates in the macro `$crate::format_args_nl` which comes from the expansion of the macro `println` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+For more information about this error, try `rustc --explain E0382`.
+error: could not compile `playground` due to previous error
+
+```
+
+### Explaination
+
+---
+## Example of Mutable arguments
+```rust
+fn main() {
+    let mut list = vec![1, 2, 3];
+    let only_borrows = |mut list: Vec<u8>| {
+    list.push(4);
+    println!("From closure: {:?}", list );
+    list
+    };
+    println!("Before calling closure: {:?}", list);
+    list = only_borrows(list);
+    println!("After calling closure: {:?}", list);
+}
+```
+Output 
+
+```
+Before calling closure: [1, 2, 3]
+From closure: [1, 2, 3, 4]
+After calling closure: [1, 2, 3, 4]
+```
+### Explaination
+
+---
+
+
+## Example of borowing
+```rust
+fn main() {
+    let mut list: Vec<u8> = vec![1, 2, 3];
+
+    let only_borrows = |list: &mut Vec<u8>| {
+    list.push(4);
+    println!("From closure: {:?}", list );
+    };
+    println!("Before calling closure: {:?}", list);
+    only_borrows(&mut list);
+    println!("After calling closure: {:?}", list);
+}
+```
+
+Output
+
+```
+Before calling closure: [1, 2, 3]
+From closure: [1, 2, 3, 4]
+After calling closure: [1, 2, 3, 4]
+```
+### Explaination
+
+---
+
+
+# Moving capured values ouu of fn traits
 
