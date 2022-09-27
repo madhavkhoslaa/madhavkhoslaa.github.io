@@ -17,9 +17,9 @@ tags:
 ![image](https://i.imgur.com/y0nqC0G.jpg)
 
 
-# What is Functional Programming ?
+# What is Functional Programming?
 
-It is a Programming Paradigm where you use functions to solve what you are building. Most common features that you might have used FP in any language will be Map and Reduce.
+It is a Programming Paradigm where you use functions to solve what you are building. The most common features that you might have used FP in any language will be Map and Reduce.
 Where you pass in a function what iterates in the collection you run map or reduce on.
 
 Rust has some functional features too that I plan to write here.
@@ -34,18 +34,18 @@ Let's see what MDN has to say(even though it is JS).
 
 ## What information can we take from this statement?
 1. It is a function that is inside a function
-2. The inner function shares the same enviorment as the outer function.
+2. The inner function shares the same environment as the outer function.
 
-## What information we can conclude from this statement ?
-1. The variables defined in the outer function are accessable in the inner function.
+## What information we can conclude from this statement?
+1. The variables defined in the outer function are accessible in the inner function.
 
-There is alot of information that is left here in context of rust, but hold on for a while :D
+There is a lot of information that is left here in the context of rust, but hold on for a while :D
 
 # Syntax for closure in Rust.
 
-Take a look carefully on how you can create closures in rust. 
+Take a look carefully at how you can create closures in rust. 
 
-1. You give no typpe signatures for the formal arguments.
+1. You give no type signatures for the formal arguments.
 ```rust
 let a = |arg| arg + 1;
 ```
@@ -59,13 +59,13 @@ let a = |arg: u8| arg + 1;
 let a = |arg: u8| -> u8 {arg + 1} 
 ```
 
-So closures in rust are kind of "Pythonic" in a way where you can choose to give function type signatures, Right ? Yes, but to an extent. Look at this example
+So closures in rust are kind of "Pythonic" in a way where you can choose to give function type signatures, Right? Yes, but to an extent. Look at this example
 
 ## Playing with Closures !!!!
 ```rust
 fn main() {
     let example = |arg| arg + 10;
-    //  ^ This closure has no types for the arg, it just adds 10 to any type that supports addition(We can assume the minimum requirment of the type here)
+    //  ^ This closure has no types for the arg, it just adds 10 to any type that supports addition(We can assume the minimum requirement of the type here)
     let x: usize = 10;
     let y: u8 = 11;
     example(x);
@@ -76,7 +76,7 @@ fn main() {
 ```
 You might expect this program to compile correctly and on runtime to print 21 and 21. 
 
-But we recieve a compile error.
+But we received a compile error.
 
 Output
 ```
@@ -101,9 +101,9 @@ help: you can convert a `u8` to a `usize`
 For more information about this error, try `rustc --explain E0308`.
 error: could not compile `playground` due to previous error
 ```
-When we disect the error(Rust has best errors btw) we see that on the second time the compiler says that "expected `usize` found `u8`" and then gives a suggestion.
+When we dissect the error(Rust has the best errors btw) we see that on the second time the compiler says that "expected `usize` found `u8`" and then gives a suggestion.
 
-So we learn that a closure takes the first arguments type and return type as the type signature of the closure.
+So we learn that closure takes the first arguments type and return type as the type signature of the closure.
 
 
 ## Playing with closures(again)
@@ -123,10 +123,10 @@ Output
 ```
 2
 ```
-We cacn observe here that variable b is accessable inside of closure a, so we can conclude that a closure shares the same scope as the parent.
-## Phew, alot of stuff to learn. Let's break down what I wrote down
-1. Closures are funtions that are inside a function and hence share the same scope as the parent function.
-2. The are "Pythonic" in a way that they do not need type signatures but instead the compiler gives it a signature based off the type of arguments on the first call.
+We can observe here that variable b is accessible inside of closure a, so we can conclude that a closure shares the same scope as the parent.
+## Phew, a lot of stuff to learn. Let's break down what I wrote down
+1. Closures are functions that are inside a function and hence share the same scope as the parent function.
+2. They are "Pythonic" in a way that they do not need type signatures but instead the compiler gives it a signature based on the type of arguments on the first call.
 
 # Moving values inside closures.
 
@@ -195,7 +195,7 @@ After calling closure: [1, 2, 3, 4]
 
 
 
-## Example of borowing
+## Example of borrowing
 ```rust
 fn main() {
     let mut list: Vec<u8> = vec![1, 2, 3];
@@ -220,25 +220,25 @@ After calling closure: [1, 2, 3, 4]
 
 
 
-# Moving capured values out of fn traits
+# Moving captured values out of fn traits
 
-So, once a value or a refrence has been passed to the closure, The closure decides what happens with it.
-It could use the value once and drop it, mutate the value or can take refrences to a value and do all of these.
+So, once a value or a reference has been passed to the closure, The closure decides what happens with it.
+It could use the value once and drop it, mutate the value or can take references to a value and do all of these.
 
-Why do we have to do this ?
-Since Rust has this philosophy of all errors being compile time errors and not runtime errors, we need to know how the values are being handled inside the closure so that in the runtime we do not get any UBs.
+Why do we have to do this?
+Since Rust has this philosophy of all errors being compiled time errors and not runtime errors, we need to know how the values are being handled inside the closure so that in the runtime we do not get any UBs.
 
-This defines three types of closures traits when they are passes in functions or in structs.
+This defines three types of closures traits when they are passed in functions or structs.
 1. `FnOnce` -> Uses the value which is passed in it and drops it
 2. `FnMut` -> It can modify the passed values
-3. `Fn` -> Can take any refrence
+3. `Fn` -> Can take any reference
 
 
 ## Example of `FnOnce`
 
 Consider the rust option enum. Rust option enum has a `unwrap_or_else` function that returns `Some` value or runs the closure to provide the value for. 
 
-Let's disect the code below. 
+Let's dissect the code below. 
 
 ```rust
 impl<T> Option<T> {
@@ -256,7 +256,7 @@ impl<T> Option<T> {
 
 ### Observations 
 
-1. The function return a type `T` which is the value held by the option enum
+1. The function returns a type `T` which is the value held by the option enum
 2. There is a trait bound `f` which is `FnOnce` and returns the same type as the enum. 
 
 So we see can conclude that we need to pass in a closure that takes in no arguments to `unwrap_or_else` and return the same value as the option and it has to run only once.
@@ -281,3 +281,22 @@ assert_eq!(friends, ["Sly", "Punchy", "Gladys", "Puddles", "Isabelle"]);
 ```
 
 ## Example of `Fn`
+
+```rust
+fn main() {
+fn call_with_one<F>(func: F) -> usize
+    where F: Fn(usize) -> usize {
+    func(1)
+}
+
+let double = |x| x * 2;
+let x = call_with_one(double);
+// Does not mutate the value, returns the double
+println!("{}",x);
+}
+```
+
+Output 
+```
+2
+```
