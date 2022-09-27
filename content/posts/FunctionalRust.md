@@ -1,6 +1,6 @@
 ---
 title: "Functional Programming in Rust 1: Closures"
-date: 2022-09-14T02:01:58+05:30
+date: 2022-09-27T02:01:58+05:30
 draft: false
 description: ""
 tags:
