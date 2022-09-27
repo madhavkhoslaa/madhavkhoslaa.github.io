@@ -2,7 +2,7 @@
 title: "Functional Programming in Rust 1: Closures"
 date: 2022-09-27T02:01:58+05:30
 draft: false
-description: ""
+description: "It is a Programming Paradigm where you use functions to solve what you are building. The most common features that you might have used FP in any language will be Map and Reduce. Where you pass in a function what iterates in the collection you run map or reduce on."
 tags:
   [
     Rust,
