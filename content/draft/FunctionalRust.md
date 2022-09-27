@@ -170,9 +170,7 @@ error: could not compile `playground` due to previous error
 
 ```
 
-### Explaination
 
----
 ## Example of Mutable arguments
 ```rust
 fn main() {
@@ -194,9 +192,7 @@ Before calling closure: [1, 2, 3]
 From closure: [1, 2, 3, 4]
 After calling closure: [1, 2, 3, 4]
 ```
-### Explaination
 
----
 
 
 ## Example of borowing
@@ -221,9 +217,7 @@ Before calling closure: [1, 2, 3]
 From closure: [1, 2, 3, 4]
 After calling closure: [1, 2, 3, 4]
 ```
-### Explaination
 
----
 
 
 # Moving capured values out of fn traits
@@ -242,8 +236,48 @@ This defines three types of closures traits when they are passes in functions or
 
 ## Example of `FnOnce`
 
+Consider the rust option enum. Rust option enum has a `unwrap_or_else` function that returns `Some` value or runs the closure to provide the value for. 
+
+Let's disect the code below. 
+
+```rust
+impl<T> Option<T> {
+    pub fn unwrap_or_else<F>(self, f: F) -> T
+    where
+        F: FnOnce() -> T
+    {
+        match self {
+            Some(x) => x,
+            None => f(),
+        }
+    }
+}
+```
+
+### Observations 
+
+1. The function return a type `T` which is the value held by the option enum
+2. There is a trait bound `f` which is `FnOnce` and returns the same type as the enum. 
+
+So we see can conclude that we need to pass in a closure that takes in no arguments to `unwrap_or_else` and return the same value as the option and it has to run only once.
 
 ## Example of `FnMut`
 
+```rust
+pub fn sort_by_key<T, F, K>(slice: &mut [T], key_fn: F) 
+where
+    F: FnMut(&T) -> K,
+    K: Key, 
+```
+
+
+```
+let mut friends = ["Punchy", "Isabelle", "Sly", "Puddles", "Gladys"];
+ 
+// sort by the length of the string in bytes
+radsort::sort_by_key(&mut friends, |s| s.len());
+ 
+assert_eq!(friends, ["Sly", "Punchy", "Gladys", "Puddles", "Isabelle"]);
+```
 
 ## Example of `Fn`
