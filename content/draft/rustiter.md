@@ -1,6 +1,6 @@
 ---
 title: "Functional Programming in Rust 2: Iterators"
-date: 2022-10-1T02:01:58+05:30
+date: 2022-09-28T23:01:35+05:30
 draft: false
 description: "Creational design patterns aid in the instantiation of objects by providing suitable abstractions and make the systems independent of how objects are created composed and represented."
 tags:
@@ -32,10 +32,17 @@ Imagine you are the pacman ghost and the representation of the pacman world is i
 ![image](https://i.imgur.com/5lF87Jv.png)
 
 ## Why did I highlight `next` ? | Let's talk Code.
+https://doc.rust-lang.org/stable/std/iter/
 
 
+```rust
 
+trait Iterator {
+    type Item;
+    fn next(&mut self) -> Option<Self::Item>;
+}
 
+```
 
 
 
