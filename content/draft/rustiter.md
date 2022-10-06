@@ -54,7 +54,24 @@ trait Iterator {
 
 Lazy Iterator example
 
+```rust
+fn main() {
+    let v: Vec<u8> = vec![1,2,3,4];
+    let vec_iter = v.iter();
+    for vec_val in vec_iter{
+        println!("{}", vec_val);
+    }
+}
+```
+Output
+```
+1
+2
+3
+4
+```
 # Producers of iterators
+
 
 
 # Consumers of iterators
