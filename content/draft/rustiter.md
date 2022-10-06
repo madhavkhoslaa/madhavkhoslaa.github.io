@@ -70,6 +70,25 @@ Output
 3
 4
 ```
+
+code
+
+```rust
+fn main() {
+    let mut v: Vec<u8> = vec![1,2,3,4];
+    println!("{:?}", v);
+    let vec_iter = v.iter_mut();
+    for vec_val in vec_iter{
+        *vec_val = *vec_val + 1;
+    }
+    println!("{:?}", v);
+}
+```
+Output
+```
+[1, 2, 3, 4]
+[2, 3, 4, 5]
+```
 # Producers of iterators
 
 
