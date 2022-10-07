@@ -98,7 +98,7 @@ An obvious question to this is how do you resolve these chained iterators to get
 </code></pre><h1 id=how-to-create-an-iterator-to-travers-a-tree-using-for-loopsa-thought-process>How to create an iterator to travers a tree using for loops(A thought process)</h1><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-rust data-lang=rust><span style=display:flex><span><span style=color:#75715e>// More than two derives
 </span></span></span><span style=display:flex><span><span style=color:#75715e>// generics
 </span></span></span><span style=display:flex><span><span style=color:#75715e>// Deref coersion
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span><span style=color:#75715e>#[derive(Debug)]</span>
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span><span style=color:#75715e>#[derive(Debug, Clone)]</span>
 </span></span><span style=display:flex><span><span style=color:#66d9ef>struct</span> <span style=color:#a6e22e>Node</span><span style=color:#f92672>&lt;</span>T<span style=color:#f92672>&gt;</span> {
 </span></span><span style=display:flex><span>    left: Option<span style=color:#f92672>&lt;</span>Box<span style=color:#f92672>&lt;</span>Node<span style=color:#f92672>&lt;</span>T<span style=color:#f92672>&gt;&gt;&gt;</span>,
 </span></span><span style=display:flex><span>    right: Option<span style=color:#f92672>&lt;</span>Box<span style=color:#f92672>&lt;</span>Node<span style=color:#f92672>&lt;</span>T<span style=color:#f92672>&gt;&gt;&gt;</span>,
@@ -107,7 +107,7 @@ An obvious question to this is how do you resolve these chained iterators to get
 </span></span><span style=display:flex><span>
 </span></span><span style=display:flex><span><span style=color:#66d9ef>struct</span> <span style=color:#a6e22e>PreTreeIterator</span><span style=color:#f92672>&lt;</span>T<span style=color:#f92672>&gt;</span> {
 </span></span><span style=display:flex><span>    head: <span style=color:#a6e22e>Node</span><span style=color:#f92672>&lt;</span>T<span style=color:#f92672>&gt;</span>,
-</span></span><span style=display:flex><span>    iter_list: Vec<span style=color:#f92672>&lt;</span>Node<span style=color:#f92672>&lt;</span>T<span style=color:#f92672>&gt;&gt;</span>,
+</span></span><span style=display:flex><span>    iter_list: Vec<span style=color:#f92672>&lt;</span>T<span style=color:#f92672>&gt;</span>,
 </span></span><span style=display:flex><span>}
 </span></span><span style=display:flex><span>
 </span></span><span style=display:flex><span><span style=color:#66d9ef>impl</span><span style=color:#f92672>&lt;</span>T<span style=color:#f92672>&gt;</span> PreTreeIterator<span style=color:#f92672>&lt;</span>T<span style=color:#f92672>&gt;</span> {
@@ -118,21 +118,12 @@ An obvious question to this is how do you resolve these chained iterators to get
 </span></span><span style=display:flex><span>        }
 </span></span><span style=display:flex><span>    }
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>    <span style=color:#66d9ef>pub</span> <span style=color:#66d9ef>fn</span> <span style=color:#a6e22e>generate_iter_list</span>(self, head: <span style=color:#a6e22e>Node</span><span style=color:#f92672>&lt;</span>T<span style=color:#f92672>&gt;</span>) {
-</span></span><span style=display:flex><span>        <span style=color:#66d9ef>let</span> <span style=color:#66d9ef>mut</span> curr <span style=color:#f92672>=</span> Some(Box::new(head));
-</span></span><span style=display:flex><span>        <span style=color:#66d9ef>match</span> curr {
-</span></span><span style=display:flex><span>            None <span style=color:#f92672>=&gt;</span> {}
-</span></span><span style=display:flex><span>            Some(val) <span style=color:#f92672>=&gt;</span> {
-</span></span><span style=display:flex><span>                <span style=color:#75715e>//PreOrder
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span>                <span style=color:#75715e>//Node
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span>                <span style=color:#75715e>//left
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span>                <span style=color:#75715e>//right
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span>                self.iter_list.push(val.clone());
-</span></span><span style=display:flex><span>                self.generate_iter_list(val.clone().left.unwrap());
-</span></span><span style=display:flex><span>                self.generate_iter_list(val.clone().right.unwrap());
-</span></span><span style=display:flex><span>            }
-</span></span><span style=display:flex><span>        }
-</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span><span style=color:#66d9ef>pub</span> <span style=color:#66d9ef>fn</span> <span style=color:#a6e22e>generate_iter_list</span>(<span style=color:#f92672>&amp;</span><span style=color:#66d9ef>mut</span> self, head: <span style=color:#a6e22e>Node</span><span style=color:#f92672>&lt;</span>T<span style=color:#f92672>&gt;</span>){
+</span></span><span style=display:flex><span>        self.iter_list.push(head.value);
+</span></span><span style=display:flex><span>        self.generate_iter_list(<span style=color:#f92672>*</span>head.left.unwrap());
+</span></span><span style=display:flex><span>        self.generate_iter_list(<span style=color:#f92672>*</span>head.right.unwrap());
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
 </span></span><span style=display:flex><span>}
 </span></span><span style=display:flex><span><span style=color:#75715e>// impl&lt;T&gt; Iterator for PreTreeIterator&lt;T&gt; {
 </span></span></span><span style=display:flex><span><span style=color:#75715e>//     Type Item = Type;
@@ -157,6 +148,7 @@ An obvious question to this is how do you resolve these chained iterators to get
 </span></span><span style=display:flex><span>        value: <span style=color:#ae81ff>1</span>,
 </span></span><span style=display:flex><span>    };
 </span></span><span style=display:flex><span>    println!(<span style=color:#e6db74>&#34;{:?}&#34;</span>, tree);
+</span></span><span style=display:flex><span>
 </span></span><span style=display:flex><span>    <span style=color:#75715e>// Node { left: Some(Node { left: None, right: Some(Node { left: None, right: None, value: 3 }), value: 2 }), right: Some(Node { left: None, right: None, value: 9 }), value: 1 }
 </span></span></span><span style=display:flex><span><span style=color:#75715e></span>}
 </span></span></code></pre></div><hr><p>Sources</p></section><div class=post-tags><nav class="nav tags"><ul class=tags><li><a href=/tags/design-patterns>Design Patterns</a></li><li><a href=/tags/iterator-design-pattern>Iterator Design Pattern</a></li><li><a href=/tags/rust>Rust</a></li><li><a href=/tags/blazingly-fast>Blazingly Fast</a></li><li><a href=/tags/loops>loops</a></li><li><a href=/tags/not-c++>Not C++</a></li></ul></nav></div></article></main><footer><div style=display:flex><a class=soc href=https://bit.ly/3Qyr87Y title=GitHub><i data-feather=github></i></a><a class=soc href=https://bit.ly/3Qtgn6y title=Twitter><i data-feather=twitter></i></a></div><div class=footer-info>2022 <a href=https://github.com/athul/archie>Archie Theme</a> | Built with <a href=https://gohugo.io>Hugo</a></div></footer><script>feather.replace()</script></div></body></html>
