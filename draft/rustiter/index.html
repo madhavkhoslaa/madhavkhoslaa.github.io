@@ -3,12 +3,11 @@
 <a href=/posts>All posts</a>
 <a href=/about>About</a>
 <a href=/draft>Draft</a>
-<a href=/tags>Tags</a></nav></header><main><article><div class=title><h1 class=title>Functional Programming in Rust 2: Iterators</h1><div class=meta>Posted on Sep 28, 2022</div></div><section class=body><h1 id=iterator-design-pattern-what-is-it->Iterator Design Pattern, What is it ?</h1><h2 id=example-1>Example 1</h2><p>Let&rsquo;s consider you are this tiny person in the image and you have too walk traverse the tree below. Ideally how you traverse it, it does not matter what is the most important thing is <strong>1.</strong> where you are and <strong>2.</strong> Where you want to be when you go to the <code>next</code> node.</p><p>So in a way an iterator design pattern(in real life) is a thought process of how you iterate a structure(not just a tree), or you knowing where you want(not how) to go <code>next</code>.</p><p>It is the way to decide if you go on the left node or the right, or the leaf node of the left subtree or the leaf node of the right most subtree but not how you do it.</p><p><img src=https://i.imgur.com/mWXRCUt.png alt=image></p><h2 id=example-2>Example 2</h2><p>Imagine you are the pacman ghost and the representation of the pacman world is in a graph. Which node you go to is dependant on where pacman is. Imagine you are on a <code>T</code> intersection and pacman is on thr right side of the T intersection. Then the <code>next</code> node you want to treverse is the right node.</p><p><img src=https://i.imgur.com/5lF87Jv.png alt=image></p><h2 id=why-did-i-highlight-next---lets-talk-code>Why did I highlight <code>next</code> ? | Let&rsquo;s talk Code.</h2><p><a href=https://doc.rust-lang.org/stable/std/iter/>https://doc.rust-lang.org/stable/std/iter/</a></p><h1 id=iter-trait>Iter trait</h1><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-rust data-lang=rust><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#66d9ef>trait</span> Iterator {
+<a href=/tags>Tags</a></nav></header><main><article><div class=title><h1 class=title>Functional Programming in Rust 2: Iterators</h1><div class=meta>Posted on Sep 28, 2022</div></div><section class=body><h1 id=iterator-design-pattern-what-is-it->Iterator Design Pattern, What is it ?</h1><h2 id=example-1>Example 1</h2><p>Let&rsquo;s consider you are this tiny person in the image and you have too walk traverse the tree below. Ideally how you traverse it, it does not matter what is the most important thing is <strong>1.</strong> where you are and <strong>2.</strong> Where you want to be when you go to the <code>next</code> node.</p><p>So in a way an iterator design pattern(in real life) is a thought process of how you iterate a structure(not just a tree), or you knowing where you want(not how) to go <code>next</code>.</p><p>It is the way to decide if you go on the left node or the right, or the leaf node of the left subtree or the leaf node of the right most subtree but not how you do it.</p><p><img src=https://i.imgur.com/mWXRCUt.png alt=image></p><h2 id=example-2>Example 2</h2><p>Imagine you are the pacman ghost and the representation of the pacman world is in a graph. Which node you go to is dependant on where pacman is. Imagine you are on a <code>T</code> intersection and pacman is on thr right side of the T intersection. Then the <code>next</code> node you want to treverse is the right node.</p><p><img src=https://i.imgur.com/5lF87Jv.png alt=image></p><h2 id=why-did-i-highlight-next---lets-talk-code>Why did I highlight <code>next</code> ? | Let&rsquo;s talk Code.</h2><p><a href=https://doc.rust-lang.org/stable/std/iter/>https://doc.rust-lang.org/stable/std/iter/</a></p><h1 id=iter-trait>Iter trait</h1><p>This</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-rust data-lang=rust><span style=display:flex><span><span style=color:#66d9ef>trait</span> Iterator {
 </span></span><span style=display:flex><span>    <span style=color:#66d9ef>type</span> <span style=color:#a6e22e>Item</span>;
 </span></span><span style=display:flex><span>    <span style=color:#66d9ef>fn</span> <span style=color:#a6e22e>next</span>(<span style=color:#f92672>&amp;</span><span style=color:#66d9ef>mut</span> self) -&gt; Option<span style=color:#f92672>&lt;</span>Self::Item<span style=color:#f92672>&gt;</span>;
 </span></span><span style=display:flex><span>}
-</span></span></code></pre></div><h1 id=iterators-in-rust>Iterators in Rust</h1><h2 id=iterating-a-list-using-iterators>Iterating a List using iterators</h2><p>Lazy Iterator example</p><h3 id=example-1-immutable-iterator>Example 1 (Immutable iterator)</h3><p>The value of next sends a refrence to the value in the data structure. In our case we create an instance of the iterator called <code>vec_iter</code>. Then use it to loop through out list. The iterator next trait is implemented in the <code>for in</code> loop in rust.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-rust data-lang=rust><span style=display:flex><span><span style=color:#66d9ef>fn</span> <span style=color:#a6e22e>main</span>() {
+</span></span></code></pre></div><p>I will talk about iter trait below in the blog once I get done with explaining how to use pre built iterators.</p><h1 id=iterators-in-rust>Iterators in Rust</h1><p>Lazy Iterator example</p><pre tabindex=0><code></code></pre><h2 id=iterating-a-list-using-iterators>Iterating a List using iterators</h2><p>Using laxy iterator to iterate</p><h3 id=example-1-immutable-iterator>Example 1 (Immutable iterator)</h3><p>The value of next sends a refrence to the value in the data structure. In our case we create an instance of the iterator called <code>vec_iter</code>. Then use it to loop through out list. The iterator next trait is implemented in the <code>for in</code> loop in rust.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-rust data-lang=rust><span style=display:flex><span><span style=color:#66d9ef>fn</span> <span style=color:#a6e22e>main</span>() {
 </span></span><span style=display:flex><span>    <span style=color:#66d9ef>let</span> v: Vec<span style=color:#f92672>&lt;</span><span style=color:#66d9ef>u8</span><span style=color:#f92672>&gt;</span> <span style=color:#f92672>=</span> vec![<span style=color:#ae81ff>1</span>,<span style=color:#ae81ff>2</span>,<span style=color:#ae81ff>3</span>,<span style=color:#ae81ff>4</span>];
 </span></span><span style=display:flex><span>    <span style=color:#66d9ef>let</span> vec_iter <span style=color:#f92672>=</span> v.iter();
 </span></span><span style=display:flex><span>    <span style=color:#66d9ef>for</span> vec_val <span style=color:#66d9ef>in</span> vec_iter{
@@ -44,5 +43,113 @@ An obvious question to this is how do you resolve these chained iterators to get
 </span></span><span style=display:flex><span>    <span style=color:#75715e>// Divides all number by 2 into a u8 then adds 10 to everything. Then filters out even numbers
 </span></span></span><span style=display:flex><span><span style=color:#75715e></span>    println!(<span style=color:#e6db74>&#34;{:?}&#34;</span>, vec2);
 </span></span><span style=display:flex><span>}
-</span></span></code></pre></div><h1 id=the-three-forms-of-iteration>The three forms of iteration</h1><ol><li>iter(), which iterates over &T.</li><li>iter_mut(), which iterates over &mut T.</li><li>into_iter(), which iterates over T.</li></ol><h1 id=using-iter-trait-to-create-own-iterator-for-our-data-struct>Using Iter trait to create own iterator for our data struct</h1><p>1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15
-We want out iter to return us only odd values in a DS</p><h1 id=how-to-create-an-iterator-to-travers-a-tree-using-for-loops>How to create an iterator to travers a tree using for loops</h1></section><div class=post-tags><nav class="nav tags"><ul class=tags><li><a href=/tags/design-patterns>Design Patterns</a></li><li><a href=/tags/iterator-design-pattern>Iterator Design Pattern</a></li><li><a href=/tags/rust>Rust</a></li><li><a href=/tags/blazingly-fast>Blazingly Fast</a></li><li><a href=/tags/loops>loops</a></li><li><a href=/tags/not-c++>Not C++</a></li></ul></nav></div></article></main><footer><div style=display:flex><a class=soc href=https://bit.ly/3Qyr87Y title=GitHub><i data-feather=github></i></a><a class=soc href=https://bit.ly/3Qtgn6y title=Twitter><i data-feather=twitter></i></a></div><div class=footer-info>2022 <a href=https://github.com/athul/archie>Archie Theme</a> | Built with <a href=https://gohugo.io>Hugo</a></div></footer><script>feather.replace()</script></div></body></html>
+</span></span></code></pre></div><h1 id=the-three-forms-of-iteration>The three forms of iteration</h1><ol><li>iter(), which iterates over &T.</li><li>iter_mut(), which iterates over &mut T.</li><li>into_iter(), which iterates over T.</li></ol><h1 id=revisiting-the-iter-trait>Revisiting the Iter trait</h1><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-rust data-lang=rust><span style=display:flex><span><span style=color:#66d9ef>trait</span> Iterator {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>type</span> <span style=color:#a6e22e>Item</span>;
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>fn</span> <span style=color:#a6e22e>next</span>(<span style=color:#f92672>&amp;</span><span style=color:#66d9ef>mut</span> self) -&gt; Option<span style=color:#f92672>&lt;</span>Self::Item<span style=color:#f92672>&gt;</span>;
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>calling next will return a <code>Option&lt;Self::item></code> as long as there are elements in the collection.</p><h1 id=example-of-implementing-iter-trait-to-create-own-iterator-for-our-data-structure>Example of implementing Iter trait to create own iterator for our data structure.</h1><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-rust data-lang=rust><span style=display:flex><span><span style=color:#66d9ef>struct</span> <span style=color:#a6e22e>Counter</span> {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>pub</span> limit: <span style=color:#66d9ef>usize</span>,
+</span></span><span style=display:flex><span>    count: <span style=color:#66d9ef>usize</span>,
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>impl</span> Counter {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>fn</span> <span style=color:#a6e22e>new</span>(limit: <span style=color:#66d9ef>usize</span>) -&gt; <span style=color:#a6e22e>Counter</span> {
+</span></span><span style=display:flex><span>        Counter {
+</span></span><span style=display:flex><span>            limit,
+</span></span><span style=display:flex><span>            count: <span style=color:#ae81ff>0</span>
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span><span style=color:#66d9ef>impl</span> Iterator <span style=color:#66d9ef>for</span> Counter {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>type</span> <span style=color:#a6e22e>Item</span> <span style=color:#f92672>=</span> <span style=color:#66d9ef>usize</span>;
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>fn</span> <span style=color:#a6e22e>next</span>(<span style=color:#f92672>&amp;</span><span style=color:#66d9ef>mut</span> self) -&gt; Option<span style=color:#f92672>&lt;</span>Self::Item<span style=color:#f92672>&gt;</span>{
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>if</span> self.count <span style=color:#f92672>&lt;=</span> self.limit {
+</span></span><span style=display:flex><span>            self.count <span style=color:#f92672>+=</span> <span style=color:#ae81ff>1</span>;
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>return</span> Some(self.count);
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>        None
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span><span style=color:#66d9ef>fn</span> <span style=color:#a6e22e>main</span>() {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>let</span> <span style=color:#66d9ef>mut</span> c <span style=color:#f92672>=</span> Counter::new(<span style=color:#ae81ff>10</span>);
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>let</span> <span style=color:#66d9ef>mut</span> start <span style=color:#f92672>=</span> Some(<span style=color:#ae81ff>0</span>);
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>loop</span> {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>if</span> start <span style=color:#f92672>==</span> None {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>break</span>;
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>        println!(<span style=color:#e6db74>&#34;{}&#34;</span>, start.unwrap());
+</span></span><span style=display:flex><span>        start <span style=color:#f92672>=</span> c.next();
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>Output</p><pre tabindex=0><code>0
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+</code></pre><h1 id=how-to-create-an-iterator-to-travers-a-tree-using-for-loopsa-thought-process>How to create an iterator to travers a tree using for loops(A thought process)</h1><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-rust data-lang=rust><span style=display:flex><span><span style=color:#75715e>#[derive(Debug)]</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>struct</span> <span style=color:#a6e22e>Node</span><span style=color:#f92672>&lt;</span>T<span style=color:#f92672>&gt;</span> {
+</span></span><span style=display:flex><span>    left: Option<span style=color:#f92672>&lt;</span>Box<span style=color:#f92672>&lt;</span>Node<span style=color:#f92672>&lt;</span>T<span style=color:#f92672>&gt;&gt;&gt;</span>,
+</span></span><span style=display:flex><span>    right: Option<span style=color:#f92672>&lt;</span>Box<span style=color:#f92672>&lt;</span>Node<span style=color:#f92672>&lt;</span>T<span style=color:#f92672>&gt;&gt;&gt;</span>,
+</span></span><span style=display:flex><span>    value: <span style=color:#a6e22e>T</span>,
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>struct</span> <span style=color:#a6e22e>PreTreeIterator</span><span style=color:#f92672>&lt;</span>T<span style=color:#f92672>&gt;</span> {
+</span></span><span style=display:flex><span>    head: <span style=color:#a6e22e>Node</span><span style=color:#f92672>&lt;</span>T<span style=color:#f92672>&gt;</span>,
+</span></span><span style=display:flex><span>    iter_list: Vec<span style=color:#f92672>&lt;</span>Node<span style=color:#f92672>&lt;</span>T<span style=color:#f92672>&gt;&gt;</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>impl</span> PreTreeIterator<span style=color:#f92672>&lt;</span>T<span style=color:#f92672>&gt;</span>{
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>pub</span> <span style=color:#66d9ef>fn</span> <span style=color:#a6e22e>new</span>(head: <span style=color:#a6e22e>Node</span><span style=color:#f92672>&lt;</span>T<span style=color:#f92672>&gt;</span>) {
+</span></span><span style=display:flex><span>        self.head <span style=color:#f92672>=</span> head;
+</span></span><span style=display:flex><span>        self.iter_list <span style=color:#f92672>=</span> vec![];
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>pub</span> <span style=color:#66d9ef>fn</span> <span style=color:#a6e22e>generate_iter_list</span>(<span style=color:#f92672>&amp;</span>self, head: <span style=color:#a6e22e>Node</span><span style=color:#f92672>&lt;</span>T<span style=color:#f92672>&gt;</span>) {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>let</span> <span style=color:#66d9ef>mut</span> curr <span style=color:#f92672>=</span> Some(Box::new(head));
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>match</span> curr {
+</span></span><span style=display:flex><span>            None <span style=color:#f92672>=&gt;</span> {},
+</span></span><span style=display:flex><span>            Some(val) <span style=color:#f92672>=&gt;</span> {
+</span></span><span style=display:flex><span>                <span style=color:#75715e>//PreOrder
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>                <span style=color:#75715e>//Node
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>                <span style=color:#75715e>//left
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>                <span style=color:#75715e>//right
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>                self.iter_list.add(val);
+</span></span><span style=display:flex><span>                generate_iter_list(<span style=color:#f92672>&amp;</span>self, val.next);
+</span></span><span style=display:flex><span>                generate_iter_list(<span style=color:#f92672>&amp;</span>self, val.right);
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span><span style=color:#66d9ef>impl</span> Iterator <span style=color:#66d9ef>for</span> PreTreeIterator<span style=color:#f92672>&lt;</span>T<span style=color:#f92672>&gt;</span> {
+</span></span><span style=display:flex><span>    Type Item <span style=color:#f92672>=</span> T;
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>fn</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span><span style=color:#66d9ef>fn</span> <span style=color:#a6e22e>main</span>() {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>let</span> tree <span style=color:#f92672>=</span> Node::<span style=color:#f92672>&lt;</span><span style=color:#66d9ef>u8</span><span style=color:#f92672>&gt;</span> {
+</span></span><span style=display:flex><span>        left: Some(Box::new(Node::<span style=color:#f92672>&lt;</span><span style=color:#66d9ef>u8</span><span style=color:#f92672>&gt;</span> {
+</span></span><span style=display:flex><span>            left: None,
+</span></span><span style=display:flex><span>            right: Some(Box::new(Node::<span style=color:#f92672>&lt;</span><span style=color:#66d9ef>u8</span><span style=color:#f92672>&gt;</span> {
+</span></span><span style=display:flex><span>                left: None,
+</span></span><span style=display:flex><span>                right: None,
+</span></span><span style=display:flex><span>                value: <span style=color:#ae81ff>3</span>,
+</span></span><span style=display:flex><span>            })),
+</span></span><span style=display:flex><span>            value: <span style=color:#ae81ff>2</span>
+</span></span><span style=display:flex><span>        })),
+</span></span><span style=display:flex><span>        right: Some(Box::new(Node::<span style=color:#f92672>&lt;</span><span style=color:#66d9ef>u8</span><span style=color:#f92672>&gt;</span>{
+</span></span><span style=display:flex><span>            left: None,
+</span></span><span style=display:flex><span>            right: None,
+</span></span><span style=display:flex><span>            value: <span style=color:#ae81ff>9</span>
+</span></span><span style=display:flex><span>        })),
+</span></span><span style=display:flex><span>        value: <span style=color:#ae81ff>1</span>,
+</span></span><span style=display:flex><span>    };
+</span></span><span style=display:flex><span>    println!(<span style=color:#e6db74>&#34;{:?}&#34;</span>, tree);
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// Node { left: Some(Node { left: None, right: Some(Node { left: None, right: None, value: 3 }), value: 2 }), right: Some(Node { left: None, right: None, value: 9 }), value: 1 }
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>}
+</span></span></code></pre></div></section><div class=post-tags><nav class="nav tags"><ul class=tags><li><a href=/tags/design-patterns>Design Patterns</a></li><li><a href=/tags/iterator-design-pattern>Iterator Design Pattern</a></li><li><a href=/tags/rust>Rust</a></li><li><a href=/tags/blazingly-fast>Blazingly Fast</a></li><li><a href=/tags/loops>loops</a></li><li><a href=/tags/not-c++>Not C++</a></li></ul></nav></div></article></main><footer><div style=display:flex><a class=soc href=https://bit.ly/3Qyr87Y title=GitHub><i data-feather=github></i></a><a class=soc href=https://bit.ly/3Qtgn6y title=Twitter><i data-feather=twitter></i></a></div><div class=footer-info>2022 <a href=https://github.com/athul/archie>Archie Theme</a> | Built with <a href=https://gohugo.io>Hugo</a></div></footer><script>feather.replace()</script></div></body></html>
