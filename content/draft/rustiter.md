@@ -36,24 +36,26 @@ https://doc.rust-lang.org/stable/std/iter/
 
 # Iter trait
 
+This 
 ```rust
-
 trait Iterator {
     type Item;
     fn next(&mut self) -> Option<Self::Item>;
 }
-
 ```
 
-
+I will talk about iter trait below in the blog once I get done with explaining how to use pre built iterators.
 
 # Iterators in Rust
 
+Lazy Iterator example
+
+```
+```
 
 
 ## Iterating a List using iterators
-
-Lazy Iterator example
+Using laxy iterator to iterate
 
 ### Example 1 (Immutable iterator)
 
@@ -145,11 +147,135 @@ fn main() {
 2. iter_mut(), which iterates over &mut T.
 3. into_iter(), which iterates over T.
 
-# Using Iter trait to create own iterator for our data struct
 
-1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15
-We want out iter to return us only odd values in a DS
+# Revisiting the Iter trait
+
+```rust
+trait Iterator {
+    type Item;
+    fn next(&mut self) -> Option<Self::Item>;
+}
+```
+
+calling next will return a `Option<Self::item>` as long as there are elements in the collection.
 
 
+# Example of implementing Iter trait to create own iterator for our data structure.
 
-# How to create an iterator to travers a tree using for loops
+```rust
+struct Counter {
+    pub limit: usize,
+    count: usize,
+}
+
+impl Counter {
+    fn new(limit: usize) -> Counter {
+        Counter {
+            limit,
+            count: 0
+        }
+    }
+}
+impl Iterator for Counter {
+    type Item = usize;
+    fn next(&mut self) -> Option<Self::Item>{
+        if self.count <= self.limit {
+            self.count += 1;
+            return Some(self.count);
+        }
+        None
+    }
+}
+fn main() {
+    let mut c = Counter::new(10);
+    let mut start = Some(0);
+    loop {
+        if start == None {
+            break;
+        }
+        println!("{}", start.unwrap());
+        start = c.next();
+    }
+}
+```
+Output 
+
+```
+0
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+```
+
+# How to create an iterator to travers a tree using for loops(A thought process)
+
+```rust
+#[derive(Debug)]
+struct Node<T> {
+    left: Option<Box<Node<T>>>,
+    right: Option<Box<Node<T>>>,
+    value: T,
+}
+
+struct PreTreeIterator<T> {
+    head: Node<T>,
+    iter_list: Vec<Node<T>>
+}
+
+impl PreTreeIterator<T>{
+    pub fn new(head: Node<T>) {
+        self.head = head;
+        self.iter_list = vec![];
+    }
+    
+    pub fn generate_iter_list(&self, head: Node<T>) {
+        let mut curr = Some(Box::new(head));
+        match curr {
+            None => {},
+            Some(val) => {
+                //PreOrder
+                //Node
+                //left
+                //right
+                self.iter_list.add(val);
+                generate_iter_list(&self, val.next);
+                generate_iter_list(&self, val.right);
+            }
+        }
+    }
+}
+impl Iterator for PreTreeIterator<T> {
+    Type Item = T;
+    fn
+}
+fn main() {
+    let tree = Node::<u8> {
+        left: Some(Box::new(Node::<u8> {
+            left: None,
+            right: Some(Box::new(Node::<u8> {
+                left: None,
+                right: None,
+                value: 3,
+            })),
+            value: 2
+        })),
+        right: Some(Box::new(Node::<u8>{
+            left: None,
+            right: None,
+            value: 9
+        })),
+        value: 1,
+    };
+    println!("{:?}", tree);
+    // Node { left: Some(Node { left: None, right: Some(Node { left: None, right: None, value: 3 }), value: 2 }), right: Some(Node { left: None, right: None, value: 9 }), value: 1 }
+}
+
+```
