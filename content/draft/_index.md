@@ -1,1 +1,0 @@
-These are drafts for my blog. They might not be ready(Makes me just commit to master branch and not have gazillion branches for every blog or change I do). But you're cool for reading them.

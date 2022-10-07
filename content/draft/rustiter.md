@@ -220,6 +220,9 @@ Output
 # How to create an iterator to travers a tree using for loops(A thought process)
 
 ```rust
+// More than two derives
+// generics
+// Deref coersion
 #[derive(Debug)]
 struct Node<T> {
     left: Option<Box<Node<T>>>,
@@ -229,35 +232,37 @@ struct Node<T> {
 
 struct PreTreeIterator<T> {
     head: Node<T>,
-    iter_list: Vec<Node<T>>
+    iter_list: Vec<Node<T>>,
 }
 
-impl PreTreeIterator<T>{
-    pub fn new(head: Node<T>) {
-        self.head = head;
-        self.iter_list = vec![];
+impl<T> PreTreeIterator<T> {
+    pub fn new(head: Node<T>) -> PreTreeIterator<T> {
+        PreTreeIterator {
+            head,
+            iter_list: vec![],
+        }
     }
-    
-    pub fn generate_iter_list(&self, head: Node<T>) {
+
+    pub fn generate_iter_list(self, head: Node<T>) {
         let mut curr = Some(Box::new(head));
         match curr {
-            None => {},
+            None => {}
             Some(val) => {
                 //PreOrder
                 //Node
                 //left
                 //right
-                self.iter_list.add(val);
-                generate_iter_list(&self, val.next);
-                generate_iter_list(&self, val.right);
+                self.iter_list.push(val.clone());
+                self.generate_iter_list(val.clone().left.unwrap());
+                self.generate_iter_list(val.clone().right.unwrap());
             }
         }
     }
 }
-impl Iterator for PreTreeIterator<T> {
-    Type Item = T;
-    fn
-}
+// impl<T> Iterator for PreTreeIterator<T> {
+//     Type Item = Type;
+//     fn
+// }
 fn main() {
     let tree = Node::<u8> {
         left: Some(Box::new(Node::<u8> {
@@ -267,18 +272,19 @@ fn main() {
                 right: None,
                 value: 3,
             })),
-            value: 2
+            value: 2,
         })),
-        right: Some(Box::new(Node::<u8>{
+        right: Some(Box::new(Node::<u8> {
             left: None,
             right: None,
-            value: 9
+            value: 9,
         })),
         value: 1,
     };
     println!("{:?}", tree);
     // Node { left: Some(Node { left: None, right: Some(Node { left: None, right: None, value: 3 }), value: 2 }), right: Some(Node { left: None, right: None, value: 9 }), value: 1 }
 }
+
 
 ```
 
