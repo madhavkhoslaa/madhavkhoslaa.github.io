@@ -50,7 +50,9 @@ I will talk about iter trait below in the blog once I get done with explaining h
 
 Lazy Iterator example
 
-```
+```rust
+let v: Vec<u8> = vec![1,2,3,4];
+let vec_iter = v.iter();
 ```
 
 
@@ -279,3 +281,8 @@ fn main() {
 }
 
 ```
+
+
+---
+
+Sources
