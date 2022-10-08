@@ -223,7 +223,7 @@ Output
 // More than two derives
 // generics
 // Deref coersion
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 struct Node<T> {
     left: Option<Box<Node<T>>>,
     right: Option<Box<Node<T>>>,
@@ -232,7 +232,7 @@ struct Node<T> {
 
 struct PreTreeIterator<T> {
     head: Node<T>,
-    iter_list: Vec<Node<T>>,
+    iter_list: Vec<T>,
 }
 
 impl<T> PreTreeIterator<T> {
@@ -243,21 +243,12 @@ impl<T> PreTreeIterator<T> {
         }
     }
 
-    pub fn generate_iter_list(self, head: Node<T>) {
-        let mut curr = Some(Box::new(head));
-        match curr {
-            None => {}
-            Some(val) => {
-                //PreOrder
-                //Node
-                //left
-                //right
-                self.iter_list.push(val.clone());
-                self.generate_iter_list(val.clone().left.unwrap());
-                self.generate_iter_list(val.clone().right.unwrap());
-            }
-        }
-    }
+pub fn generate_iter_list(&mut self, head: Node<T>){
+        self.iter_list.push(head.value);
+        self.generate_iter_list(*head.left.unwrap());
+        self.generate_iter_list(*head.right.unwrap());
+}
+
 }
 // impl<T> Iterator for PreTreeIterator<T> {
 //     Type Item = Type;
@@ -282,6 +273,7 @@ fn main() {
         value: 1,
     };
     println!("{:?}", tree);
+
     // Node { left: Some(Node { left: None, right: Some(Node { left: None, right: None, value: 3 }), value: 2 }), right: Some(Node { left: None, right: None, value: 9 }), value: 1 }
 }
 
