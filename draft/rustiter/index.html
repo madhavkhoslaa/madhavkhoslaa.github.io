@@ -95,52 +95,78 @@ An obvious question to this is how do you resolve these chained iterators to get
 9
 10
 11
-</code></pre><h1 id=how-to-create-an-iterator-to-travers-a-tree-using-for-loopsa-thought-process>How to create an iterator to travers a tree using for loops(A thought process)</h1><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-rust data-lang=rust><span style=display:flex><span><span style=color:#75715e>// More than two derives
+</code></pre><h1 id=how-to-create-an-iterator-to-travers-a-tree-using-for-loops--fun-code-ahead>How to create an iterator to travers a tree using for loops !!!! [FUN CODE AHEAD!]</h1><p><img src=https://i.imgur.com/Unw3Dwf.jpeg alt=image></p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-rust data-lang=rust><span style=display:flex><span><span style=color:#75715e>// More than two derives
 </span></span></span><span style=display:flex><span><span style=color:#75715e>// generics
 </span></span></span><span style=display:flex><span><span style=color:#75715e>// Deref coersion
 </span></span></span><span style=display:flex><span><span style=color:#75715e></span><span style=color:#75715e>#[derive(Debug, Clone)]</span>
-</span></span><span style=display:flex><span><span style=color:#66d9ef>struct</span> <span style=color:#a6e22e>Node</span><span style=color:#f92672>&lt;</span>T<span style=color:#f92672>&gt;</span> {
-</span></span><span style=display:flex><span>    left: Option<span style=color:#f92672>&lt;</span>Box<span style=color:#f92672>&lt;</span>Node<span style=color:#f92672>&lt;</span>T<span style=color:#f92672>&gt;&gt;&gt;</span>,
-</span></span><span style=display:flex><span>    right: Option<span style=color:#f92672>&lt;</span>Box<span style=color:#f92672>&lt;</span>Node<span style=color:#f92672>&lt;</span>T<span style=color:#f92672>&gt;&gt;&gt;</span>,
-</span></span><span style=display:flex><span>    value: <span style=color:#a6e22e>T</span>,
+</span></span><span style=display:flex><span><span style=color:#66d9ef>struct</span> <span style=color:#a6e22e>Node</span> {
+</span></span><span style=display:flex><span>    left: Option<span style=color:#f92672>&lt;</span>Box<span style=color:#f92672>&lt;</span>Node<span style=color:#f92672>&gt;&gt;</span>,
+</span></span><span style=display:flex><span>    right: Option<span style=color:#f92672>&lt;</span>Box<span style=color:#f92672>&lt;</span>Node<span style=color:#f92672>&gt;&gt;</span>,
+</span></span><span style=display:flex><span>    value: <span style=color:#66d9ef>u8</span>,
 </span></span><span style=display:flex><span>}
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#66d9ef>struct</span> <span style=color:#a6e22e>PreTreeIterator</span><span style=color:#f92672>&lt;</span>T<span style=color:#f92672>&gt;</span> {
-</span></span><span style=display:flex><span>    head: <span style=color:#a6e22e>Node</span><span style=color:#f92672>&lt;</span>T<span style=color:#f92672>&gt;</span>,
-</span></span><span style=display:flex><span>    iter_list: Vec<span style=color:#f92672>&lt;</span>T<span style=color:#f92672>&gt;</span>,
+</span></span><span style=display:flex><span><span style=color:#66d9ef>struct</span> <span style=color:#a6e22e>PreTreeIterator</span> {
+</span></span><span style=display:flex><span>    head: <span style=color:#a6e22e>Node</span>,
+</span></span><span style=display:flex><span>    iter_list: Vec<span style=color:#f92672>&lt;</span><span style=color:#66d9ef>u8</span><span style=color:#f92672>&gt;</span>,
+</span></span><span style=display:flex><span>    current_value: Option<span style=color:#f92672>&lt;</span><span style=color:#66d9ef>u8</span><span style=color:#f92672>&gt;</span>,
+</span></span><span style=display:flex><span>    ctr: <span style=color:#66d9ef>usize</span>,
 </span></span><span style=display:flex><span>}
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#66d9ef>impl</span><span style=color:#f92672>&lt;</span>T<span style=color:#f92672>&gt;</span> PreTreeIterator<span style=color:#f92672>&lt;</span>T<span style=color:#f92672>&gt;</span> {
-</span></span><span style=display:flex><span>    <span style=color:#66d9ef>pub</span> <span style=color:#66d9ef>fn</span> <span style=color:#a6e22e>new</span>(head: <span style=color:#a6e22e>Node</span><span style=color:#f92672>&lt;</span>T<span style=color:#f92672>&gt;</span>) -&gt; <span style=color:#a6e22e>PreTreeIterator</span><span style=color:#f92672>&lt;</span>T<span style=color:#f92672>&gt;</span> {
+</span></span><span style=display:flex><span><span style=color:#66d9ef>impl</span> PreTreeIterator {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>pub</span> <span style=color:#66d9ef>fn</span> <span style=color:#a6e22e>new</span>(head: <span style=color:#66d9ef>&amp;</span><span style=color:#a6e22e>Node</span>) -&gt; <span style=color:#a6e22e>PreTreeIterator</span> {
 </span></span><span style=display:flex><span>        PreTreeIterator {
-</span></span><span style=display:flex><span>            head,
+</span></span><span style=display:flex><span>            head: <span style=color:#a6e22e>head</span>.clone(),
 </span></span><span style=display:flex><span>            iter_list: <span style=color:#a6e22e>vec</span><span style=color:#f92672>!</span>[],
+</span></span><span style=display:flex><span>            current_value: None,
+</span></span><span style=display:flex><span>            ctr: <span style=color:#ae81ff>0</span>,
 </span></span><span style=display:flex><span>        }
 </span></span><span style=display:flex><span>    }
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#66d9ef>pub</span> <span style=color:#66d9ef>fn</span> <span style=color:#a6e22e>generate_iter_list</span>(<span style=color:#f92672>&amp;</span><span style=color:#66d9ef>mut</span> self, head: <span style=color:#a6e22e>Node</span><span style=color:#f92672>&lt;</span>T<span style=color:#f92672>&gt;</span>){
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>pub</span> <span style=color:#66d9ef>fn</span> <span style=color:#a6e22e>generate_iter_list</span>(<span style=color:#f92672>&amp;</span><span style=color:#66d9ef>mut</span> self, head: <span style=color:#66d9ef>&amp;</span><span style=color:#a6e22e>Node</span>) {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>match</span> <span style=color:#f92672>&amp;</span>head.left {
+</span></span><span style=display:flex><span>            Some(x) <span style=color:#f92672>=&gt;</span> {
+</span></span><span style=display:flex><span>                self.generate_iter_list(x);
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>            None <span style=color:#f92672>=&gt;</span> {}
+</span></span><span style=display:flex><span>        }
 </span></span><span style=display:flex><span>        self.iter_list.push(head.value);
-</span></span><span style=display:flex><span>        self.generate_iter_list(<span style=color:#f92672>*</span>head.left.unwrap());
-</span></span><span style=display:flex><span>        self.generate_iter_list(<span style=color:#f92672>*</span>head.right.unwrap());
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>match</span> <span style=color:#f92672>&amp;</span>head.right {
+</span></span><span style=display:flex><span>            Some(x) <span style=color:#f92672>=&gt;</span> {
+</span></span><span style=display:flex><span>                self.generate_iter_list(x);
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>            None <span style=color:#f92672>=&gt;</span> {}
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>    }
 </span></span><span style=display:flex><span>}
 </span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>impl</span> Iterator <span style=color:#66d9ef>for</span> PreTreeIterator {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>type</span> <span style=color:#a6e22e>Item</span> <span style=color:#f92672>=</span> <span style=color:#66d9ef>u8</span>;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>fn</span> <span style=color:#a6e22e>next</span>(<span style=color:#f92672>&amp;</span><span style=color:#66d9ef>mut</span> self) -&gt; Option<span style=color:#f92672>&lt;</span>Self::Item<span style=color:#f92672>&gt;</span> {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>if</span> self.ctr <span style=color:#f92672>&lt;</span> self.iter_list.len() {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>let</span> to_return <span style=color:#f92672>=</span> <span style=color:#f92672>*</span>self.iter_list.get(self.ctr).unwrap();
+</span></span><span style=display:flex><span>            self.ctr <span style=color:#f92672>+=</span> <span style=color:#ae81ff>1</span>;
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>return</span> Some(to_return);
+</span></span><span style=display:flex><span>        } <span style=color:#66d9ef>else</span> {
+</span></span><span style=display:flex><span>            print!(<span style=color:#e6db74>&#34;{}    {}&#34;</span>, self.iter_list.len(), self.ctr);
+</span></span><span style=display:flex><span>            None
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>    }
 </span></span><span style=display:flex><span>}
-</span></span><span style=display:flex><span><span style=color:#75715e>// impl&lt;T&gt; Iterator for PreTreeIterator&lt;T&gt; {
-</span></span></span><span style=display:flex><span><span style=color:#75715e>//     Type Item = Type;
-</span></span></span><span style=display:flex><span><span style=color:#75715e>//     fn
-</span></span></span><span style=display:flex><span><span style=color:#75715e>// }
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span><span style=color:#66d9ef>fn</span> <span style=color:#a6e22e>main</span>() {
-</span></span><span style=display:flex><span>    <span style=color:#66d9ef>let</span> tree <span style=color:#f92672>=</span> Node::<span style=color:#f92672>&lt;</span><span style=color:#66d9ef>u8</span><span style=color:#f92672>&gt;</span> {
-</span></span><span style=display:flex><span>        left: Some(Box::new(Node::<span style=color:#f92672>&lt;</span><span style=color:#66d9ef>u8</span><span style=color:#f92672>&gt;</span> {
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>fn</span> <span style=color:#a6e22e>main</span>() {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>let</span> tree <span style=color:#f92672>=</span> Node {
+</span></span><span style=display:flex><span>        left: Some(Box::new(Node {
 </span></span><span style=display:flex><span>            left: None,
-</span></span><span style=display:flex><span>            right: Some(Box::new(Node::<span style=color:#f92672>&lt;</span><span style=color:#66d9ef>u8</span><span style=color:#f92672>&gt;</span> {
+</span></span><span style=display:flex><span>            right: Some(Box::new(Node {
 </span></span><span style=display:flex><span>                left: None,
 </span></span><span style=display:flex><span>                right: None,
 </span></span><span style=display:flex><span>                value: <span style=color:#ae81ff>3</span>,
 </span></span><span style=display:flex><span>            })),
 </span></span><span style=display:flex><span>            value: <span style=color:#ae81ff>2</span>,
 </span></span><span style=display:flex><span>        })),
-</span></span><span style=display:flex><span>        right: Some(Box::new(Node::<span style=color:#f92672>&lt;</span><span style=color:#66d9ef>u8</span><span style=color:#f92672>&gt;</span> {
+</span></span><span style=display:flex><span>        right: Some(Box::new(Node {
 </span></span><span style=display:flex><span>            left: None,
 </span></span><span style=display:flex><span>            right: None,
 </span></span><span style=display:flex><span>            value: <span style=color:#ae81ff>9</span>,
@@ -148,7 +174,29 @@ An obvious question to this is how do you resolve these chained iterators to get
 </span></span><span style=display:flex><span>        value: <span style=color:#ae81ff>1</span>,
 </span></span><span style=display:flex><span>    };
 </span></span><span style=display:flex><span>    println!(<span style=color:#e6db74>&#34;{:?}&#34;</span>, tree);
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>let</span> <span style=color:#66d9ef>mut</span> iter <span style=color:#f92672>=</span> PreTreeIterator::new(<span style=color:#f92672>&amp;</span>tree);
+</span></span><span style=display:flex><span>    println!(<span style=color:#e6db74>&#34;{:?}&#34;</span>, iter.iter_list);
+</span></span><span style=display:flex><span>    iter.generate_iter_list(<span style=color:#f92672>&amp;</span>tree);
+</span></span><span style=display:flex><span>    println!(<span style=color:#e6db74>&#34;{:?}&#34;</span>, iter.iter_list);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    println!(<span style=color:#e6db74>&#34;Looping through the tree in preiterator way using iterator design pattern&#34;</span>);
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>loop</span> {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>let</span> value <span style=color:#f92672>=</span> iter.next();
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>if</span> value <span style=color:#f92672>==</span> None {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>break</span>;
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>        println!(<span style=color:#e6db74>&#34;{:?}&#34;</span>, value.unwrap());
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
 </span></span><span style=display:flex><span>
 </span></span><span style=display:flex><span>    <span style=color:#75715e>// Node { left: Some(Node { left: None, right: Some(Node { left: None, right: None, value: 3 }), value: 2 }), right: Some(Node { left: None, right: None, value: 9 }), value: 1 }
 </span></span></span><span style=display:flex><span><span style=color:#75715e></span>}
-</span></span></code></pre></div><hr><p>Sources</p></section><div class=post-tags><nav class="nav tags"><ul class=tags><li><a href=/tags/design-patterns>Design Patterns</a></li><li><a href=/tags/iterator-design-pattern>Iterator Design Pattern</a></li><li><a href=/tags/rust>Rust</a></li><li><a href=/tags/blazingly-fast>Blazingly Fast</a></li><li><a href=/tags/loops>loops</a></li><li><a href=/tags/not-c++>Not C++</a></li></ul></nav></div></article></main><footer><div style=display:flex><a class=soc href=https://bit.ly/3Qyr87Y title=GitHub><i data-feather=github></i></a><a class=soc href=https://bit.ly/3Qtgn6y title=Twitter><i data-feather=twitter></i></a></div><div class=footer-info>2022 <a href=https://github.com/athul/archie>Archie Theme</a> | Built with <a href=https://gohugo.io>Hugo</a></div></footer><script>feather.replace()</script></div></body></html>
+</span></span></code></pre></div><h2 id=output>Output</h2><pre tabindex=0><code>[]
+[2, 3, 1, 9]
+Looping through the tree in preiterator way using iterator design pattern
+2
+3
+1
+9
+4 
+</code></pre><hr><p>Sources</p></section><div class=post-tags><nav class="nav tags"><ul class=tags><li><a href=/tags/design-patterns>Design Patterns</a></li><li><a href=/tags/iterator-design-pattern>Iterator Design Pattern</a></li><li><a href=/tags/rust>Rust</a></li><li><a href=/tags/blazingly-fast>Blazingly Fast</a></li><li><a href=/tags/loops>loops</a></li><li><a href=/tags/not-c++>Not C++</a></li></ul></nav></div></article></main><footer><div style=display:flex><a class=soc href=https://bit.ly/3Qyr87Y title=GitHub><i data-feather=github></i></a><a class=soc href=https://bit.ly/3Qtgn6y title=Twitter><i data-feather=twitter></i></a></div><div class=footer-info>2022 <a href=https://github.com/athul/archie>Archie Theme</a> | Built with <a href=https://gohugo.io>Hugo</a></div></footer><script>feather.replace()</script></div></body></html>
