@@ -32,7 +32,6 @@ Imagine you are the Pacman ghost and the representation of the Pacman world is i
 ![image](https://i.imgur.com/5lF87Jv.png)
 
 ## Why did I highlight `next` ? | Let's talk Code.
-https://doc.rust-lang.org/stable/std/iter/
 
 # Iter trait
 
