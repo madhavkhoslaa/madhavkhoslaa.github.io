@@ -217,55 +217,83 @@ Output
 11
 ```
 
-# How to create an iterator to travers a tree using for loops(A thought process)
+# How to create an iterator to travers a tree using for loops !!!! [FUN CODE AHEAD!]
+
+![image](https://i.imgur.com/Unw3Dwf.jpeg)
 
 ```rust
 // More than two derives
 // generics
 // Deref coersion
 #[derive(Debug, Clone)]
-struct Node<T> {
-    left: Option<Box<Node<T>>>,
-    right: Option<Box<Node<T>>>,
-    value: T,
+struct Node {
+    left: Option<Box<Node>>,
+    right: Option<Box<Node>>,
+    value: u8,
 }
 
-struct PreTreeIterator<T> {
-    head: Node<T>,
-    iter_list: Vec<T>,
+struct PreTreeIterator {
+    head: Node,
+    iter_list: Vec<u8>,
+    current_value: Option<u8>,
+    ctr: usize,
 }
 
-impl<T> PreTreeIterator<T> {
-    pub fn new(head: Node<T>) -> PreTreeIterator<T> {
+impl PreTreeIterator {
+    pub fn new(head: &Node) -> PreTreeIterator {
         PreTreeIterator {
-            head,
+            head: head.clone(),
             iter_list: vec![],
+            current_value: None,
+            ctr: 0,
         }
     }
 
-pub fn generate_iter_list(&mut self, head: Node<T>){
+    pub fn generate_iter_list(&mut self, head: &Node) {
+        match &head.left {
+            Some(x) => {
+                self.generate_iter_list(x);
+            }
+            None => {}
+        }
         self.iter_list.push(head.value);
-        self.generate_iter_list(*head.left.unwrap());
-        self.generate_iter_list(*head.right.unwrap());
+
+        match &head.right {
+            Some(x) => {
+                self.generate_iter_list(x);
+            }
+            None => {}
+        }
+    }
 }
 
+impl Iterator for PreTreeIterator {
+    type Item = u8;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        if self.ctr < self.iter_list.len() {
+            let to_return = *self.iter_list.get(self.ctr).unwrap();
+            self.ctr += 1;
+            return Some(to_return);
+        } else {
+            print!("{}    {}", self.iter_list.len(), self.ctr);
+            None
+        }
+    }
 }
-// impl<T> Iterator for PreTreeIterator<T> {
-//     Type Item = Type;
-//     fn
-// }
+
 fn main() {
-    let tree = Node::<u8> {
-        left: Some(Box::new(Node::<u8> {
+    let tree = Node {
+        left: Some(Box::new(Node {
             left: None,
-            right: Some(Box::new(Node::<u8> {
+            right: Some(Box::new(Node {
                 left: None,
                 right: None,
                 value: 3,
             })),
             value: 2,
         })),
-        right: Some(Box::new(Node::<u8> {
+        right: Some(Box::new(Node {
             left: None,
             right: None,
             value: 9,
@@ -273,13 +301,38 @@ fn main() {
         value: 1,
     };
     println!("{:?}", tree);
+    let mut iter = PreTreeIterator::new(&tree);
+    println!("{:?}", iter.iter_list);
+    iter.generate_iter_list(&tree);
+    println!("{:?}", iter.iter_list);
+
+    println!("Looping through the tree in preiterator way using iterator design pattern");
+    loop {
+        let value = iter.next();
+        if value == None {
+            break;
+        }
+        println!("{:?}", value.unwrap());
+    }
+
 
     // Node { left: Some(Node { left: None, right: Some(Node { left: None, right: None, value: 3 }), value: 2 }), right: Some(Node { left: None, right: None, value: 9 }), value: 1 }
 }
 
+```
+## Output 
+
 
 ```
-
+[]
+[2, 3, 1, 9]
+Looping through the tree in preiterator way using iterator design pattern
+2
+3
+1
+9
+4 
+```
 
 ---
 
