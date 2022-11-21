@@ -275,7 +275,6 @@ impl Iterator for PreTreeIterator {
             self.ctr += 1;
             return Some(to_return);
         } else {
-            print!("{}    {}", self.iter_list.len(), self.ctr);
             None
         }
     }
@@ -314,7 +313,6 @@ fn main() {
         println!("{:?}", value.unwrap());
     }
 
-
     // Node { left: Some(Node { left: None, right: Some(Node { left: None, right: None, value: 3 }), value: 2 }), right: Some(Node { left: None, right: None, value: 9 }), value: 1 }
 }
 
@@ -330,7 +328,6 @@ Looping through the tree in pre-order way using the iterator design pattern
 3
 1
 9
-4 
 ```
 
 ---
