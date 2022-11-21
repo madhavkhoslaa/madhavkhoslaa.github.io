@@ -149,7 +149,6 @@ An obvious question to this is how do you resolve these chained iterators to get
 </span></span><span style=display:flex><span>            self.ctr <span style=color:#f92672>+=</span> <span style=color:#ae81ff>1</span>;
 </span></span><span style=display:flex><span>            <span style=color:#66d9ef>return</span> Some(to_return);
 </span></span><span style=display:flex><span>        } <span style=color:#66d9ef>else</span> {
-</span></span><span style=display:flex><span>            print!(<span style=color:#e6db74>&#34;{}    {}&#34;</span>, self.iter_list.len(), self.ctr);
 </span></span><span style=display:flex><span>            None
 </span></span><span style=display:flex><span>        }
 </span></span><span style=display:flex><span>    }
@@ -188,7 +187,6 @@ An obvious question to this is how do you resolve these chained iterators to get
 </span></span><span style=display:flex><span>        println!(<span style=color:#e6db74>&#34;{:?}&#34;</span>, value.unwrap());
 </span></span><span style=display:flex><span>    }
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>
 </span></span><span style=display:flex><span>    <span style=color:#75715e>// Node { left: Some(Node { left: None, right: Some(Node { left: None, right: None, value: 3 }), value: 2 }), right: Some(Node { left: None, right: None, value: 9 }), value: 1 }
 </span></span></span><span style=display:flex><span><span style=color:#75715e></span>}
 </span></span></code></pre></div><h2 id=output>Output</h2><pre tabindex=0><code>[]
@@ -198,5 +196,4 @@ Looping through the tree in pre-order way using the iterator design pattern
 3
 1
 9
-4 
 </code></pre><hr><p>Sources</p></section><div class=post-tags><nav class="nav tags"><ul class=tags><li><a href=/tags/design-patterns>Design Patterns</a></li><li><a href=/tags/iterator-design-pattern>Iterator Design Pattern</a></li><li><a href=/tags/rust>Rust</a></li><li><a href=/tags/blazingly-fast>Blazingly Fast</a></li><li><a href=/tags/loops>loops</a></li><li><a href=/tags/not-c++>Not C++</a></li></ul></nav></div></article></main><footer><div style=display:flex><a class=soc href=https://bit.ly/3Qyr87Y title=GitHub><i data-feather=github></i></a><a class=soc href=https://bit.ly/3Qtgn6y title=Twitter><i data-feather=twitter></i></a></div><div class=footer-info>2022 <a href=https://github.com/athul/archie>Archie Theme</a> | Built with <a href=https://gohugo.io>Hugo</a></div></footer><script>feather.replace()</script></div></body></html>
