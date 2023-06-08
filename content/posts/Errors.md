@@ -2,7 +2,7 @@
 title: "Error handling in Rust."
 date: 2023-06-08T02:01:58+05:30
 draft: false
-description: "Error Handling in rust."
+description: " Errors are an inevitable part of any software development process, and Rust provides a robust mechanism for managing and handling them. This blog aims to demystify Rust's error handling philosophy, covering its unique features, error types, and various strategies for effectively dealing with errors."
 tags:
   [
   rust,
