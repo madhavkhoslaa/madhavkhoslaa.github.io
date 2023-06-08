@@ -44,15 +44,15 @@ error: could not compile `playground` due to previous error
 </span></span><span style=display:flex><span>    <span style=color:#75715e>// closure a uses b to add to the argument
 </span></span></span><span style=display:flex><span><span style=color:#75715e></span>    <span style=color:#66d9ef>let</span> z <span style=color:#f92672>=</span> a(<span style=color:#ae81ff>1</span>);
 </span></span><span style=display:flex><span>    <span style=color:#75715e>// Result is assigned to z.
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    println!(<span style=color:#e6db74>&#34;{}&#34;</span>,z);
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    println!(<span style=color:#e6db74>&#34;</span><span style=color:#e6db74>{}</span><span style=color:#e6db74>&#34;</span>,z);
 </span></span><span style=display:flex><span>}
 </span></span></code></pre></div><p>Output</p><pre tabindex=0><code>2
 </code></pre><p>We can observe here that variable b is accessible inside of closure a, so we can conclude that a closure shares the same scope as the parent.</p><h2 id=phew-a-lot-of-stuff-to-learn-lets-break-down-what-i-wrote-down>Phew, a lot of stuff to learn. Let&rsquo;s break down what I wrote down</h2><ol><li>Closures are functions that are inside a function and hence share the same scope as the parent function.</li><li>They are &ldquo;Pythonic&rdquo; in a way that they do not need type signatures but instead the compiler gives it a signature based on the type of arguments on the first call.</li></ol><h1 id=moving-values-inside-closures>Moving values inside closures.</h1><p>If you&rsquo;re reading this blog I expect you to know what a move in rust is. If you don&rsquo;t you can read <a href=https://doc.rust-lang.org/book/ch04-00-understanding-ownership.html>this</a>.</p><p>So there are three ways of moving values into closues.</p><ol><li>Immutable immutable</li><li>Mutable argument</li><li>Borrowing</li></ol><h2 id=example-of-immutable-arguments>Example of Immutable arguments</h2><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-rust data-lang=rust><span style=display:flex><span><span style=color:#66d9ef>fn</span> <span style=color:#a6e22e>main</span>() {
 </span></span><span style=display:flex><span>    <span style=color:#66d9ef>let</span> list <span style=color:#f92672>=</span> vec![<span style=color:#ae81ff>1</span>, <span style=color:#ae81ff>2</span>, <span style=color:#ae81ff>3</span>];
-</span></span><span style=display:flex><span>    <span style=color:#66d9ef>let</span> only_borrows <span style=color:#f92672>=</span> <span style=color:#f92672>|</span>list<span style=color:#f92672>|</span> println!(<span style=color:#e6db74>&#34;From closure: {:?}&#34;</span>, list);
-</span></span><span style=display:flex><span>    println!(<span style=color:#e6db74>&#34;Before calling closure: {:?}&#34;</span>, list);
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>let</span> only_borrows <span style=color:#f92672>=</span> <span style=color:#f92672>|</span>list<span style=color:#f92672>|</span> println!(<span style=color:#e6db74>&#34;From closure: </span><span style=color:#e6db74>{:?}</span><span style=color:#e6db74>&#34;</span>, list);
+</span></span><span style=display:flex><span>    println!(<span style=color:#e6db74>&#34;Before calling closure: </span><span style=color:#e6db74>{:?}</span><span style=color:#e6db74>&#34;</span>, list);
 </span></span><span style=display:flex><span>    only_borrows(list);
-</span></span><span style=display:flex><span>    println!(<span style=color:#e6db74>&#34;After calling closure: {:?}&#34;</span>, list);
+</span></span><span style=display:flex><span>    println!(<span style=color:#e6db74>&#34;After calling closure: </span><span style=color:#e6db74>{:?}</span><span style=color:#e6db74>&#34;</span>, list);
 </span></span><span style=display:flex><span>}
 </span></span></code></pre></div><p>Output</p><pre tabindex=0><code>   Compiling playground v0.0.1 (/playground)
 error[E0382]: borrow of moved value: `list`
@@ -74,12 +74,12 @@ error: could not compile `playground` due to previous error
 </span></span><span style=display:flex><span>    <span style=color:#66d9ef>let</span> <span style=color:#66d9ef>mut</span> list <span style=color:#f92672>=</span> vec![<span style=color:#ae81ff>1</span>, <span style=color:#ae81ff>2</span>, <span style=color:#ae81ff>3</span>];
 </span></span><span style=display:flex><span>    <span style=color:#66d9ef>let</span> only_borrows <span style=color:#f92672>=</span> <span style=color:#f92672>|</span><span style=color:#66d9ef>mut</span> list: Vec<span style=color:#f92672>&lt;</span><span style=color:#66d9ef>u8</span><span style=color:#f92672>&gt;|</span> {
 </span></span><span style=display:flex><span>    list.push(<span style=color:#ae81ff>4</span>);
-</span></span><span style=display:flex><span>    println!(<span style=color:#e6db74>&#34;From closure: {:?}&#34;</span>, list );
+</span></span><span style=display:flex><span>    println!(<span style=color:#e6db74>&#34;From closure: </span><span style=color:#e6db74>{:?}</span><span style=color:#e6db74>&#34;</span>, list );
 </span></span><span style=display:flex><span>    list
 </span></span><span style=display:flex><span>    };
-</span></span><span style=display:flex><span>    println!(<span style=color:#e6db74>&#34;Before calling closure: {:?}&#34;</span>, list);
+</span></span><span style=display:flex><span>    println!(<span style=color:#e6db74>&#34;Before calling closure: </span><span style=color:#e6db74>{:?}</span><span style=color:#e6db74>&#34;</span>, list);
 </span></span><span style=display:flex><span>    list <span style=color:#f92672>=</span> only_borrows(list);
-</span></span><span style=display:flex><span>    println!(<span style=color:#e6db74>&#34;After calling closure: {:?}&#34;</span>, list);
+</span></span><span style=display:flex><span>    println!(<span style=color:#e6db74>&#34;After calling closure: </span><span style=color:#e6db74>{:?}</span><span style=color:#e6db74>&#34;</span>, list);
 </span></span><span style=display:flex><span>}
 </span></span></code></pre></div><p>Output</p><pre tabindex=0><code>Before calling closure: [1, 2, 3]
 From closure: [1, 2, 3, 4]
@@ -89,11 +89,11 @@ After calling closure: [1, 2, 3, 4]
 </span></span><span style=display:flex><span>
 </span></span><span style=display:flex><span>    <span style=color:#66d9ef>let</span> only_borrows <span style=color:#f92672>=</span> <span style=color:#f92672>|</span>list: <span style=color:#66d9ef>&amp;</span><span style=color:#a6e22e>mut</span> Vec<span style=color:#f92672>&lt;</span><span style=color:#66d9ef>u8</span><span style=color:#f92672>&gt;|</span> {
 </span></span><span style=display:flex><span>    list.push(<span style=color:#ae81ff>4</span>);
-</span></span><span style=display:flex><span>    println!(<span style=color:#e6db74>&#34;From closure: {:?}&#34;</span>, list );
+</span></span><span style=display:flex><span>    println!(<span style=color:#e6db74>&#34;From closure: </span><span style=color:#e6db74>{:?}</span><span style=color:#e6db74>&#34;</span>, list );
 </span></span><span style=display:flex><span>    };
-</span></span><span style=display:flex><span>    println!(<span style=color:#e6db74>&#34;Before calling closure: {:?}&#34;</span>, list);
+</span></span><span style=display:flex><span>    println!(<span style=color:#e6db74>&#34;Before calling closure: </span><span style=color:#e6db74>{:?}</span><span style=color:#e6db74>&#34;</span>, list);
 </span></span><span style=display:flex><span>    only_borrows(<span style=color:#f92672>&amp;</span><span style=color:#66d9ef>mut</span> list);
-</span></span><span style=display:flex><span>    println!(<span style=color:#e6db74>&#34;After calling closure: {:?}&#34;</span>, list);
+</span></span><span style=display:flex><span>    println!(<span style=color:#e6db74>&#34;After calling closure: </span><span style=color:#e6db74>{:?}</span><span style=color:#e6db74>&#34;</span>, list);
 </span></span><span style=display:flex><span>}
 </span></span></code></pre></div><p>Output</p><pre tabindex=0><code>Before calling closure: [1, 2, 3]
 From closure: [1, 2, 3, 4]
@@ -130,7 +130,7 @@ assert_eq!(friends, [&#34;Sly&#34;, &#34;Punchy&#34;, &#34;Gladys&#34;, &#34;Pud
 </span></span><span style=display:flex><span><span style=color:#66d9ef>let</span> double <span style=color:#f92672>=</span> <span style=color:#f92672>|</span>x<span style=color:#f92672>|</span> x <span style=color:#f92672>*</span> <span style=color:#ae81ff>2</span>;
 </span></span><span style=display:flex><span><span style=color:#66d9ef>let</span> x <span style=color:#f92672>=</span> call_with_one(double);
 </span></span><span style=display:flex><span><span style=color:#75715e>// Does not mutate the value, returns the double
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span>println!(<span style=color:#e6db74>&#34;{}&#34;</span>,x);
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>println!(<span style=color:#e6db74>&#34;</span><span style=color:#e6db74>{}</span><span style=color:#e6db74>&#34;</span>,x);
 </span></span><span style=display:flex><span>}
 </span></span></code></pre></div><p>Output</p><pre tabindex=0><code>2
 </code></pre></section><div class=post-tags><nav class="nav tags"><ul class=tags><li><a href=/tags/rust>Rust</a></li><li><a href=/tags/c++>C++</a></li><li><a href=/tags/functional-programming>Functional Programming</a></li><li><a href=/tags/closures>Closures</a></li><li><a href=/tags/traits>Traits</a></li><li><a href=/tags/ferris>Ferris</a></li><li><a href=/tags/blazingly-fast>Blazingly Fast</a></li></ul></nav></div></article></main><footer><div style=display:flex><a class=soc href=https://bit.ly/3Qyr87Y title=GitHub><i data-feather=github></i></a><a class=soc href=https://bit.ly/3Qtgn6y title=Twitter><i data-feather=twitter></i></a></div><div class=footer-info>2023 <a href=https://github.com/athul/archie>Archie Theme</a> | Built with <a href=https://gohugo.io>Hugo</a></div></footer><script>feather.replace()</script></div></body></html>

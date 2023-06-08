@@ -23,7 +23,7 @@ The image above shows the organization of a stack.</p><h1 id=what-is-ownership>W
 </span></span><span style=display:flex><span>    <span style=color:#66d9ef>let</span> madhav <span style=color:#f92672>=</span> String::from(<span style=color:#e6db74>&#34;Madhav&#39;s Laptop&#34;</span>);
 </span></span><span style=display:flex><span>    <span style=color:#75715e>// Madhav is the owner and he owns the string &#34;Madhav&#39;s Laptop&#34;;
 </span></span></span><span style=display:flex><span><span style=color:#75715e></span>    <span style=color:#66d9ef>let</span> diya <span style=color:#f92672>=</span> madhav;
-</span></span><span style=display:flex><span>    println!(<span style=color:#e6db74>&#34;Diya = {}, Madhav = {}&#34;</span>, madhav, diya);
+</span></span><span style=display:flex><span>    println!(<span style=color:#e6db74>&#34;Diya = </span><span style=color:#e6db74>{}</span><span style=color:#e6db74>, Madhav = </span><span style=color:#e6db74>{}</span><span style=color:#e6db74>&#34;</span>, madhav, diya);
 </span></span><span style=display:flex><span>}
 </span></span></code></pre></div><p>relating to other languages like c++, you might expect that variable named <code>diya</code> will have the value of the string, and the variable <code>madhav</code> will have it too? However, the output says something different.
 Output:</p><pre tabindex=0><code>error[E0382]: borrow of moved value: `madhav`
@@ -46,14 +46,14 @@ For more information about this error, try `rustc --explain E0382`.
 </span></span><span style=display:flex><span>    <span style=color:#66d9ef>let</span> madhav <span style=color:#f92672>=</span> String::from(<span style=color:#e6db74>&#34;Madhav&#39;s Laptop&#34;</span>);
 </span></span><span style=display:flex><span>    <span style=color:#75715e>// Madhav is the owner and he owns the string &#34;Madhav&#39;s Laptop&#34;;
 </span></span></span><span style=display:flex><span><span style=color:#75715e></span>    <span style=color:#66d9ef>let</span> diya <span style=color:#f92672>=</span> <span style=color:#f92672>&amp;</span>madhav;
-</span></span><span style=display:flex><span>    println!(<span style=color:#e6db74>&#34;Diya = {}, Madhav = {}&#34;</span>, madhav, diya);
+</span></span><span style=display:flex><span>    println!(<span style=color:#e6db74>&#34;Diya = </span><span style=color:#e6db74>{}</span><span style=color:#e6db74>, Madhav = </span><span style=color:#e6db74>{}</span><span style=color:#e6db74>&#34;</span>, madhav, diya);
 </span></span><span style=display:flex><span>}
 </span></span></code></pre></div><p>Here the variable <code>diya</code> borrows the value from the variable <code>madhav</code>.</p><p>Output</p><pre tabindex=0><code>Diya = Madhav&#39;s Laptop, Madhav = Madhav&#39;s Laptop
 </code></pre><h2 id=scenario-2>Scenario 2</h2><ol><li>Assume you have a Laptop and you need to overclock it.</li><li>Your friend <code>borrows</code> your laptop and overclocks it.</li><li>Friend returns the laptop to you</li></ol><p><code>madhav</code> variables pass his laptop to the function <code>overclock_laptop()</code> and expects laptop string to be appended with &ldquo;+ 2Ghz&rdquo; but what does happen?</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-rust data-lang=rust><span style=display:flex><span><span style=color:#66d9ef>fn</span> <span style=color:#a6e22e>main</span>(){
 </span></span><span style=display:flex><span>    <span style=color:#66d9ef>let</span> madhav <span style=color:#f92672>=</span> String::from(<span style=color:#e6db74>&#34;Madhav&#39;s Laptop&#34;</span>);
 </span></span><span style=display:flex><span>    <span style=color:#75715e>// Madhav is the owner and he owns the string &#34;Madhav&#39;s Laptop&#34;;
 </span></span></span><span style=display:flex><span><span style=color:#75715e></span>    <span style=color:#66d9ef>let</span> madhav <span style=color:#f92672>=</span> overclock_laptop(madhav);
-</span></span><span style=display:flex><span>    println!(<span style=color:#e6db74>&#34;{}&#34;</span>, madhav)
+</span></span><span style=display:flex><span>    println!(<span style=color:#e6db74>&#34;</span><span style=color:#e6db74>{}</span><span style=color:#e6db74>&#34;</span>, madhav)
 </span></span><span style=display:flex><span>
 </span></span><span style=display:flex><span>}
 </span></span><span style=display:flex><span>
@@ -65,7 +65,7 @@ For more information about this error, try `rustc --explain E0382`.
 </code></pre><p>This code works fine, but there&rsquo;s a tiny inconvenience here. The inconvenience is that we have to pass around ownership from functions to variables again and again at our point you will have to return tuples and it can get messy.</p><h3 id=borrowing-in-function>Borrowing in function</h3><p>Here we create a mutable variable <code>madhav</code> we pass in the mutable reference to the function <code>overclock_laptop</code>, where the variable is mutated, Notice here we did not have to switch ownership multiple times, since the function borrowed the value once and it got reflected in the variable in the function main.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-rust data-lang=rust><span style=display:flex><span><span style=color:#66d9ef>fn</span> <span style=color:#a6e22e>main</span>(){
 </span></span><span style=display:flex><span>    <span style=color:#66d9ef>let</span> <span style=color:#66d9ef>mut</span> madhav <span style=color:#f92672>=</span> String::from(<span style=color:#e6db74>&#34;Madhav&#39;s Laptop&#34;</span>);
 </span></span><span style=display:flex><span>    overclock_laptop(<span style=color:#f92672>&amp;</span><span style=color:#66d9ef>mut</span> madhav);
-</span></span><span style=display:flex><span>    println!(<span style=color:#e6db74>&#34;{}&#34;</span>, madhav);
+</span></span><span style=display:flex><span>    println!(<span style=color:#e6db74>&#34;</span><span style=color:#e6db74>{}</span><span style=color:#e6db74>&#34;</span>, madhav);
 </span></span><span style=display:flex><span>}
 </span></span><span style=display:flex><span><span style=color:#66d9ef>fn</span> <span style=color:#a6e22e>overclock_laptop</span>(laptop: <span style=color:#66d9ef>&amp;</span><span style=color:#a6e22e>mut</span> String) {
 </span></span><span style=display:flex><span>    laptop.push_str(<span style=color:#e6db74>&#34;+ 2Ghz&#34;</span>);
