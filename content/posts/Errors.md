@@ -41,7 +41,7 @@ The result of this code will be a panic with a message `Division by zero not all
 # How to handle recoverable errors 
 
 These errors are to be handled at runtime and do not stop the execution of the program. Like an empty file in a directory.
-Functions that expect to return a success value or a erroneous value use the `Result` enum to wrap the values.
+Functions that expect to return a success value or an erroneous value use the `Result` enum to wrap the values.
 ```rust 
 enum Result<T, E>{
   Ok(T), 
@@ -69,9 +69,9 @@ fn get_database_contents(id: usize) -> Result<String, String>{
   }
 }
 ```
-Here in the mock function we return `Ok` variant of the enum if the argument is 1 and return `Error` variant of the enum on other cases; The caller of the function has the responsibility of handling the enum variants.
+Here in the mock function, we return the `Ok` variant of the enum if the argument is 1 and return the `Error` variant of the enum in other cases; The caller of the function has the responsibility of handling the enum variants.
 
-# Syntactical sugar for early returning of errors using `?` operator.
+# Syntactical sugar for early returning of errors using the `?` operator.
 
 
 ```rust 
@@ -110,7 +110,7 @@ fn main() {
     let file_path = "path/to/your/file.txt";
     match read_file(file_path) {
         Ok(contents) => println!("File contents:\n{}", contents),
-        Err(error) => eprintln!("Error reading file: {}", error),
+        Err(error) => println!("Error reading file: {}", error),
     }
 }
 ```
@@ -118,7 +118,7 @@ fn main() {
 # Returning different types of errors.
 Sometimes you might want to send different types of errors to the function caller in case different errors arise in the execution of the function. Here we have two approaches for the following.
 ## Dynamic dispatch approach.
-In this case we can use `dynamic dispatch` on the error type and send different types of errors.
+In this case, we can use `dynamic dispatch` on the error type and send different types of errors.
 
 ```rust 
 fn do_operation(arg: &str) -> Result<String, Box<dyn error::Error>>{
@@ -138,7 +138,7 @@ fn do_operation(arg: &str) -> Result<String, Box<dyn error::Error>>{
 On the runtime we do not know what error type the caller of the function will receive on the runtime hence the error handling will be hard to handle.
 
 ## Using Error Enums approach.
-We can create an enum with all the values for the enums and then create a match all the values for the enum. 
+We can create an enum with all the values for the enums and then create a match of all the values for the enum. 
 
 ```rust 
 #[derive(PartialEq, PartialOrd)]
@@ -153,7 +153,7 @@ fn main (){
     Ok(value) => {value},
     Err(value) => {
       if(value == APP_FAILURE::TIMEOUT){
-        // do something
+        //Do something
       }
       // .. exhaustive comparison list 
     }
