@@ -126,10 +126,10 @@ fn do_operation(arg: &str) -> Result<String, Box<dyn error::Error>>{
     Ok()
   }
   if boolean_response_for_error1() {
-    Err(Errimp1)
+    Err(Box::new(ErrorType1))
   }
   if boolean_response_for_errore() {
-    Err(Errorimpl2)
+    Err(Box::new(ErrorType2))
   }
 }
 ```
