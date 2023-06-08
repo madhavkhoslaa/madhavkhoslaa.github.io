@@ -12,8 +12,7 @@ tags:
     loops,
     Not C++
   ]
----
-
+--- 
 # Static and Dynamic Dispatch in Rust
 
 ---
