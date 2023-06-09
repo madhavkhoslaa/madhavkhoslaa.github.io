@@ -10,6 +10,9 @@ tags:
 ] 
 ---
 ![image](https://i.imgur.com/VSG6kWK.jpeg)
+
+Errors in any language are hard to handle since they include the caller, defining errors, handling them and reporting to the end user. In this blog I will explain how to handle and create errors in rust.
+
 # Types of Errors 
 1. Unrecoverable Errors
 2. Recoverable Errors
