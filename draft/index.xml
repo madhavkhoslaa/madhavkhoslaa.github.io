@@ -1,7 +1,28 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Madhav Khosla</title><link>https://madhavkhoslaa.github.io/draft/</link><description>Recent content on Madhav Khosla</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Thu, 09 Nov 2023 02:01:58 +0530</lastBuildDate><atom:link href="https://madhavkhoslaa.github.io/draft/index.xml" rel="self" type="application/rss+xml"/><item><title>Torrent: 1. How a .torrent file works</title><link>https://madhavkhoslaa.github.io/draft/torrent_file/</link><pubDate>Thu, 09 Nov 2023 02:01:58 +0530</pubDate><guid>https://madhavkhoslaa.github.io/draft/torrent_file/</guid><description>Scope of this blog To be able to understand what a torrent file does. What does contents inside torrent file do.
-How you download a torrent. Say you were to download arch linux from the provided torrent file on the archlinux website. You would
-Download the file from the website load the file onto a torrent client like deluge/transmission/uTorrent etc and it begins downloading. Observing a torrent file Let&amp;rsquo;s disect the Arch Linux Iso and open the file.</description></item><item><title>Automating your Linux Development using Ansible and GNU Stow</title><link>https://madhavkhoslaa.github.io/draft/ansible/</link><pubDate>Mon, 27 Jun 2022 02:01:58 +0530</pubDate><guid>https://madhavkhoslaa.github.io/draft/ansible/</guid><description>Automating your Linux Development using Ansible and GNU Stow</description></item><item><title>How to make a URL shortner</title><link>https://madhavkhoslaa.github.io/draft/urlshortner/</link><pubDate>Mon, 27 Jun 2022 02:01:58 +0530</pubDate><guid>https://madhavkhoslaa.github.io/draft/urlshortner/</guid><description>What is a URL shortner ? It is a service that takes in a larger URL and turns it into a smaller URL, for the sake of:
-Convencice Tracking clicks Tracking where the URL was opened from. For Example:
-Long URL: https://www.amazon.in/gp/bestsellers/?ref_=nav_em_cs_bestsellers_0_1_1_2 Short URL: http://MyWebSite.com/{key}
-We replaced the larger url with a unique key in out system from which we can identify our unique key.
-How to generate a key ?</description></item><item><title>Static and Dynamic Dispatch in Rust</title><link>https://madhavkhoslaa.github.io/draft/dyn/</link><pubDate>Mon, 27 Jun 2022 02:01:58 +0530</pubDate><guid>https://madhavkhoslaa.github.io/draft/dyn/</guid><description>Static and Dynamic Dispatch in Rust</description></item></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Madhav Khosla</title><link>https://madhavkhoslaa.github.io/draft/</link><description>Recent content on Madhav Khosla</description><generator>Hugo</generator><language>en-us</language><lastBuildDate>Thu, 09 Nov 2023 02:01:58 +0530</lastBuildDate><atom:link href="https://madhavkhoslaa.github.io/draft/index.xml" rel="self" type="application/rss+xml"/><item><title>Torrent: 1. How a .torrent file works</title><link>https://madhavkhoslaa.github.io/draft/torrent_file/</link><pubDate>Thu, 09 Nov 2023 02:01:58 +0530</pubDate><guid>https://madhavkhoslaa.github.io/draft/torrent_file/</guid><description>&lt;p>&lt;img src="https://i.imgur.com/NQFCFTC.jpeg" alt="image">&lt;/p>
+&lt;h1 id="scope-of-this-blog">Scope of this blog&lt;/h1>
+&lt;p>To be able to understand what a torrent file does. What does contents inside torrent file do.&lt;/p>
+&lt;h1 id="how-you-download-a-torrent">How you download a torrent.&lt;/h1>
+&lt;p>Say you were to download arch linux from the provided torrent file on the archlinux website. You would&lt;/p>
+&lt;ol>
+&lt;li>Download the file from the website&lt;/li>
+&lt;li>load the file onto a torrent client like deluge/transmission/uTorrent etc and it begins downloading.&lt;/li>
+&lt;/ol>
+&lt;h1 id="observing-a-torrent-file">Observing a torrent file&lt;/h1>
+&lt;p>Let&amp;rsquo;s disect the &lt;a href="https://archlinux.org/releng/releases/2023.11.01/torrent/">Arch Linux Iso&lt;/a> and open the file.&lt;/p></description></item><item><title>Automating your Linux Development using Ansible and GNU Stow</title><link>https://madhavkhoslaa.github.io/draft/ansible/</link><pubDate>Mon, 27 Jun 2022 02:01:58 +0530</pubDate><guid>https://madhavkhoslaa.github.io/draft/ansible/</guid><description>&lt;h1 id="automating-your-linux-development-using-ansible-and-gnu-stow">Automating your Linux Development using Ansible and GNU Stow&lt;/h1>
+&lt;hr>
+&lt;hr></description></item><item><title>How to make a URL shortner</title><link>https://madhavkhoslaa.github.io/draft/urlshortner/</link><pubDate>Mon, 27 Jun 2022 02:01:58 +0530</pubDate><guid>https://madhavkhoslaa.github.io/draft/urlshortner/</guid><description>&lt;h1 id="what-is-a-url-shortner-">What is a URL shortner ?&lt;/h1>
+&lt;p>It is a service that takes in a larger URL and turns it into a smaller URL, for the sake of:&lt;/p>
+&lt;ol>
+&lt;li>Convencice&lt;/li>
+&lt;li>Tracking clicks&lt;/li>
+&lt;li>Tracking where the URL was opened from.&lt;/li>
+&lt;/ol>
+&lt;p>For Example:&lt;/p>
+&lt;p>Long URL: &lt;code>https://www.amazon.in/gp/bestsellers/?ref_=nav_em_cs_bestsellers_0_1_1_2&lt;/code> &lt;br>
+Short URL: &lt;code>http://MyWebSite.com/{key}&lt;/code>&lt;/p>
+&lt;p>We replaced the larger url with a unique key in out system from which we can identify our unique key.&lt;/p>
+&lt;h1 id="how-to-generate-a-key-">How to generate a key ?&lt;/h1>
+&lt;p>You need a way to transform your string to an other string, it could be either a set of random charecters or using a hashing algorithm.
+You use a hashing function to create a key that does not exist our system and is unique to a (long url) or (long url + user)&lt;/p></description></item><item><title>Static and Dynamic Dispatch in Rust</title><link>https://madhavkhoslaa.github.io/draft/dyn/</link><pubDate>Mon, 27 Jun 2022 02:01:58 +0530</pubDate><guid>https://madhavkhoslaa.github.io/draft/dyn/</guid><description>&lt;h1 id="static-and-dynamic-dispatch-in-rust">Static and Dynamic Dispatch in Rust&lt;/h1>
+&lt;hr>
+&lt;hr></description></item></channel></rss>
