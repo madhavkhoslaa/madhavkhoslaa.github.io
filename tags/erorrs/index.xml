@@ -1,10 +1,10 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Erorrs on Madhav Khosla</title><link>https://madhavkhoslaa.github.io/tags/erorrs/</link><description>Recent content in Erorrs on Madhav Khosla</description><generator>Hugo</generator><language>en-us</language><lastBuildDate>Thu, 08 Jun 2023 02:01:58 +0530</lastBuildDate><atom:link href="https://madhavkhoslaa.github.io/tags/erorrs/index.xml" rel="self" type="application/rss+xml"/><item><title>Error handling in Rust.</title><link>https://madhavkhoslaa.github.io/posts/errors/</link><pubDate>Thu, 08 Jun 2023 02:01:58 +0530</pubDate><guid>https://madhavkhoslaa.github.io/posts/errors/</guid><description>&lt;p>&lt;img src="https://i.imgur.com/VSG6kWK.jpeg" alt="image">&lt;/p>
-&lt;p>Errors in any language are hard to handle since they include the caller, defining errors, handling them and reporting to the end user. In this blog I will explain how to handle and create errors in rust.&lt;/p>
-&lt;h1 id="types-of-errors">Types of Errors&lt;/h1>
-&lt;ol>
-&lt;li>Unrecoverable Errors&lt;/li>
-&lt;li>Recoverable Errors&lt;/li>
-&lt;/ol>
-&lt;h1 id="how-to-handle-unrecoverable-errors">How to handle unrecoverable Errors.&lt;/h1>
-&lt;p>These errors are errors that make you want to stop the execution of the program. Like not being able to find a free port for starting the server, division by zero.
-These errors use the &lt;code>panic&lt;/code> macro to stop the execution of the program in rust.&lt;/p></description></item></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Erorrs on Madhav Khosla</title><link>https://madhavkhoslaa.github.io/tags/erorrs/</link><description>Recent content in Erorrs on Madhav Khosla</description><generator>Hugo</generator><language>en-us</language><lastBuildDate>Thu, 08 Jun 2023 02:01:58 +0530</lastBuildDate><atom:link href="https://madhavkhoslaa.github.io/tags/erorrs/index.xml" rel="self" type="application/rss+xml"/><item><title>Error handling in Rust.</title><link>https://madhavkhoslaa.github.io/posts/errors/</link><pubDate>Thu, 08 Jun 2023 02:01:58 +0530</pubDate><guid>https://madhavkhoslaa.github.io/posts/errors/</guid><description>&lt;p&gt;&lt;img src="https://madhavkhoslaa.github.io/images/VSG6kWK.jpeg" alt="image"&gt;&lt;/p&gt;
+&lt;p&gt;Errors in any language are hard to handle since they include the caller, defining errors, handling them and reporting to the end user. In this blog I will explain how to handle and create errors in rust.&lt;/p&gt;
+&lt;h1 id="types-of-errors"&gt;Types of Errors&lt;/h1&gt;
+&lt;ol&gt;
+&lt;li&gt;Unrecoverable Errors&lt;/li&gt;
+&lt;li&gt;Recoverable Errors&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h1 id="how-to-handle-unrecoverable-errors"&gt;How to handle unrecoverable Errors.&lt;/h1&gt;
+&lt;p&gt;These errors are errors that make you want to stop the execution of the program. Like not being able to find a free port for starting the server, division by zero.
+These errors use the &lt;code&gt;panic&lt;/code&gt; macro to stop the execution of the program in rust.&lt;/p&gt;</description></item></channel></rss>

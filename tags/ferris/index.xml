@@ -1,15 +1,15 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Ferris on Madhav Khosla</title><link>https://madhavkhoslaa.github.io/tags/ferris/</link><description>Recent content in Ferris on Madhav Khosla</description><generator>Hugo</generator><language>en-us</language><lastBuildDate>Tue, 27 Sep 2022 02:01:58 +0530</lastBuildDate><atom:link href="https://madhavkhoslaa.github.io/tags/ferris/index.xml" rel="self" type="application/rss+xml"/><item><title>Functional Programming in Rust 1: Closures</title><link>https://madhavkhoslaa.github.io/posts/functionalrust/</link><pubDate>Tue, 27 Sep 2022 02:01:58 +0530</pubDate><guid>https://madhavkhoslaa.github.io/posts/functionalrust/</guid><description>&lt;p>&lt;img src="https://i.imgur.com/y0nqC0G.jpg" alt="image">&lt;/p>
-&lt;h1 id="what-is-functional-programming">What is Functional Programming?&lt;/h1>
-&lt;p>It is a Programming Paradigm where you use functions to solve what you are building. The most common features that you might have used FP in any language will be Map and Reduce.
-Where you pass in a function what iterates in the collection you run map or reduce on.&lt;/p>
-&lt;p>Rust has some functional features too that I plan to write here.&lt;/p>
-&lt;h1 id="closures">Closures&lt;/h1>
-&lt;p>Let&amp;rsquo;s do a quick Google search &amp;ldquo;closures&amp;rdquo;; The first result that comes to me is from MDN.&lt;/p></description></item><item><title>Understanding Rust Ownership</title><link>https://madhavkhoslaa.github.io/posts/rustownership/</link><pubDate>Sun, 03 Jul 2022 02:01:58 +0530</pubDate><guid>https://madhavkhoslaa.github.io/posts/rustownership/</guid><description>&lt;p>Ownership is one of the features that make it different than so many programming languages and what makes it memory safe and a good language for concurrent programming. It solves problems like null pointers, dangling pointers and data races without a garbage collector at the run time.&lt;/p>
-&lt;h1 id="understanding-rust-ownership">Understanding Rust Ownership&lt;/h1>
-&lt;p>&lt;img src="https://i.imgur.com/j5Pxkuu.jpg" alt="image">&lt;/p>
-&lt;h1 id="how-is-data-stored-in-the-program">How is data stored in the program?&lt;/h1>
-&lt;ol>
-&lt;li>Stack&lt;/li>
-&lt;li>Heap&lt;/li>
-&lt;/ol>
-&lt;p>Data(variables in function arguments and defined) in the stack have a known type hence the size of the data in the stack is known at the time of compilation. However, data types like vectors and strings are bound to grow in size hence they are stored in the heap(their size cannot be determined at the time of compilation).&lt;/p></description></item></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Ferris on Madhav Khosla</title><link>https://madhavkhoslaa.github.io/tags/ferris/</link><description>Recent content in Ferris on Madhav Khosla</description><generator>Hugo</generator><language>en-us</language><lastBuildDate>Tue, 27 Sep 2022 02:01:58 +0530</lastBuildDate><atom:link href="https://madhavkhoslaa.github.io/tags/ferris/index.xml" rel="self" type="application/rss+xml"/><item><title>Functional Programming in Rust 1: Closures</title><link>https://madhavkhoslaa.github.io/posts/functionalrust/</link><pubDate>Tue, 27 Sep 2022 02:01:58 +0530</pubDate><guid>https://madhavkhoslaa.github.io/posts/functionalrust/</guid><description>&lt;p&gt;&lt;img src="https://madhavkhoslaa.github.io/images/y0nqC0G.jpg" alt="image"&gt;&lt;/p&gt;
+&lt;h1 id="what-is-functional-programming"&gt;What is Functional Programming?&lt;/h1&gt;
+&lt;p&gt;It is a Programming Paradigm where you use functions to solve what you are building. The most common features that you might have used FP in any language will be Map and Reduce.
+Where you pass in a function what iterates in the collection you run map or reduce on.&lt;/p&gt;
+&lt;p&gt;Rust has some functional features too that I plan to write here.&lt;/p&gt;
+&lt;h1 id="closures"&gt;Closures&lt;/h1&gt;
+&lt;p&gt;Let&amp;rsquo;s do a quick Google search &amp;ldquo;closures&amp;rdquo;; The first result that comes to me is from MDN.&lt;/p&gt;</description></item><item><title>Understanding Rust Ownership</title><link>https://madhavkhoslaa.github.io/posts/rustownership/</link><pubDate>Sun, 03 Jul 2022 02:01:58 +0530</pubDate><guid>https://madhavkhoslaa.github.io/posts/rustownership/</guid><description>&lt;p&gt;Ownership is one of the features that make it different than so many programming languages and what makes it memory safe and a good language for concurrent programming. It solves problems like null pointers, dangling pointers and data races without a garbage collector at the run time.&lt;/p&gt;
+&lt;h1 id="understanding-rust-ownership"&gt;Understanding Rust Ownership&lt;/h1&gt;
+&lt;p&gt;&lt;img src="https://madhavkhoslaa.github.io/images/j5Pxkuu.jpg" alt="image"&gt;&lt;/p&gt;
+&lt;h1 id="how-is-data-stored-in-the-program"&gt;How is data stored in the program?&lt;/h1&gt;
+&lt;ol&gt;
+&lt;li&gt;Stack&lt;/li&gt;
+&lt;li&gt;Heap&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Data(variables in function arguments and defined) in the stack have a known type hence the size of the data in the stack is known at the time of compilation. However, data types like vectors and strings are bound to grow in size hence they are stored in the heap(their size cannot be determined at the time of compilation).&lt;/p&gt;</description></item></channel></rss>

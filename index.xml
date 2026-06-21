@@ -1,64 +1,65 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Madhav Khosla</title><link>https://madhavkhoslaa.github.io/</link><description>Recent content on Madhav Khosla</description><generator>Hugo</generator><language>en-us</language><lastBuildDate>Thu, 09 Nov 2023 02:01:58 +0530</lastBuildDate><atom:link href="https://madhavkhoslaa.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>Torrent: 1. How a .torrent file works</title><link>https://madhavkhoslaa.github.io/draft/torrent_file/</link><pubDate>Thu, 09 Nov 2023 02:01:58 +0530</pubDate><guid>https://madhavkhoslaa.github.io/draft/torrent_file/</guid><description>&lt;p>&lt;img src="https://i.imgur.com/NQFCFTC.jpeg" alt="image">&lt;/p>
-&lt;h1 id="scope-of-this-blog">Scope of this blog&lt;/h1>
-&lt;p>To be able to understand what a torrent file does. What does contents inside torrent file do.&lt;/p>
-&lt;h1 id="how-you-download-a-torrent">How you download a torrent.&lt;/h1>
-&lt;p>Say you were to download arch linux from the provided torrent file on the archlinux website. You would&lt;/p>
-&lt;ol>
-&lt;li>Download the file from the website&lt;/li>
-&lt;li>load the file onto a torrent client like deluge/transmission/uTorrent etc and it begins downloading.&lt;/li>
-&lt;/ol>
-&lt;h1 id="observing-a-torrent-file">Observing a torrent file&lt;/h1>
-&lt;p>Let&amp;rsquo;s disect the &lt;a href="https://archlinux.org/releng/releases/2023.11.01/torrent/">Arch Linux Iso&lt;/a> and open the file.&lt;/p></description></item><item><title>Error handling in Rust.</title><link>https://madhavkhoslaa.github.io/posts/errors/</link><pubDate>Thu, 08 Jun 2023 02:01:58 +0530</pubDate><guid>https://madhavkhoslaa.github.io/posts/errors/</guid><description>&lt;p>&lt;img src="https://i.imgur.com/VSG6kWK.jpeg" alt="image">&lt;/p>
-&lt;p>Errors in any language are hard to handle since they include the caller, defining errors, handling them and reporting to the end user. In this blog I will explain how to handle and create errors in rust.&lt;/p>
-&lt;h1 id="types-of-errors">Types of Errors&lt;/h1>
-&lt;ol>
-&lt;li>Unrecoverable Errors&lt;/li>
-&lt;li>Recoverable Errors&lt;/li>
-&lt;/ol>
-&lt;h1 id="how-to-handle-unrecoverable-errors">How to handle unrecoverable Errors.&lt;/h1>
-&lt;p>These errors are errors that make you want to stop the execution of the program. Like not being able to find a free port for starting the server, division by zero.
-These errors use the &lt;code>panic&lt;/code> macro to stop the execution of the program in rust.&lt;/p></description></item><item><title>Functional Programming in Rust 2: Iterators</title><link>https://madhavkhoslaa.github.io/posts/rustiter/</link><pubDate>Sun, 20 Nov 2022 23:01:35 +0530</pubDate><guid>https://madhavkhoslaa.github.io/posts/rustiter/</guid><description>&lt;h1 id="iterator-design-pattern-what-is-it">Iterator Design Pattern, What is it?&lt;/h1>
-&lt;h2 id="example-1">Example 1&lt;/h2>
-&lt;p>Let&amp;rsquo;s consider you are this tiny person in the image and you have to walk traverse the tree below. Ideally, how you traverse it, it does not matter what is the most important thing is &lt;strong>1.&lt;/strong> where you are and &lt;strong>2.&lt;/strong> Where you want to be when you go to the &lt;code>next&lt;/code> node.&lt;/p>
-&lt;p>So in a way, an iterator design pattern(in real life) is a thought process of how you iterate a structure(not just a tree), or you know where you want(not how) to go &lt;code>next&lt;/code>.&lt;/p></description></item><item><title>Functional Programming in Rust 1: Closures</title><link>https://madhavkhoslaa.github.io/posts/functionalrust/</link><pubDate>Tue, 27 Sep 2022 02:01:58 +0530</pubDate><guid>https://madhavkhoslaa.github.io/posts/functionalrust/</guid><description>&lt;p>&lt;img src="https://i.imgur.com/y0nqC0G.jpg" alt="image">&lt;/p>
-&lt;h1 id="what-is-functional-programming">What is Functional Programming?&lt;/h1>
-&lt;p>It is a Programming Paradigm where you use functions to solve what you are building. The most common features that you might have used FP in any language will be Map and Reduce.
-Where you pass in a function what iterates in the collection you run map or reduce on.&lt;/p>
-&lt;p>Rust has some functional features too that I plan to write here.&lt;/p>
-&lt;h1 id="closures">Closures&lt;/h1>
-&lt;p>Let&amp;rsquo;s do a quick Google search &amp;ldquo;closures&amp;rdquo;; The first result that comes to me is from MDN.&lt;/p></description></item><item><title>Understanding Rust Ownership</title><link>https://madhavkhoslaa.github.io/posts/rustownership/</link><pubDate>Sun, 03 Jul 2022 02:01:58 +0530</pubDate><guid>https://madhavkhoslaa.github.io/posts/rustownership/</guid><description>&lt;p>Ownership is one of the features that make it different than so many programming languages and what makes it memory safe and a good language for concurrent programming. It solves problems like null pointers, dangling pointers and data races without a garbage collector at the run time.&lt;/p>
-&lt;h1 id="understanding-rust-ownership">Understanding Rust Ownership&lt;/h1>
-&lt;p>&lt;img src="https://i.imgur.com/j5Pxkuu.jpg" alt="image">&lt;/p>
-&lt;h1 id="how-is-data-stored-in-the-program">How is data stored in the program?&lt;/h1>
-&lt;ol>
-&lt;li>Stack&lt;/li>
-&lt;li>Heap&lt;/li>
-&lt;/ol>
-&lt;p>Data(variables in function arguments and defined) in the stack have a known type hence the size of the data in the stack is known at the time of compilation. However, data types like vectors and strings are bound to grow in size hence they are stored in the heap(their size cannot be determined at the time of compilation).&lt;/p></description></item><item><title>Automating your Linux Development using Ansible and GNU Stow</title><link>https://madhavkhoslaa.github.io/draft/ansible/</link><pubDate>Mon, 27 Jun 2022 02:01:58 +0530</pubDate><guid>https://madhavkhoslaa.github.io/draft/ansible/</guid><description>&lt;h1 id="automating-your-linux-development-using-ansible-and-gnu-stow">Automating your Linux Development using Ansible and GNU Stow&lt;/h1>
-&lt;hr>
-&lt;hr></description></item><item><title>How to make a URL shortner</title><link>https://madhavkhoslaa.github.io/draft/urlshortner/</link><pubDate>Mon, 27 Jun 2022 02:01:58 +0530</pubDate><guid>https://madhavkhoslaa.github.io/draft/urlshortner/</guid><description>&lt;h1 id="what-is-a-url-shortner-">What is a URL shortner ?&lt;/h1>
-&lt;p>It is a service that takes in a larger URL and turns it into a smaller URL, for the sake of:&lt;/p>
-&lt;ol>
-&lt;li>Convencice&lt;/li>
-&lt;li>Tracking clicks&lt;/li>
-&lt;li>Tracking where the URL was opened from.&lt;/li>
-&lt;/ol>
-&lt;p>For Example:&lt;/p>
-&lt;p>Long URL: &lt;code>https://www.amazon.in/gp/bestsellers/?ref_=nav_em_cs_bestsellers_0_1_1_2&lt;/code> &lt;br>
-Short URL: &lt;code>http://MyWebSite.com/{key}&lt;/code>&lt;/p>
-&lt;p>We replaced the larger url with a unique key in out system from which we can identify our unique key.&lt;/p>
-&lt;h1 id="how-to-generate-a-key-">How to generate a key ?&lt;/h1>
-&lt;p>You need a way to transform your string to an other string, it could be either a set of random charecters or using a hashing algorithm.
-You use a hashing function to create a key that does not exist our system and is unique to a (long url) or (long url + user)&lt;/p></description></item><item><title>Static and Dynamic Dispatch in Rust</title><link>https://madhavkhoslaa.github.io/draft/dyn/</link><pubDate>Mon, 27 Jun 2022 02:01:58 +0530</pubDate><guid>https://madhavkhoslaa.github.io/draft/dyn/</guid><description>&lt;h1 id="static-and-dynamic-dispatch-in-rust">Static and Dynamic Dispatch in Rust&lt;/h1>
-&lt;hr>
-&lt;hr></description></item><item><title>Creational Design Patterns: My lessons on it</title><link>https://madhavkhoslaa.github.io/posts/ceationaldesignpatterns/</link><pubDate>Fri, 24 Jun 2022 02:01:58 +0530</pubDate><guid>https://madhavkhoslaa.github.io/posts/ceationaldesignpatterns/</guid><description>&lt;h1 id="creational-design-patterns">Creational Design Patterns&lt;/h1>
-&lt;blockquote>
-&lt;p>&lt;a href="https://refactoring.guru/design-patterns/creational-patterns">Creational design patterns provide various object creation mechanisms, which increase flexibility and reuse of existing code&lt;/a>.&lt;/p>&lt;/blockquote>
-&lt;h1 id="why-were-they-made-and-why-should-you-care-about-reading-them">Why were they made and why should you care about reading them?&lt;/h1>
-&lt;p>You must have noticed in a larger code base where multiple classes dealing with the class instantiation becomes too hard, in fact in the case of languages like java where the ecosystem expects everything to be a class; a framework called spring had been developed to solve the problem of instantiating classes(and so much more). So you get the scope of the problem of just the creation of objects.&lt;/p></description></item><item><title>SOLID Patterns: My lessons on it</title><link>https://madhavkhoslaa.github.io/posts/solid/</link><pubDate>Tue, 07 Jun 2022 04:01:25 +0530</pubDate><guid>https://madhavkhoslaa.github.io/posts/solid/</guid><description>&lt;p>SOLID is just an acronym for a few principles that Robert C. Martin compiled together. SOLID Design principles aim to make your code base extensible, easy to modify in the future, and easy to debug and fix. They are &lt;em>not rules&lt;/em> just a bunch of thought ideas of segregation of logic and how to organize your code.&lt;/p>
-&lt;p>&lt;strong>S&lt;/strong> =&amp;gt; &lt;a href="#1-Single-Responsibility-Principle">Single Responsibility Principle&lt;/a>&lt;/p>
-&lt;p>&lt;strong>O&lt;/strong> =&amp;gt; &lt;a href="#Open-Close-Princple">Open Close Princple&lt;/a>&lt;/p>
-&lt;p>&lt;strong>L&lt;/strong> =&amp;gt; &lt;a href="#Liskov-Substitution-Principle">Liskov Substitution Principle&lt;/a>&lt;/p>
-&lt;p>&lt;strong>I&lt;/strong> =&amp;gt; &lt;a href="#Interface-Segregation-Principle">Interface Segregation Principle&lt;/a>&lt;/p></description></item><item><title>Caching: My lessons on it</title><link>https://madhavkhoslaa.github.io/posts/post1/</link><pubDate>Sat, 19 Mar 2022 02:01:58 +0530</pubDate><guid>https://madhavkhoslaa.github.io/posts/post1/</guid><description>&lt;p>Caching is a cheap way to scale a system&amp;rsquo;s performance in very less time. Being cheap and easy to implement on the top of a existing system it also brings some problems such as invalidation and infrastructure for setting up the cache itself. Here I plan to talk about some lessons on caching that I&amp;rsquo;ve learnt in a few months.&lt;/p>
-&lt;h1 id="philosophy-of-caching">Philosophy of Caching&lt;/h1>
-&lt;p>&lt;em>The supreme art of war is to subdue the enemy without fighting it - Sun Tzu&lt;/em>&lt;/p></description></item><item><title>About</title><link>https://madhavkhoslaa.github.io/about/</link><pubDate>Thu, 28 Feb 2019 00:00:00 +0000</pubDate><guid>https://madhavkhoslaa.github.io/about/</guid><description>&lt;h2 id="hi-writing-here-about-what-i-like-and-care-about-d">Hi, Writing here about what I like and care about. :D&lt;/h2></description></item></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Madhav Khosla</title><link>https://madhavkhoslaa.github.io/</link><description>Recent content on Madhav Khosla</description><generator>Hugo</generator><language>en-us</language><lastBuildDate>Thu, 09 Nov 2023 02:01:58 +0530</lastBuildDate><atom:link href="https://madhavkhoslaa.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>Torrent: 1. How a .torrent file works</title><link>https://madhavkhoslaa.github.io/draft/torrent_file/</link><pubDate>Thu, 09 Nov 2023 02:01:58 +0530</pubDate><guid>https://madhavkhoslaa.github.io/draft/torrent_file/</guid><description>&lt;p&gt;&lt;img src="https://madhavkhoslaa.github.io/images/NQFCFTC.jpeg" alt="image"&gt;&lt;/p&gt;
+&lt;h1 id="scope-of-this-blog"&gt;Scope of this blog&lt;/h1&gt;
+&lt;p&gt;To be able to understand what a torrent file does. What does contents inside torrent file do.&lt;/p&gt;
+&lt;h1 id="how-you-download-a-torrent"&gt;How you download a torrent.&lt;/h1&gt;
+&lt;p&gt;Say you were to download arch linux from the provided torrent file on the archlinux website. You would&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Download the file from the website&lt;/li&gt;
+&lt;li&gt;load the file onto a torrent client like deluge/transmission/uTorrent etc and it begins downloading.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h1 id="observing-a-torrent-file"&gt;Observing a torrent file&lt;/h1&gt;
+&lt;p&gt;Let&amp;rsquo;s disect the &lt;a href="https://archlinux.org/releng/releases/2023.11.01/torrent/"&gt;Arch Linux Iso&lt;/a&gt; and open the file.&lt;/p&gt;</description></item><item><title>Error handling in Rust.</title><link>https://madhavkhoslaa.github.io/posts/errors/</link><pubDate>Thu, 08 Jun 2023 02:01:58 +0530</pubDate><guid>https://madhavkhoslaa.github.io/posts/errors/</guid><description>&lt;p&gt;&lt;img src="https://madhavkhoslaa.github.io/images/VSG6kWK.jpeg" alt="image"&gt;&lt;/p&gt;
+&lt;p&gt;Errors in any language are hard to handle since they include the caller, defining errors, handling them and reporting to the end user. In this blog I will explain how to handle and create errors in rust.&lt;/p&gt;
+&lt;h1 id="types-of-errors"&gt;Types of Errors&lt;/h1&gt;
+&lt;ol&gt;
+&lt;li&gt;Unrecoverable Errors&lt;/li&gt;
+&lt;li&gt;Recoverable Errors&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h1 id="how-to-handle-unrecoverable-errors"&gt;How to handle unrecoverable Errors.&lt;/h1&gt;
+&lt;p&gt;These errors are errors that make you want to stop the execution of the program. Like not being able to find a free port for starting the server, division by zero.
+These errors use the &lt;code&gt;panic&lt;/code&gt; macro to stop the execution of the program in rust.&lt;/p&gt;</description></item><item><title>Functional Programming in Rust 2: Iterators</title><link>https://madhavkhoslaa.github.io/posts/rustiter/</link><pubDate>Sun, 20 Nov 2022 23:01:35 +0530</pubDate><guid>https://madhavkhoslaa.github.io/posts/rustiter/</guid><description>&lt;h1 id="iterator-design-pattern-what-is-it"&gt;Iterator Design Pattern, What is it?&lt;/h1&gt;
+&lt;h2 id="example-1"&gt;Example 1&lt;/h2&gt;
+&lt;p&gt;Let&amp;rsquo;s consider you are this tiny person in the image and you have to walk traverse the tree below. Ideally, how you traverse it, it does not matter what is the most important thing is &lt;strong&gt;1.&lt;/strong&gt; where you are and &lt;strong&gt;2.&lt;/strong&gt; Where you want to be when you go to the &lt;code&gt;next&lt;/code&gt; node.&lt;/p&gt;
+&lt;p&gt;So in a way, an iterator design pattern(in real life) is a thought process of how you iterate a structure(not just a tree), or you know where you want(not how) to go &lt;code&gt;next&lt;/code&gt;.&lt;/p&gt;</description></item><item><title>Functional Programming in Rust 1: Closures</title><link>https://madhavkhoslaa.github.io/posts/functionalrust/</link><pubDate>Tue, 27 Sep 2022 02:01:58 +0530</pubDate><guid>https://madhavkhoslaa.github.io/posts/functionalrust/</guid><description>&lt;p&gt;&lt;img src="https://madhavkhoslaa.github.io/images/y0nqC0G.jpg" alt="image"&gt;&lt;/p&gt;
+&lt;h1 id="what-is-functional-programming"&gt;What is Functional Programming?&lt;/h1&gt;
+&lt;p&gt;It is a Programming Paradigm where you use functions to solve what you are building. The most common features that you might have used FP in any language will be Map and Reduce.
+Where you pass in a function what iterates in the collection you run map or reduce on.&lt;/p&gt;
+&lt;p&gt;Rust has some functional features too that I plan to write here.&lt;/p&gt;
+&lt;h1 id="closures"&gt;Closures&lt;/h1&gt;
+&lt;p&gt;Let&amp;rsquo;s do a quick Google search &amp;ldquo;closures&amp;rdquo;; The first result that comes to me is from MDN.&lt;/p&gt;</description></item><item><title>Understanding Rust Ownership</title><link>https://madhavkhoslaa.github.io/posts/rustownership/</link><pubDate>Sun, 03 Jul 2022 02:01:58 +0530</pubDate><guid>https://madhavkhoslaa.github.io/posts/rustownership/</guid><description>&lt;p&gt;Ownership is one of the features that make it different than so many programming languages and what makes it memory safe and a good language for concurrent programming. It solves problems like null pointers, dangling pointers and data races without a garbage collector at the run time.&lt;/p&gt;
+&lt;h1 id="understanding-rust-ownership"&gt;Understanding Rust Ownership&lt;/h1&gt;
+&lt;p&gt;&lt;img src="https://madhavkhoslaa.github.io/images/j5Pxkuu.jpg" alt="image"&gt;&lt;/p&gt;
+&lt;h1 id="how-is-data-stored-in-the-program"&gt;How is data stored in the program?&lt;/h1&gt;
+&lt;ol&gt;
+&lt;li&gt;Stack&lt;/li&gt;
+&lt;li&gt;Heap&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Data(variables in function arguments and defined) in the stack have a known type hence the size of the data in the stack is known at the time of compilation. However, data types like vectors and strings are bound to grow in size hence they are stored in the heap(their size cannot be determined at the time of compilation).&lt;/p&gt;</description></item><item><title>Automating your Linux Development using Ansible and GNU Stow</title><link>https://madhavkhoslaa.github.io/draft/ansible/</link><pubDate>Mon, 27 Jun 2022 02:01:58 +0530</pubDate><guid>https://madhavkhoslaa.github.io/draft/ansible/</guid><description>&lt;h1 id="automating-your-linux-development-using-ansible-and-gnu-stow"&gt;Automating your Linux Development using Ansible and GNU Stow&lt;/h1&gt;
+&lt;hr&gt;
+&lt;hr&gt;</description></item><item><title>How to make a URL shortner</title><link>https://madhavkhoslaa.github.io/draft/urlshortner/</link><pubDate>Mon, 27 Jun 2022 02:01:58 +0530</pubDate><guid>https://madhavkhoslaa.github.io/draft/urlshortner/</guid><description>&lt;h1 id="what-is-a-url-shortner-"&gt;What is a URL shortner ?&lt;/h1&gt;
+&lt;p&gt;It is a service that takes in a larger URL and turns it into a smaller URL, for the sake of:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Convencice&lt;/li&gt;
+&lt;li&gt;Tracking clicks&lt;/li&gt;
+&lt;li&gt;Tracking where the URL was opened from.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;For Example:&lt;/p&gt;
+&lt;p&gt;Long URL: &lt;code&gt;https://www.amazon.in/gp/bestsellers/?ref_=nav_em_cs_bestsellers_0_1_1_2&lt;/code&gt; &lt;br&gt;
+Short URL: &lt;code&gt;http://MyWebSite.com/{key}&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;We replaced the larger url with a unique key in out system from which we can identify our unique key.&lt;/p&gt;
+&lt;h1 id="how-to-generate-a-key-"&gt;How to generate a key ?&lt;/h1&gt;
+&lt;p&gt;You need a way to transform your string to an other string, it could be either a set of random charecters or using a hashing algorithm.
+You use a hashing function to create a key that does not exist our system and is unique to a (long url) or (long url + user)&lt;/p&gt;</description></item><item><title>Static and Dynamic Dispatch in Rust</title><link>https://madhavkhoslaa.github.io/draft/dyn/</link><pubDate>Mon, 27 Jun 2022 02:01:58 +0530</pubDate><guid>https://madhavkhoslaa.github.io/draft/dyn/</guid><description>&lt;h1 id="static-and-dynamic-dispatch-in-rust"&gt;Static and Dynamic Dispatch in Rust&lt;/h1&gt;
+&lt;hr&gt;
+&lt;hr&gt;</description></item><item><title>Creational Design Patterns: My lessons on it</title><link>https://madhavkhoslaa.github.io/posts/ceationaldesignpatterns/</link><pubDate>Fri, 24 Jun 2022 02:01:58 +0530</pubDate><guid>https://madhavkhoslaa.github.io/posts/ceationaldesignpatterns/</guid><description>&lt;h1 id="creational-design-patterns"&gt;Creational Design Patterns&lt;/h1&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;a href="https://refactoring.guru/design-patterns/creational-patterns"&gt;Creational design patterns provide various object creation mechanisms, which increase flexibility and reuse of existing code&lt;/a&gt;.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h1 id="why-were-they-made-and-why-should-you-care-about-reading-them"&gt;Why were they made and why should you care about reading them?&lt;/h1&gt;
+&lt;p&gt;You must have noticed in a larger code base where multiple classes dealing with the class instantiation becomes too hard, in fact in the case of languages like java where the ecosystem expects everything to be a class; a framework called spring had been developed to solve the problem of instantiating classes(and so much more). So you get the scope of the problem of just the creation of objects.&lt;/p&gt;</description></item><item><title>SOLID Patterns: My lessons on it</title><link>https://madhavkhoslaa.github.io/posts/solid/</link><pubDate>Tue, 07 Jun 2022 04:01:25 +0530</pubDate><guid>https://madhavkhoslaa.github.io/posts/solid/</guid><description>&lt;p&gt;SOLID is just an acronym for a few principles that Robert C. Martin compiled together. SOLID Design principles aim to make your code base extensible, easy to modify in the future, and easy to debug and fix. They are &lt;em&gt;not rules&lt;/em&gt; just a bunch of thought ideas of segregation of logic and how to organize your code.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;S&lt;/strong&gt; =&amp;gt; &lt;a href="#1-Single-Responsibility-Principle"&gt;Single Responsibility Principle&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;O&lt;/strong&gt; =&amp;gt; &lt;a href="#Open-Close-Princple"&gt;Open Close Princple&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;L&lt;/strong&gt; =&amp;gt; &lt;a href="#Liskov-Substitution-Principle"&gt;Liskov Substitution Principle&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;I&lt;/strong&gt; =&amp;gt; &lt;a href="#Interface-Segregation-Principle"&gt;Interface Segregation Principle&lt;/a&gt;&lt;/p&gt;</description></item><item><title>Caching: My lessons on it</title><link>https://madhavkhoslaa.github.io/posts/post1/</link><pubDate>Sat, 19 Mar 2022 02:01:58 +0530</pubDate><guid>https://madhavkhoslaa.github.io/posts/post1/</guid><description>&lt;p&gt;Caching is a cheap way to scale a system&amp;rsquo;s performance in very less time. Being cheap and easy to implement on the top of a existing system it also brings some problems such as invalidation and infrastructure for setting up the cache itself. Here I plan to talk about some lessons on caching that I&amp;rsquo;ve learnt in a few months.&lt;/p&gt;
+&lt;h1 id="philosophy-of-caching"&gt;Philosophy of Caching&lt;/h1&gt;
+&lt;p&gt;&lt;em&gt;The supreme art of war is to subdue the enemy without fighting it - Sun Tzu&lt;/em&gt;&lt;/p&gt;</description></item><item><title>About</title><link>https://madhavkhoslaa.github.io/about/</link><pubDate>Thu, 28 Feb 2019 00:00:00 +0000</pubDate><guid>https://madhavkhoslaa.github.io/about/</guid><description>&lt;h2 id="hi-writing-here-about-what-i-like-and-care-about-d"&gt;Hi, Writing here about what I like and care about. :D&lt;/h2&gt;</description></item></channel></rss>
