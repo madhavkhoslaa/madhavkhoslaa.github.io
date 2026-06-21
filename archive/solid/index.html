@@ -1,0 +1,289 @@
+<!doctype html><html lang=en><head><title>SOLID Patterns: My lessons on it &ndash; Madhav Khosla</title><meta name=description content="Backend Engineer | Crypto Enthusiast"><meta name=viewport content="width=device-width,initial-scale=1"><meta charset=UTF-8><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin=anonymous referrerpolicy=no-referrer><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/academicons/1.9.4/css/academicons.min.css integrity="sha512-IW0nhlW5MgNydsXJO40En2EoCkTTjZhI3yuODrZIc8cQ4h1XcF53PsqDHa09NqnkXuIe0Oiyyj171BqZFwISBw==" crossorigin=anonymous referrerpolicy=no-referrer><link rel=stylesheet href=/css/palettes/base16-dark.css><link rel=stylesheet href=/css/risotto.css><link rel=stylesheet href=/css/custom.css><meta property="og:title" content="SOLID Patterns: My lessons on it &ndash; Madhav Khosla"><meta property="og:url" content="https://madhavkhoslaa.github.io/archive/solid/"><meta property="og:description" content="SOLID Patterns are a general guideline and recommended patterns that you can use in your codebase to be extensible, easy to modify in the future, and easy to fix. These aren't hard-bound rules just general recommendations. Here, I'll talk about them in detail. &ndash; "><meta property="og:locale" content="en"><meta property="og:image" content></head><body><div class=page><header class=page__header><nav class="page__nav main-nav"><ul><li class=nomarker><h1 class=page__logo><a href=/ class=page__logo-inner>Madhav Khosla</a></h1></li><li class=main-nav__item><a class=nav-main-item href=/ title>Home</a></li><li class=main-nav__item><a class=nav-main-item href=/posts/ title>Posts</a></li><li class=main-nav__item><a class=nav-main-item href=/archive/ title>Archive</a></li><li class=main-nav__item><a class=nav-main-item href=/about/ title>About</a></li><li class=main-nav__item><a class=nav-main-item href=/tags/ title>Tags</a></li><li class=main-nav__item><a class=nav-main-item href=/draft/ title>Draft</a></li></ul></nav></header><section class=page__body><header class=content__header><h1>SOLID Patterns: My lessons on it</h1></header><div class=content__body><p>SOLID is just an acronym for a few principles that Robert C. Martin compiled together. SOLID Design principles aim to make your code base extensible, easy to modify in the future, and easy to debug and fix. They are <em>not rules</em> just a bunch of thought ideas of segregation of logic and how to organize your code.</p><p><strong>S</strong> => <a href=#1-Single-Responsibility-Principle>Single Responsibility Principle</a></p><p><strong>O</strong> => <a href=#Open-Close-Princple>Open Close Princple</a></p><p><strong>L</strong> => <a href=#Liskov-Substitution-Principle>Liskov Substitution Principle</a></p><p><strong>I</strong> => <a href=#Interface-Segregation-Principle>Interface Segregation Principle</a></p><p><strong>D</strong> => <a href=#Dependency-Injection>Dependency Injection</a></p><h1 id=1-single-responsibility-principle>1 Single Responsibility Principle</h1><p>According to the definition, SRP is:</p><blockquote><p>A class should have one and only one reason to change, meaning that a class should have only one job.</p></blockquote><p>But, what does it mean ??</p><p>It means that if you have multiple functionalities in your application, then there should be a separate class or an entity for them, this leads to the separation of concerns, and fixing a bug related to a feature will be changed in the respective entity.</p><p>For Example, you have a program to write a diary and have options to store it to JSON, toS3, and whatnot.</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-typescript data-lang=typescript><span class=line><span class=cl><span class=kr>class</span> <span class=nx>NoteBook</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=nx>pageCount</span> <span class=o>=</span> <span class=mi>0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=nx>pages</span> <span class=o>=</span> <span class=p>[];</span>
+</span></span><span class=line><span class=cl>  <span class=kr>constructor</span><span class=p>(</span><span class=kr>public</span> <span class=nx>name</span><span class=p>)</span> <span class=p>{}</span>
+</span></span><span class=line><span class=cl>  <span class=nx>writePage</span><span class=p>(</span><span class=nx>contents</span>: <span class=kt>string</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>this</span><span class=p>.</span><span class=nx>pages</span><span class=p>.</span><span class=nx>push</span><span class=p>(</span><span class=nx>contents</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=k>this</span><span class=p>.</span><span class=nx>pageCount</span> <span class=o>+=</span> <span class=mi>1</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl>  <span class=nx>getPage</span><span class=p>(</span><span class=nx>idx</span>: <span class=kt>number</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=nx>pages</span><span class=p>[</span><span class=nx>idx</span><span class=p>];</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl>  <span class=nx>getPages() {</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=nx>pageCount</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl>  <span class=nx>toString() {</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=nx>pages</span><span class=p>.</span><span class=nx>toString</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl>  <span class=nx>toJSON() {</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=p>{</span> <span class=nx>contents</span>: <span class=kt>this.toString</span><span class=p>()</span> <span class=p>};</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl>  <span class=nx>toS3() {</span>
+</span></span><span class=line><span class=cl>    <span class=nx>aws</span><span class=p>.</span><span class=nx>S3</span><span class=p>.</span><span class=nx>uploadBucketData</span><span class=p>(</span><span class=k>this</span><span class=p>.</span><span class=nx>toJSON</span><span class=p>());</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div><h2 id=11-what-is-the-issue-with-this-code>1.1 What is the issue with this code?</h2><p>Let&rsquo;s observe the behavior of the class in the above code.</p><ol><li>Handles the logic for notebooks. Such as adding pages, deleting pages, and getting page count.</li><li>Parsing the code to JSON, String.</li><li>Saving the Code to S3 or some file.</li></ol><p>If we observe functions like toS3(), there might be other classes that require the same functionality as well, such as a Diary Class? We might write the same code for the other class that might require the same functionality.</p><p>Do you see the problem here? There is no code reusability a single class has too many functions and writing and persisting are tightly coupled to each other in this implementation.</p><p>This implementation over time will lead to the formation of a &ldquo;God Class&rdquo;, where a single class is doing too much work. This leads to difficulty in fixing bugs, specialized implementations for every single class, and not generic implementations.</p><p>We can fix these issues by thinking of different functionalities as different classes or different responsibilities, that handle only that set of related functionalities. Like a persistence class, a different class to create Notebook objects.</p><h3 id=12-a-better-implementation>1.2 A Better Implementation</h3><div class=highlight><pre tabindex=0 class=chroma><code class=language-typescript data-lang=typescript><span class=line><span class=cl><span class=kr>abstract</span> <span class=kr>class</span> <span class=nx>Persistance</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=nx>toString() {</span><span class=p>}</span>
+</span></span><span class=line><span class=cl>  <span class=nx>toJSON() {</span><span class=p>}</span>
+</span></span><span class=line><span class=cl>  <span class=nx>toS3() {</span><span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kr>class</span> <span class=nx>NotebookPersistance</span> <span class=kr>extends</span> <span class=nx>Persistance</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=nx>notebook</span>: <span class=kt>Notebook</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=kr>constructor</span><span class=p>(</span><span class=nx>_notebook</span>: <span class=kt>Notebook</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>this</span><span class=p>.</span><span class=nx>notebook</span> <span class=o>=</span> <span class=nx>_notebook</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl>  <span class=nx>toS3() {</span>
+</span></span><span class=line><span class=cl>    <span class=c1>// Some Logic to S3
+</span></span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl>  <span class=nx>toJSON() {</span>
+</span></span><span class=line><span class=cl>    <span class=c1>// Some Logic to JSON
+</span></span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl>  <span class=nx>toString() {</span>
+</span></span><span class=line><span class=cl>    <span class=c1>// Some Logic to String
+</span></span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=kr>class</span> <span class=nx>DiaryPersistance</span> <span class=kr>extends</span> <span class=nx>Persistance</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=nx>diary</span>: <span class=kt>Diary</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=kr>constructor</span><span class=p>(</span><span class=nx>_diary_</span>: <span class=kt>Notebook</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>this</span><span class=p>.</span><span class=nx>diary</span> <span class=o>=</span> <span class=nx>_diary</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl>  <span class=nx>toS3() {</span>
+</span></span><span class=line><span class=cl>    <span class=c1>// Some Logic to S3
+</span></span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl>  <span class=nx>toJSON() {</span>
+</span></span><span class=line><span class=cl>    <span class=c1>// Some Logic to JSON
+</span></span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl>  <span class=nx>toString() {</span>
+</span></span><span class=line><span class=cl>    <span class=c1>// Some Logic to String
+</span></span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=kr>abstract</span> <span class=kr>class</span> <span class=nx>Writeable</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=nx>pageCount</span>: <span class=kt>number</span> <span class=o>=</span> <span class=mi>0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=nx>pages</span>: <span class=kt>number</span> <span class=o>=</span> <span class=p>[];</span>
+</span></span><span class=line><span class=cl>  <span class=nx>writePage</span><span class=p>(</span><span class=nx>contents</span>: <span class=kt>string</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>this</span><span class=p>.</span><span class=nx>pages</span><span class=p>.</span><span class=nx>push</span><span class=p>(</span><span class=nx>contents</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=k>this</span><span class=p>.</span><span class=nx>pageCount</span> <span class=o>+=</span> <span class=mi>1</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl>  <span class=nx>getPage</span><span class=p>(</span><span class=nx>idx</span>: <span class=kt>number</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=nx>pages</span><span class=p>[</span><span class=nx>idx</span><span class=p>];</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl>  <span class=nx>getPagesCount() {</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=nx>pageCount</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl>  <span class=nx>deletePage</span><span class=p>(</span><span class=nx>idx</span>: <span class=kt>number</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>delete</span> <span class=nx>pages</span><span class=p>[</span><span class=nx>idx</span><span class=p>];</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kr>class</span> <span class=nx>Notebook</span> <span class=kr>extends</span> <span class=nx>Writeable</span> <span class=p>{}</span>
+</span></span><span class=line><span class=cl><span class=kr>class</span> <span class=nx>Diary</span> <span class=kr>extends</span> <span class=nx>Writeable</span> <span class=p>{}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kr>const</span> <span class=nx>RedNoteBook</span> <span class=o>=</span> <span class=k>new</span> <span class=nx>NoteBook</span><span class=p>();</span>
+</span></span><span class=line><span class=cl><span class=nx>RedNoteBook</span><span class=p>.</span><span class=nx>writePage</span><span class=p>(</span><span class=s2>&#34;Java Notes&#34;</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=nx>RedNoteBook</span><span class=p>.</span><span class=nx>writePage</span><span class=p>(</span><span class=s2>&#34;Python Notes&#34;</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=kr>const</span> <span class=nx>NoteBookSavingHandler</span> <span class=o>=</span> <span class=k>new</span> <span class=nx>NotebookPersistance</span><span class=p>(</span><span class=nx>RedNoteBook</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=nx>NoteBookSavingHandler</span><span class=p>.</span><span class=nx>toS3</span><span class=p>();</span>
+</span></span></code></pre></div><h3 id=121-observatations-from-the-implementation-above>1.2.1 Observatations from the implementation above.</h3><ol><li>There are two abstract classes one being <code>Writeable</code> and the other one being <code>Persistence</code></li><li>The <code>Notebook</code> and <code>Diary</code> classes extend the <code>Writeable</code> abstract class</li><li>The <code>NotebookPersistance</code> and <code>DiaryPersistance</code> classes extend the <code>Persistance</code> abstract class
+Here the writing implementation and the saving of the writing implementations are loosely coupled and not in a single class coupled together.</li></ol><h3 id=122-how-is-this-implementation-better-than-the-one-above>1.2.2 How is this implementation better than the one above?</h3><p>Here the two responsibilities of creation, the writing of a notebook and the storage of it are loosely coupled and are written separately.</p><h2 id=lessons>Lessons</h2><p>Thinking of responsibilities and features similar to each other to be in a similar object that can apply the desired functionality to any other object that requires it.</p><h1 id=2-open-close-principle>2 Open Close Principle</h1><p>According to the definition, OCP is</p><blockquote><p>Software entities (classes, modules, functions, etc.) should be open for extension, but closed for modification.”</p></blockquote><p>The idea is to write your code in such a way that to add the functionality you do not have to fiddle with the existing code. The idea sounds great but when one of your classes has to change and you have to reflect on changes in all other classes. For example, a method from class A returns a value x and after the change, it returns an instance of a class y. You have to change your logic every place where that function is called.</p><p>So how do you solve this problem of a changing class being a dependency?</p><p>Bertrand Mayer proposes to use inheritance to achieve this goal since, in his words</p><blockquote><p>A class is closed, since it may be compiled, stored in a library, baselined, and used by client classes. But it is also open, since any new class may use it as a parent, adding new features. When a descendant class is defined, there is no need to change the original or to disturb its clients.</p></blockquote><p>let us see this principle in an example.</p><p>Suppose you have an API where you and multiple engineers are working together in different teams. And the product calculates the area of polygons. You have a class for squares in your codebase already, you get an immediate requirement where you have to add support for rectangles, what do you do? Overload Area and Perimeter in the square class itself? Or do you extend a class for polygons and create new implementations of rectangle logic?</p><p>The latter option, since it brings no changes to the place where square logic is used, it is logically separated from the square class and you did not have to change the existing codebase.</p><p>This is a vague code for the situation.</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-TypeScript data-lang=TypeScript><span class=line><span class=cl><span class=kr>abstract</span> <span class=nx>Class</span> <span class=nx>Polygon</span><span class=p>{</span>
+</span></span><span class=line><span class=cl> <span class=nx>Area</span><span class=p>(){}</span>
+</span></span><span class=line><span class=cl> <span class=nx>Perimeter</span><span class=p>{}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=nx>Class</span> <span class=nx>Square</span> <span class=kr>extends</span> <span class=nx>Polygon</span><span class=p>{</span>
+</span></span><span class=line><span class=cl> <span class=nx>Area</span><span class=p>(</span><span class=nx>len</span>: <span class=kt>number</span><span class=p>){</span>
+</span></span><span class=line><span class=cl> <span class=k>return</span> <span class=nx>len</span><span class=o>*</span><span class=nx>len</span><span class=p>;</span>
+</span></span><span class=line><span class=cl> <span class=p>}</span>
+</span></span><span class=line><span class=cl> <span class=nx>Perimeter</span><span class=p>(</span><span class=nx>int</span> <span class=nx>len</span><span class=p>){</span>
+</span></span><span class=line><span class=cl> <span class=k>return</span> <span class=mi>4</span><span class=o>*</span><span class=nx>len</span>
+</span></span><span class=line><span class=cl> <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=nx>Class</span> <span class=nx>Rectangle</span> <span class=kr>extends</span> <span class=nx>Polygon</span><span class=p>{</span>
+</span></span><span class=line><span class=cl> <span class=nx>Area</span><span class=p>(</span><span class=nx>len</span>: <span class=kt>number</span><span class=p>,</span> <span class=nx>br</span>: <span class=kt>number</span><span class=p>){</span>
+</span></span><span class=line><span class=cl> <span class=k>return</span> <span class=nx>len</span><span class=o>*</span><span class=nx>br</span><span class=p>;</span>
+</span></span><span class=line><span class=cl> <span class=p>}</span>
+</span></span><span class=line><span class=cl> <span class=nx>Perimeter</span><span class=p>(</span><span class=nx>len</span>: <span class=kt>number</span><span class=p>,</span> <span class=nx>br</span>: <span class=kt>number</span><span class=p>){</span>
+</span></span><span class=line><span class=cl> <span class=k>return</span> <span class=mi>2</span><span class=o>*</span><span class=p>(</span><span class=nx>len</span> <span class=o>+</span> <span class=nx>br</span><span class=p>);</span>
+</span></span><span class=line><span class=cl> <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=nx>Class</span> <span class=nx>Triangle</span> <span class=kr>extends</span> <span class=nx>Polygon</span><span class=p>{</span>
+</span></span><span class=line><span class=cl> <span class=nx>Area</span><span class=p>(</span><span class=nx>len</span>: <span class=kt>number</span><span class=p>,</span> <span class=nx>br</span>: <span class=kt>number</span><span class=p>,</span> <span class=nx>height</span>: <span class=kt>number</span><span class=p>){</span>
+</span></span><span class=line><span class=cl> <span class=k>return</span> <span class=mf>0.5</span> <span class=o>*</span> <span class=nx>len</span> <span class=o>*</span> <span class=nx>br</span><span class=o>*</span> <span class=nx>height</span>
+</span></span><span class=line><span class=cl> <span class=p>}</span>
+</span></span><span class=line><span class=cl> <span class=nx>Perimeter</span><span class=p>(</span><span class=nx>len</span>: <span class=kt>number</span><span class=p>,</span> <span class=nx>br</span>: <span class=kt>number</span><span class=p>,</span> <span class=nx>height</span>: <span class=kt>number</span><span class=p>){</span>
+</span></span><span class=line><span class=cl> <span class=k>return</span> <span class=nx>len</span> <span class=o>+</span> <span class=nx>br</span> <span class=o>+</span> <span class=nx>height</span>
+</span></span><span class=line><span class=cl> <span class=p>}}</span>
+</span></span></code></pre></div><h2 id=lessons-1>Lessons</h2><p>When you have a large code base or code bases. Where a single class is being used in different places, or the java ecosystem a single jar file is being used in multiple code bases. You need to take account of multiple devs working on the same code base. Your changes should be such that they are not changing the existing implementation of the code, rather than just building on top of it. Unless(obviously) you&rsquo;re fixing a bug in a function.</p><h1 id=3-liskov-substitution-principle>3 Liskov Substitution Principle</h1><blockquote><p>Let Φ(x) be a property provable about objects x of type T. Then Φ(y) should be true for objects y of type S where S is a subtype of T.</p></blockquote><p>in other words, &ldquo;If S is a subtype of T, then objects of type T may be replaced with objects of type S&rdquo;.</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-TypeScript data-lang=TypeScript><span class=line><span class=cl><span class=kr>interface</span> <span class=nx>Family</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl> <span class=nx>Message</span><span class=p>(){}</span>
+</span></span><span class=line><span class=cl> <span class=nx>LastName</span><span class=p>()</span>
+</span></span><span class=line><span class=cl> <span class=nx>FirstName</span><span class=p>()</span>
+</span></span><span class=line><span class=cl> <span class=nx>LastName</span><span class=p>()</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=kr>class</span> <span class=nx>Parent</span> <span class=kr>implements</span> <span class=nx>Family</span><span class=p>{</span>
+</span></span><span class=line><span class=cl> <span class=kr>constructor</span><span class=p>(){}</span>
+</span></span><span class=line><span class=cl> <span class=nx>Message</span><span class=p>(){</span>
+</span></span><span class=line><span class=cl> <span class=k>return</span> <span class=s2>&#34;I&#39;m a parent&#34;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl> <span class=p>}</span>
+</span></span><span class=line><span class=cl> <span class=nx>LastName</span><span class=p>()</span>
+</span></span><span class=line><span class=cl> <span class=nx>FirstName</span><span class=p>()</span>
+</span></span><span class=line><span class=cl> <span class=nx>LastName</span><span class=p>()</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kr>class</span> <span class=nx>Child</span> <span class=kr>extends</span> <span class=nx>Parent</span> <span class=kr>implements</span> <span class=nx>Family</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl> <span class=kr>constructor</span><span class=p>(){}</span>
+</span></span><span class=line><span class=cl> <span class=nx>Message</span><span class=p>(){</span>
+</span></span><span class=line><span class=cl> <span class=k>return</span> <span class=s2>&#34;I&#39;m a child&#34;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl> <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kr>class</span> <span class=nx>FamilyLogger</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl> <span class=nx>f</span>: <span class=kt>Family</span>
+</span></span><span class=line><span class=cl> <span class=kr>constructor</span><span class=p>(</span><span class=nx>f</span>: <span class=kt>Family</span><span class=p>){</span>
+</span></span><span class=line><span class=cl> <span class=k>this</span><span class=p>.</span><span class=nx>f</span> <span class=o>=</span> <span class=nx>f</span><span class=p>;</span>
+</span></span><span class=line><span class=cl> <span class=p>}</span>
+</span></span><span class=line><span class=cl> <span class=nx>log</span><span class=p>(){</span>
+</span></span><span class=line><span class=cl> <span class=nx>console</span><span class=p>.</span><span class=nx>log</span><span class=p>(</span><span class=nb>Object</span><span class=p>.</span><span class=nx>getOwnPropertyNames</span><span class=p>(</span><span class=nb>Math</span><span class=p>).</span><span class=nx>filter</span><span class=p>(</span><span class=kd>function</span> <span class=p>(</span><span class=nx>p</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl> <span class=k>if</span><span class=p>(</span><span class=k>typeof</span> <span class=nb>Math</span><span class=p>[</span><span class=nx>p</span><span class=p>]</span> <span class=o>===</span> <span class=s1>&#39;function&#39;</span><span class=p>){</span>
+</span></span><span class=line><span class=cl> <span class=nx>console</span><span class=p>.</span><span class=nx>log</span><span class=p>(</span><span class=nx>p</span><span class=p>());</span>
+</span></span><span class=line><span class=cl> <span class=p>}</span>
+</span></span><span class=line><span class=cl> <span class=p>}));</span>
+</span></span><span class=line><span class=cl> <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kr>const</span> <span class=nx>p</span> : <span class=kt>Parent</span> <span class=o>=</span> <span class=k>new</span> <span class=nx>Parent</span><span class=p>();</span>
+</span></span><span class=line><span class=cl><span class=kr>const</span> <span class=nx>c</span> : <span class=kt>Child</span> <span class=o>=</span> <span class=k>new</span> <span class=nx>Child</span><span class=p>();</span>
+</span></span><span class=line><span class=cl><span class=kr>const</span> <span class=nx>Parentlogger</span> <span class=o>=</span> <span class=k>new</span> <span class=nx>FamilyLogger</span><span class=p>(</span><span class=nx>p</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=kr>const</span> <span class=nx>Childlogger</span> <span class=o>=</span> <span class=k>new</span> <span class=nx>FamilyLogger</span><span class=p>(</span><span class=nx>c</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=nx>Parentlogger</span><span class=p>.</span><span class=nx>log</span><span class=p>();</span>
+</span></span><span class=line><span class=cl><span class=nx>Childlogger</span><span class=p>.</span><span class=nx>log</span><span class=p>();</span>
+</span></span></code></pre></div><p>Here we have a logger class that takes in an object of type family in it. The Parent class implements the family interface and the Child class extends the Parent class.</p><p>The logger class iterates through each function in the local instance and runs it and logs to the console.</p><p>Hence we see that both parent and child instances are passed to the same class without breaking the code.</p><p>This is essentially what LSP is.</p><h1 id=4-interface-segregation-principle>4 Interface Segregation Principle</h1><blockquote><p>Clients should not be forced to depend upon interfaces that they do not use.”</p></blockquote><p>This principle is sort of an extension of the first solid principle with the central theme being interfaces.</p><p>A single interface should not have multiple responsibilities forming a god interface instead there should be multiple interfaces for different responsibilities.</p><p>The interface should exist in such a way that classes that implement those do not have many unused functions.</p><p>An interface should aptly represent a class that it implements, it should not hide major implementations nor share unused implementations.</p><p>Example: Assume we have an RPG game and certain characters do similar activities. Characters being an <code>ork</code> and a <code>wolf</code>.
+These characters can Attack, Walk, Breathe and do a few activities that they do that are not common. Like an ork can lift a boulder and a wolf can run fast.</p><p>Let us try naively creating an interface for them.</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-TypeScript data-lang=TypeScript><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kr>interface</span> <span class=nx>Charecter</span><span class=p>{</span>
+</span></span><span class=line><span class=cl> <span class=nx>Attack</span><span class=p>()</span>
+</span></span><span class=line><span class=cl> <span class=nx>Walk</span><span class=p>()</span>
+</span></span><span class=line><span class=cl> <span class=nx>Breathe</span><span class=p>()</span>
+</span></span><span class=line><span class=cl> <span class=nx>LiftBoulder</span><span class=p>()</span>
+</span></span><span class=line><span class=cl> <span class=nx>RunFast</span><span class=p>()</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kr>class</span> <span class=nx>GreenFatOrk</span> <span class=kr>implements</span> <span class=nx>Charecter</span><span class=p>{</span>
+</span></span><span class=line><span class=cl> <span class=nx>Attack</span><span class=p>(){</span>
+</span></span><span class=line><span class=cl> <span class=k>return</span> <span class=s2>&#34;Ork Attack&#34;</span>
+</span></span><span class=line><span class=cl> <span class=p>}</span>
+</span></span><span class=line><span class=cl> <span class=nx>Walk</span><span class=p>(){</span>
+</span></span><span class=line><span class=cl> <span class=k>return</span> <span class=s2>&#34;Ork Walk&#34;</span>
+</span></span><span class=line><span class=cl> <span class=p>}</span>
+</span></span><span class=line><span class=cl> <span class=nx>Breathe</span><span class=p>(){</span>
+</span></span><span class=line><span class=cl> <span class=k>return</span> <span class=s2>&#34;Ork Gasps&#34;</span>
+</span></span><span class=line><span class=cl> <span class=p>}</span>
+</span></span><span class=line><span class=cl> <span class=nx>LiftBoulder</span><span class=p>(){</span>
+</span></span><span class=line><span class=cl> <span class=k>return</span> <span class=s2>&#34;Ork lifts boulder&#34;</span>
+</span></span><span class=line><span class=cl> <span class=p>}</span>
+</span></span><span class=line><span class=cl> <span class=nx>RunFast</span><span class=p>(){</span>
+</span></span><span class=line><span class=cl> <span class=k>throw</span> <span class=k>new</span> <span class=nb>Error</span><span class=p>(</span><span class=s2>&#34;Method not implemented&#34;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl> <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kr>class</span> <span class=nx>GreyWolf</span> <span class=kr>implements</span> <span class=nx>Charecter</span><span class=p>{</span>
+</span></span><span class=line><span class=cl> <span class=nx>Attack</span><span class=p>(){</span>
+</span></span><span class=line><span class=cl> <span class=k>return</span> <span class=s2>&#34;Wolf Attack&#34;</span>
+</span></span><span class=line><span class=cl> <span class=p>}</span>
+</span></span><span class=line><span class=cl> <span class=nx>Walk</span><span class=p>(){</span>
+</span></span><span class=line><span class=cl> <span class=k>return</span> <span class=s2>&#34;Wolf Walk&#34;</span>
+</span></span><span class=line><span class=cl> <span class=p>}</span>
+</span></span><span class=line><span class=cl> <span class=nx>Breathe</span><span class=p>(){</span>
+</span></span><span class=line><span class=cl> <span class=k>return</span> <span class=s2>&#34;Wolf Gasps&#34;</span>
+</span></span><span class=line><span class=cl> <span class=p>}</span>
+</span></span><span class=line><span class=cl> <span class=nx>LiftBoulder</span><span class=p>(){</span>
+</span></span><span class=line><span class=cl> <span class=k>throw</span> <span class=k>new</span> <span class=nb>Error</span><span class=p>(</span><span class=s2>&#34;Method not implemented&#34;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl> <span class=p>}</span>
+</span></span><span class=line><span class=cl> <span class=nx>RunFast</span><span class=p>(){</span>
+</span></span><span class=line><span class=cl> <span class=k>return</span> <span class=s2>&#34;Wolf runs so fast&#34;</span>
+</span></span><span class=line><span class=cl> <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div><h1 id=41-what-is-wrong-with-this-code>4.1 What is wrong with this code?</h1><p>Here we can see we have a big fat interface that both &lsquo;ork&rsquo; and the &lsquo;wolf&rsquo; class implement. We can also observe functions that wolf does and ork does not. In both of these implementations, we are throwing errors that are not implemented. This does not seem since we have functions in a class that doesn&rsquo;t do anything and it can be misleading to other engineers who are just using the classes, this also creates ambiguity and confusion.</p><h1 id=411-a-better-implementation>4.1.1 A Better Implementation</h1><div class=highlight><pre tabindex=0 class=chroma><code class=language-TypeScript data-lang=TypeScript><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kr>interface</span> <span class=nx>Charecter</span><span class=p>{</span>
+</span></span><span class=line><span class=cl> <span class=nx>Attack</span><span class=p>()</span>
+</span></span><span class=line><span class=cl> <span class=nx>Walk</span><span class=p>()</span>
+</span></span><span class=line><span class=cl> <span class=nx>Breathe</span><span class=p>()</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kr>interface</span> <span class=nx>ork</span> <span class=kr>extends</span> <span class=nx>Charecter</span><span class=p>{</span>
+</span></span><span class=line><span class=cl> <span class=nx>LiftBoulder</span><span class=p>()</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kr>interface</span> <span class=nx>wolf</span> <span class=kr>extends</span> <span class=nx>Charecter</span><span class=p>{</span>
+</span></span><span class=line><span class=cl> <span class=nx>RunFast</span><span class=p>()</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kr>class</span> <span class=nx>GreenFatOrk</span> <span class=kr>implements</span> <span class=nx>ork</span><span class=p>{</span>
+</span></span><span class=line><span class=cl> <span class=nx>Attack</span><span class=p>(){</span>
+</span></span><span class=line><span class=cl> <span class=k>return</span> <span class=s2>&#34;Ork Attack&#34;</span>
+</span></span><span class=line><span class=cl> <span class=p>}</span>
+</span></span><span class=line><span class=cl> <span class=nx>Walk</span><span class=p>(){</span>
+</span></span><span class=line><span class=cl> <span class=k>return</span> <span class=s2>&#34;Ork Walk&#34;</span>
+</span></span><span class=line><span class=cl> <span class=p>}</span>
+</span></span><span class=line><span class=cl> <span class=nx>Breathe</span><span class=p>(){</span>
+</span></span><span class=line><span class=cl> <span class=k>return</span> <span class=s2>&#34;Ork Gasps&#34;</span>
+</span></span><span class=line><span class=cl> <span class=p>}</span>
+</span></span><span class=line><span class=cl> <span class=nx>LiftBoulder</span><span class=p>(){</span>
+</span></span><span class=line><span class=cl> <span class=k>return</span> <span class=s2>&#34;Ork lifts boulder&#34;</span>
+</span></span><span class=line><span class=cl> <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kr>class</span> <span class=nx>GreyWolf</span> <span class=kr>implements</span> <span class=nx>wolf</span><span class=p>{</span>
+</span></span><span class=line><span class=cl> <span class=nx>Attack</span><span class=p>(){</span>
+</span></span><span class=line><span class=cl> <span class=k>return</span> <span class=s2>&#34;Wolf Attack&#34;</span>
+</span></span><span class=line><span class=cl> <span class=p>}</span>
+</span></span><span class=line><span class=cl> <span class=nx>Walk</span><span class=p>(){</span>
+</span></span><span class=line><span class=cl> <span class=k>return</span> <span class=s2>&#34;Wolf Walk&#34;</span>
+</span></span><span class=line><span class=cl> <span class=p>}</span>
+</span></span><span class=line><span class=cl> <span class=nx>Breathe</span><span class=p>(){</span>
+</span></span><span class=line><span class=cl> <span class=k>return</span> <span class=s2>&#34;Wolf Gasps&#34;</span>
+</span></span><span class=line><span class=cl> <span class=p>}</span>
+</span></span><span class=line><span class=cl> <span class=nx>RunFast</span><span class=p>(){</span>
+</span></span><span class=line><span class=cl> <span class=k>return</span> <span class=s2>&#34;Wolf runs so fast&#34;</span>
+</span></span><span class=line><span class=cl> <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div><h1 id=42-observations-about-the-better-implementation>4.2 Observations about the better implementation</h1><p>Just from the first glance, we see that both the implementations of the <code>GreyWolf</code> class and the<code>GreenFatOrk</code> class have no functions that are not implemented. The common functions are defined in a separate interface and the specific interface is defined in the respective wolf and ork interface.</p><h2 id=lessons-2>Lessons</h2><p>You should separate your interfaces such that there is no overlap in the interface functions between two different implementations, such that some functions are not implemented. Specialized interfaces should extend a generic interface to form a specific implementation. This leads to a clear boundary between why the two classes are different.</p><h1 id=5-dependency-inversion>5 Dependency Inversion</h1><blockquote><p>high-level modules should not depend on low-level modules; both should depend on abstractions. Abstractions should not depend on details. Details should depend upon abstractions.</p></blockquote><p>What it means is that class A uses an instance of a DB session. That DB session is defined within the constructor of the class. This session is only connected with the production DB.</p><p>What if you have a scenario where you need to test that class using a test DB session? What will you do? How will you solve this?</p><p>Dependency Inversion aims to solve this by saying that dependencies should be given to the class where it is called from, the place where the class is instantiated is responsible for passing in the instance of DB to the class, hence inverting the control of dependencies.</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-TypeScript data-lang=TypeScript><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kr>class</span> <span class=nx>StudentDao</span><span class=p>{</span>
+</span></span><span class=line><span class=cl> <span class=kr>constructor</span><span class=p>(){</span>
+</span></span><span class=line><span class=cl> <span class=k>this</span><span class=p>.</span><span class=nx>session</span> <span class=o>=</span> <span class=nx>session</span><span class=p>.</span><span class=nx>connect</span><span class=p>(</span><span class=s2>&#34;mongo://example.url&#34;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl> <span class=p>}</span>
+</span></span><span class=line><span class=cl> <span class=nx>getStudentbyName</span><span class=p>(</span><span class=nx>name</span>: <span class=kt>string</span><span class=p>){</span>
+</span></span><span class=line><span class=cl> <span class=k>this</span><span class=p>.</span><span class=nx>session</span><span class=p>.</span><span class=nx>findOne</span><span class=p>({</span><span class=nx>name</span><span class=p>})</span>
+</span></span><span class=line><span class=cl> <span class=p>}</span>
+</span></span><span class=line><span class=cl> <span class=nx>getStudentbyRoll</span><span class=p>(</span><span class=nx>roll</span>: <span class=kt>number</span><span class=p>){</span>
+</span></span><span class=line><span class=cl> <span class=k>this</span><span class=p>.</span><span class=nx>session</span><span class=p>.</span><span class=nx>findOne</span><span class=p>({</span><span class=nx>roll</span><span class=p>})</span>
+</span></span><span class=line><span class=cl> <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>// In Application Code
+</span></span></span><span class=line><span class=cl><span class=kr>const</span> <span class=nx>studentdio</span> <span class=o>=</span> <span class=k>new</span> <span class=nx>StudentDao</span><span class=p>()</span>
+</span></span><span class=line><span class=cl><span class=nx>studentdio</span><span class=p>.</span><span class=nx>getStudentbyName</span><span class=p>(</span><span class=s2>&#34;Bob&#34;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=c1>//
+</span></span></span></code></pre></div><h2 id=51-what-is-the-issue-with-the-code>5.1 What is the issue with the code?</h2><p>The <code>StudentDao</code> class is tightly coupled with the production session. If we want to use the class in our test environment, this would be hard since we want to run the class on a DB session instance which is not present. Hence we can pass in the instance of the Database session where we instantiate the class.</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-TypeScript data-lang=TypeScript><span class=line><span class=cl><span class=kr>class</span> <span class=nx>StudentDao</span><span class=p>{</span>
+</span></span><span class=line><span class=cl> <span class=nx>session</span>: <span class=kt>SessionType</span>
+</span></span><span class=line><span class=cl> <span class=kr>constructor</span><span class=p>(</span><span class=nx>session</span>: <span class=kt>SessionType</span><span class=p>){</span>
+</span></span><span class=line><span class=cl> <span class=k>this</span><span class=p>.</span><span class=nx>session</span> <span class=o>=</span> <span class=nx>session</span>
+</span></span><span class=line><span class=cl> <span class=p>}</span>
+</span></span><span class=line><span class=cl> <span class=nx>getStudentbyName</span><span class=p>(</span><span class=nx>name</span>: <span class=kt>string</span><span class=p>){</span>
+</span></span><span class=line><span class=cl> <span class=k>this</span><span class=p>.</span><span class=nx>session</span><span class=p>.</span><span class=nx>findOne</span><span class=p>({</span><span class=nx>name</span><span class=p>})</span>
+</span></span><span class=line><span class=cl> <span class=p>}</span>
+</span></span><span class=line><span class=cl> <span class=nx>getStudentbyRoll</span><span class=p>(</span><span class=nx>roll</span>: <span class=kt>number</span><span class=p>){</span>
+</span></span><span class=line><span class=cl> <span class=k>this</span><span class=p>.</span><span class=nx>session</span><span class=p>.</span><span class=nx>findOne</span><span class=p>({</span><span class=nx>roll</span><span class=p>})</span>
+</span></span><span class=line><span class=cl> <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>if</span><span class=p>(</span><span class=nx>process</span><span class=p>.</span><span class=nx>ENV</span><span class=p>.</span><span class=nx>name</span> <span class=o>===</span> <span class=s2>&#34;test&#34;</span><span class=p>){</span>
+</span></span><span class=line><span class=cl> <span class=kr>const</span> <span class=nx>studentdio</span> <span class=o>=</span> <span class=k>new</span> <span class=nx>StudentDao</span><span class=p>(</span><span class=k>new</span> <span class=nx>TestMongoSession</span><span class=p>())</span>
+</span></span><span class=line><span class=cl><span class=nx>studentdio</span><span class=p>.</span><span class=nx>getStudentbyName</span><span class=p>(</span><span class=s2>&#34;Bob&#34;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>if</span><span class=p>(</span><span class=nx>process</span><span class=p>.</span><span class=nx>ENV</span><span class=p>.</span><span class=nx>name</span> <span class=o>===</span> <span class=s2>&#34;prod&#34;</span><span class=p>){</span>
+</span></span><span class=line><span class=cl> <span class=kr>const</span> <span class=nx>studentdio</span> <span class=o>=</span> <span class=k>new</span> <span class=nx>StudentDao</span><span class=p>(</span><span class=k>new</span> <span class=nx>ProdMongoSession</span><span class=p>())</span>
+</span></span><span class=line><span class=cl><span class=nx>studentdio</span><span class=p>.</span><span class=nx>getStudentbyName</span><span class=p>(</span><span class=s2>&#34;Bob&#34;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div><h2 id=lessons-3>Lessons</h2><p>DI is just an implementation of <a href=https://stackoverflow.com/questions/3058/what-is-inversion-of-control>Inversion of Control</a>. It is when you let outside of the class choose what generic implementation should be used in an instance. This makes it easy to create pluggable implementations. It also helps in testing where you want a certain class to use a certain instance while testing and a different one while being run in production.</p><hr></div><footer class=content__footer></footer></section><section class=page__aside><div class=aside__about><div class=aside__about><h1 class=about__title>Madhav Khosla</h1><p class=about__description>Backend Engineer | Crypto Enthusiast</p></div><ul class=aside__social-links><li><a href=https://bit.ly/3Qyr87Y rel=me aria-label=GitHub title=GitHub><i class="fa-brands fa-github" aria-hidden=true></i></a>&nbsp;</li><li><a href=https://bit.ly/3Qtgn6y rel=me aria-label=Twitter title=Twitter><i class="fa-brands fa-twitter" aria-hidden=true></i></a>&nbsp;</li><li><a href=https://bit.ly/4ezgvhX rel=me aria-label=LinkedIn title=LinkedIn><i class="fa-brands fa-linkedin" aria-hidden=true></i></a>&nbsp;</li></ul></div><hr><div class=aside__content><p>SOLID Patterns are a general guideline and recommended patterns that you can use in your codebase to be extensible, easy to modify in the future, and easy to fix. These aren't hard-bound rules just general recommendations. Here, I'll talk about them in detail.</p><p>2022-06-07</p></div></section><footer class=page__footer><p><br><span class=active>$ echo $LANG<br><b></b></span><br></p><br><br><p class=copyright>© Madhav Khosla</p><p class=advertisement>Powered by <a href=https://gohugo.io/>hugo</a> and <a href=https://github.com/joeroe/risotto>risotto</a>.</p></footer></div></body></html>
