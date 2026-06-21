@@ -14,7 +14,7 @@ tags:
     Blazingly Fast
   ]
 ---
-![image](https://i.imgur.com/y0nqC0G.jpg)
+![image](/images/y0nqC0G.jpg)
 
 
 # What is Functional Programming?

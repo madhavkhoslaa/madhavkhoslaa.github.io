@@ -21,7 +21,7 @@ Ownership is one of the features that make it different than so many programming
 
 # Understanding Rust Ownership
 
-![image](https://i.imgur.com/j5Pxkuu.jpg)
+![image](/images/j5Pxkuu.jpg)
 
 # How is data stored in the program?
 
@@ -30,7 +30,7 @@ Ownership is one of the features that make it different than so many programming
 
 Data(variables in function arguments and defined) in the stack have a known type hence the size of the data in the stack is known at the time of compilation. However, data types like vectors and strings are bound to grow in size hence they are stored in the heap(their size cannot be determined at the time of compilation).
 
-![image](https://i.imgur.com/jiQn04E.png)
+![image](/images/jiQn04E.png)
 The image above shows the organization of a stack.
 
 # What is ownership?

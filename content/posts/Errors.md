@@ -9,7 +9,7 @@ tags:
   erorrs,
 ] 
 ---
-![image](https://i.imgur.com/VSG6kWK.jpeg)
+![image](/images/VSG6kWK.jpeg)
 
 Errors in any language are hard to handle since they include the caller, defining errors, handling them and reporting to the end user. In this blog I will explain how to handle and create errors in rust.
 

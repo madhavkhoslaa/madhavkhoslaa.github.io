@@ -27,7 +27,7 @@ Creational design patterns aid in the instantiation of objects by providing suit
 
 They are important when a system grows large and require how objects are constructed rather than what objects are constructed. They are a step above a normal hardcoded instantiation like `const instance = new SomeClass()`
 
-![image](https://i.imgur.com/dmLLnXo.jpeg)
+![image](/images/dmLLnXo.jpeg)
 
 ---
 
@@ -39,7 +39,7 @@ They are important when a system grows large and require how objects are constru
 
 Have you ever been to an ice cream parlor where you are handed a sheet of paper and you tick on stuff and then create that ice cream for you? Or if not it's similar to a subway shop where you select what you want in the sandwich. The kind of bread you want, and the kind of sauce are just the parameters you pass onto the sandwhich class or the ice cream class.
 
-![image](https://i.imgur.com/Zh02EM4.png)
+![image](/images/Zh02EM4.png)
 
 **_The Problem_**: Have you encountered a situation where a class requires so many arguments to be instantiated and some of them are optional too? The instantiation usually goes something like this `const instance = new ClassA(arg1, arg2? arg3, arg4, arg5, arg6)`; and you can relate how easy it is to forget the order of the arguments and what arguments the class requires in the first place. So there is a clear problem of the constructor being too large and complex, there can also be situations where the constructors are overloaded many times as well leading to even more confusion.
 
@@ -120,7 +120,7 @@ While studying builder design patterns, I was able to create methods to generate
 
 ## HTML Page Generated From The Above Code
 
-![image](https://i.imgur.com/zurY13J.png)
+![image](/images/zurY13J.png)
 
 ---
 
@@ -132,7 +132,7 @@ While studying builder design patterns, I was able to create methods to generate
 
 Remember how we had the option to create a custom ice cream in the builder design pattern? It might be daunting for you to think about what you want at the store or maybe seeing so many options makes you anxious? If that's so; you order something from the menu itself, you don't have to talk to the server and just tell him what you want without telling him the specifics of what you want. An example of this is just the menu.
 
-![image](https://i.imgur.com/NGvd6bS.png)
+![image](/images/NGvd6bS.png)
 
 **_The Problem_**: Sometimes there are a lot of objects of the same type and kind that have to be created and sometimes those objects can be builder classes too and the instantiation of a builder object is too ceremonial, piecewise, and takes time. To tackle this problem of creating objects piecewise; factory design patterns were made to create objects in a wholesale manner. You just invoke a particular function with a verbose name of what object you want and get the instance of the object. For example, if you have a builder class for cars, you gave call a lot of methods to just create an instance, but in the case of a factory design, you can create a function with an appropriate name that returns the same object every time you invoke it.
 
@@ -196,7 +196,7 @@ Here there is a single interface called the `Button` and two classes `MacOS` and
 ## Real-life example
 
 In India, a lot of restaurants have different types of cuisines and then they are divided by the region and then the type. The first layer of selection(the cuisine) provides the second layer of selection(the type of dish) and then comes to the dishes themselves. This is an example of the abstract factory design pattern.
-![image](https://i.imgur.com/cIbQG0p.png)
+![image](/images/cIbQG0p.png)
 
 **_The Problem_**: Now in the above example of buttons, there was a separation based on OS. But imagine in a case of a framework, where there are buttons, alerts, input boxes, and so many things. The call can differ based on the OS they are on. Now imagine you as a developer instantiating a MacOS button, Alert and Windows button, Alert from the class itself; it would be tedious, wouldn't it? To tackle this problem of
 
@@ -290,7 +290,7 @@ You could also argue if the UI factory should be returning a `MacOSFactory` and 
 ## Real-life example
 
 Imagine a situation you and your friends order a really large sundae and eat it together. Throughout the lifecycle of that ice cream (until it melts or you eat it), it remains singular and you and your friends consume it. This single large sundae is a singleton.
-![image](https://i.imgur.com/Pm4Nqsy.png)
+![image](/images/Pm4Nqsy.png)
 
 **_The Problem_**: In some scenarios you only want one instance of a class to be present, for example, you have a class that opens a session to the DB and you pass in query strings to it to receive objects. If this object were to be instantiated multiple times in a lifecycle of a program then there will be many connections open in the DB.
 
@@ -351,7 +351,7 @@ However, in a multithreaded environment, this can create multiple instances if a
 
 Ever been to a restaurant you do not go to and you see someone order something that looks delicious and you tell the server that you want the same thing? You don't know what's it details are, it just looks delicious to you and you ask the server to make the same dish for you. This is similar to a prototype design pattern.
 
-![image](https://i.imgur.com/ZMlqkN7.png)
+![image](/images/ZMlqkN7.png)
 
 **_The Problem_**: For example every time you create an instance of a class, there is a large blocking operation that takes place in the constructor of the class(Maybe a DB call or a large file read) that happens every time you create an instance, it's better the next time you create the instance, you could somehow use the same data from the old instance. The prototype design pattern solves this problem by providing objects with a clone method, to copy their values to other objects.
 

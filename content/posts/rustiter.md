@@ -24,12 +24,12 @@ So in a way, an iterator design pattern(in real life) is a thought process of ho
 
 It is the way to decide if you go on the left node or the right, or the leaf node of the left subtree or the leaf node of the rightmost subtree but not how you do it.
 
-![image](https://i.imgur.com/mWXRCUt.png)
+![image](/images/mWXRCUt.png)
 
 ## Example 2
 Imagine you are the Pacman ghost and the representation of the Pacman world is in a graph. Which node you go to is dependent on where Pacman is. Imagine you are on a `T` intersection and Pacman is on the right side of the T intersection. Then the `next` node you want to traverse is the right node.
 
-![image](https://i.imgur.com/5lF87Jv.png)
+![image](/images/5lF87Jv.png)
 
 ## Why did I highlight `next` ? | Let's talk Code.
 
@@ -218,7 +218,7 @@ Output
 
 # How to create an iterator to traverse a tree using for loops !!!! [FUN CODE AHEAD!]
 
-![image](https://i.imgur.com/Unw3Dwf.jpeg)
+![image](/images/Unw3Dwf.jpeg)
 
 ```rust
 // More than two derives

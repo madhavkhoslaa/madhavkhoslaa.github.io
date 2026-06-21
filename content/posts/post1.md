@@ -39,7 +39,7 @@ A high cache hit ratio means that your cache was used for most objects that were
 
 # Where to cache (Cache high up the call stack)?
 
-![image](https://i.imgur.com/xIFu5IS.jpeg)
+![image](/images/xIFu5IS.jpeg)
 In this scenario imagine you have 3 functions calling each other in the call stack and the result is produced by calling them all.
 Assume you call f(a) and inside the implementation it passes the value to f(f(a)) and so on.
 I am assuming the cost of each operation likewise in the table.
@@ -138,11 +138,11 @@ Solution: You delete the cache for the users that are inactive and are not using
 ## Read through cache
 
 The use case if for a read intensive application
-![image](https://i.imgur.com/QVYG6WC.jpeg)
+![image](/images/QVYG6WC.jpeg)
 
 ## Write through cache
 
 The use case if for a write intensive application
-![image](https://i.imgur.com/3qtgsNd.jpeg)
+![image](/images/3qtgsNd.jpeg)
 
 ---

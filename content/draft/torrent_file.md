@@ -6,7 +6,7 @@ description: "All of us have downloaded torrent files and files using those torr
 tags: [Bittorrent, torrent]
 ---
 
-![image](https://i.imgur.com/NQFCFTC.jpeg)
+![image](/images/NQFCFTC.jpeg)
 
 # Scope of this blog
 
