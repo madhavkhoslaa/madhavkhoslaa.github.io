@@ -1,52 +1,84 @@
 baseURL = 'https://madhavkhoslaa.github.io/'
-languageCode = 'en-us'
+languageCode = 'en'
 title = 'Madhav Khosla'
-theme = "archie"
+theme = "risotto"
+author = "Madhav Khosla"
+copyright = "© Madhav Khosla"
+
+enableInlineShortcodes = true
+enableRobotsTXT = true
+enableEmoji = true
+pygmentsUseClasses = true
+
+ignoreErrors = ["error-remote-getjson"]
+
+[pagination]
+  pagerSize = 5
+
 [params]
-	mode="dark" # color-mode → light,dark,toggle or auto
-	useCDN=false # don't use CDNs for fonts and icons, instead serve them locally.
-	subtitle = "Backend Engineer | Crypto Enthusiast"
+  noindex = false
 
-# Social Tags
+[params.theme]
+  palette = "base16-dark"
 
-[[params.social]]
-name = "GitHub"
-icon = "github"
-url = "https://bit.ly/3Qyr87Y"
+[params.about]
+  title = "Madhav Khosla"
+  description = "Backend Engineer | Crypto Enthusiast"
 
-[[params.social]]
-name = "Twitter"
-icon = "twitter"
-url = "https://bit.ly/3Qtgn6y"
+[[params.socialLinks]]
+  icon = "fa-brands fa-github"
+  title = "GitHub"
+  url = "https://bit.ly/3Qyr87Y"
 
-# [[params.social]]
-# name = "GitLab"
-# icon = "gitlab"
-# url = "https://gitlab.com/athul/"
+[[params.socialLinks]]
+  icon = "fa-brands fa-twitter"
+  title = "Twitter"
+  url = "https://bit.ly/3Qtgn6y"
 
-# Main menu Items
+[[params.socialLinks]]
+  icon = "fa-brands fa-linkedin"
+  title = "LinkedIn"
+  url = "https://bit.ly/4ezgvhX"
 
-[[menu.main]]
-name = "Home"
-url = "/"
-weight = 1
+[menu]
+  [[menu.main]]
+    identifier = "home"
+    name = "Home"
+    url = "/"
+    weight = 1
+  [[menu.main]]
+    identifier = "posts"
+    name = "Posts"
+    url = "/posts/"
+    weight = 2
+  [[menu.main]]
+    identifier = "archive"
+    name = "Archive"
+    url = "/archive/"
+    weight = 3
+  [[menu.main]]
+    identifier = "about"
+    name = "About"
+    url = "/about/"
+    weight = 4
+  [[menu.main]]
+    identifier = "tags"
+    name = "Tags"
+    url = "/tags/"
+    weight = 5
+  [[menu.main]]
+    identifier = "draft"
+    name = "Draft"
+    url = "/draft/"
+    weight = 6
 
-[[menu.main]]
-name = "All posts"
-url = "/posts"
-weight = 2
+[taxonomies]
+  tag = "tags"
 
-[[menu.main]]
-name = "About"
-url = "/about"
-weight = 3
-
-[[menu.main]]
-name = "Tags"
-url = "/tags"
-weight = 4
-
-[[menu.main]]
-name = "Draft"
-url = "/draft"
-weight = 4
+[markup]
+  [markup.goldmark.renderer]
+    unsafe = true
+  [markup.tableOfContents]
+    startLevel = 2
+    endLevel = 3
+    ordered = true

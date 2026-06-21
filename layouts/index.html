@@ -1,0 +1,15 @@
+{{ define "main" }}
+    {{ .Content }}
+    <h2 id="recent-posts">Recent Posts</h2>
+    <ul>
+    {{ range where .Site.RegularPages "Section" "posts" | first 5 }}
+        <li><a href="{{ .RelPermalink }}">{{ .Title | markdownify }}</a></li>
+    {{ end }}
+    </ul>
+    <h2 id="archive">Archive</h2>
+    <ul>
+    {{ range where .Site.RegularPages "Type" "archive" }}
+        <li><a href="{{ .RelPermalink }}">{{ .Title | markdownify }}</a></li>
+    {{ end }}
+    </ul>
+{{ end }}
