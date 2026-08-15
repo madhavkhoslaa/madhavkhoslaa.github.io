@@ -224,7 +224,8 @@ a:hover {
   display: none;
 }
 
-.waybar a.module {
+.waybar a.module,
+.waybar-bottom a.module {
   color: var(--text);
 }
 
@@ -247,6 +248,10 @@ a:hover {
   height: 1em;
   width: auto;
   vertical-align: middle;
+}
+
+:root[data-theme="light"] .module-icon {
+  filter: invert(1);
 }
 
 button.theme-toggle {
