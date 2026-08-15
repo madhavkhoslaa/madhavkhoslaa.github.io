@@ -189,6 +189,12 @@ a:hover {
   transform: translateX(-50%);
 }
 
+.waybar .right-cluster {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
 .waybar .module {
   padding: 0 14px;
   margin: 0 2px;
@@ -344,7 +350,7 @@ footer.term-footer {
    move socials to a fixed bar at the bottom */
 @media (max-width: 640px) {
   .waybar .group.center,
-  .waybar .group.right {
+  .waybar .right-cluster {
     display: none;
   }
   .waybar .group.left {
