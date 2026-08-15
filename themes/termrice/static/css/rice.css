@@ -168,9 +168,10 @@ a:hover {
   margin-right: 4px;
 }
 
-.waybar .module-icon {
+.module-icon {
   height: 1em;
   width: auto;
+  vertical-align: middle;
 }
 
 .waybar nav.modules-left,
