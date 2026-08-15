@@ -496,7 +496,7 @@ footer.term-footer {
 .not-found-img {
   display: block;
   max-width: 360px;
-  margin: 14px 0;
+  margin: 14px auto;
   border-radius: 6px;
 }
 
