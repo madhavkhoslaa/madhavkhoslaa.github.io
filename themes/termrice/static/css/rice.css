@@ -33,6 +33,55 @@
   --social-bar-h: 44px;
   --radius: 6px;
   --border: 1px solid rgba(248, 248, 242, 0.12);
+
+  --wallpaper-url:   url('/images/wallpaper.png');
+  --wallpaper-grad-1: rgba(0, 0, 0, 0.45);
+  --wallpaper-grad-2: rgba(0, 0, 0, 0.65);
+
+  --panel-bg:        rgba(20, 20, 20, 0.45);
+  --panel-bg-soft:   rgba(20, 20, 20, 0.35);
+  --panel-bg-strong: rgba(20, 20, 20, 0.72);
+  --panel-border:    rgba(248, 248, 242, 0.06);
+  --hairline:        rgba(248, 248, 242, 0.08);
+  --shadow:          rgba(0, 0, 0, 0.45);
+  --hover-bg:        rgba(255, 255, 255, 0.14);
+  --code-bg:         rgba(0, 0, 0, 0.3);
+  --pre-bg:          rgba(0, 0, 0, 0.35);
+  --modal-backdrop:  rgba(0, 0, 0, 0.6);
+}
+
+:root[data-theme="light"] {
+  --base:    #f2f0ea;
+  --mantle:  #e7e4dc;
+  --crust:   #ffffff;
+  --surface: #dedad0;
+  --overlay: #6b6b64;
+  --text:    #17171a;
+  --subtext: #45453f;
+  --red:     #111111;
+  --green:   #111111;
+  --yellow:  #4a4a42;
+  --blue:    #111111;
+  --mauve:   #111111;
+  --teal:    #111111;
+  --peach:   #5a5a52;
+
+  --border: 1px solid rgba(20, 20, 20, 0.12);
+
+  --wallpaper-url:   url('/images/white-theme.jpg');
+  --wallpaper-grad-1: rgba(255, 255, 255, 0.25);
+  --wallpaper-grad-2: rgba(255, 255, 255, 0.5);
+
+  --panel-bg:        rgba(255, 255, 255, 0.55);
+  --panel-bg-soft:   rgba(255, 255, 255, 0.4);
+  --panel-bg-strong: rgba(255, 255, 255, 0.78);
+  --panel-border:    rgba(20, 20, 20, 0.08);
+  --hairline:        rgba(20, 20, 20, 0.1);
+  --shadow:          rgba(20, 20, 20, 0.18);
+  --hover-bg:        rgba(0, 0, 0, 0.08);
+  --code-bg:         rgba(0, 0, 0, 0.06);
+  --pre-bg:          rgba(0, 0, 0, 0.05);
+  --modal-backdrop:  rgba(255, 255, 255, 0.6);
 }
 
 * {
@@ -77,8 +126,8 @@ a:hover {
   z-index: -2;
   background-color: var(--base);
   background-image:
-    linear-gradient(rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.65)),
-    url('/images/wallpaper.png');
+    linear-gradient(var(--wallpaper-grad-1), var(--wallpaper-grad-2)),
+    var(--wallpaper-url);
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -86,8 +135,8 @@ a:hover {
 
 .wallpaper-cat {
   position: fixed;
-  right: 12px;
-  bottom: 12px;
+  right: 4px;
+  bottom: 4px;
   width: 130px;
   height: auto;
   z-index: -1;
@@ -98,7 +147,8 @@ a:hover {
 @media (max-width: 640px) {
   .wallpaper-cat {
     width: 90px;
-    bottom: calc(var(--social-bar-h) + 12px);
+    right: 4px;
+    bottom: calc(var(--social-bar-h) + 4px);
   }
 }
 
@@ -124,13 +174,13 @@ a:hover {
   display: flex;
   align-items: center;
   height: calc(var(--waybar-h) - 12px);
-  background-color: rgba(20, 20, 20, 0.45);
+  background-color: var(--panel-bg);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border-radius: 12px;
   margin: 6px;
   pointer-events: auto;
-  border: 1px solid rgba(248, 248, 242, 0.06);
+  border: 1px solid var(--panel-border);
 }
 
 .waybar .group.center {
@@ -199,6 +249,16 @@ a:hover {
   vertical-align: middle;
 }
 
+button.theme-toggle {
+  background: none;
+  border: none;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+}
+
 .waybar nav.modules-left,
 .waybar nav.modules-right {
   display: contents;
@@ -221,13 +281,13 @@ a:hover {
   align-items: center;
   gap: 16px;
   height: calc(var(--social-bar-h) - 12px);
-  background-color: rgba(20, 20, 20, 0.45);
+  background-color: var(--panel-bg);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border-radius: 12px;
   padding: 0 26px;
   pointer-events: auto;
-  border: 1px solid rgba(248, 248, 242, 0.06);
+  border: 1px solid var(--panel-border);
 }
 
 /* =========================================================
@@ -320,12 +380,12 @@ footer.term-footer {
    Terminal window
    ========================================================= */
 .term-window {
-  background-color: rgba(20, 20, 20, 0.72);
+  background-color: var(--panel-bg-strong);
   backdrop-filter: blur(18px) saturate(140%);
   -webkit-backdrop-filter: blur(18px) saturate(140%);
   border: var(--border);
   border-radius: var(--radius);
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45);
+  box-shadow: 0 12px 40px var(--shadow);
   margin-bottom: 20px;
   overflow: hidden;
 }
@@ -335,7 +395,7 @@ footer.term-footer {
   align-items: center;
   justify-content: space-between;
   padding: 6px 12px;
-  background-color: rgba(20, 20, 20, 0.35);
+  background-color: var(--panel-bg-soft);
   border-bottom: var(--border);
   font-size: 12px;
   color: var(--subtext);
@@ -369,7 +429,7 @@ footer.term-footer {
 }
 .term-titlebar .close:hover {
   color: var(--red);
-  background: rgba(255, 255, 255, 0.14);
+  background: var(--hover-bg);
 }
 
 .term-body {
@@ -389,7 +449,7 @@ footer.term-footer {
 .term-body h3 { font-size: 1.05em; }
 
 .term-body code {
-  background: rgba(0, 0, 0, 0.3);
+  background: var(--code-bg);
   color: var(--peach);
   padding: 0.1em 0.35em;
   border-radius: 3px;
@@ -397,7 +457,7 @@ footer.term-footer {
 }
 
 .term-body pre {
-  background: rgba(0, 0, 0, 0.35);
+  background: var(--pre-bg);
   border: var(--border);
   border-radius: var(--radius);
   padding: 12px 14px;
@@ -419,6 +479,13 @@ footer.term-footer {
 .term-body img {
   max-width: 100%;
   border-radius: 4px;
+}
+
+.not-found-img {
+  display: block;
+  max-width: 360px;
+  margin: 14px 0;
+  border-radius: 6px;
 }
 
 .prompt-line {
@@ -462,7 +529,7 @@ ul.ls-list li {
   row-gap: 4px;
   align-items: baseline;
   padding: 7px 0;
-  border-bottom: 1px dashed rgba(248, 248, 242, 0.08);
+  border-bottom: 1px dashed var(--hairline);
 }
 ul.ls-list li:last-child {
   border-bottom: none;
@@ -517,7 +584,7 @@ ul.ls-list .ls-tags:empty {
   justify-content: center;
   padding: calc(var(--waybar-h) + 30px) 20px 40px;
   overflow-y: auto;
-  background: rgba(0, 0, 0, 0.6);
+  background: var(--modal-backdrop);
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
 }

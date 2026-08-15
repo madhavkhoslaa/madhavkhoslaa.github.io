@@ -10,6 +10,7 @@
     <span class="module clock" data-clock>--:--</span>
   </div>
   <div class="group right">
+    <button type="button" class="module theme-toggle" data-theme-toggle title="Switch to light theme"><i class="fa-solid fa-sun" aria-hidden="true"></i></button>
     {{ range .Site.Params.socialLinks }}
     <a class="module" href="{{ .url }}" title="{{ .title }}" target="_blank" rel="noopener me">{{ if .image }}<img class="module-icon" src="{{ .image | relURL }}" alt="{{ .title }}">{{ else }}<i class="{{ .icon }}" aria-hidden="true"></i>{{ end }}</a>
     {{ end }}
@@ -17,6 +18,7 @@
 </header>
 <nav class="waybar-bottom">
   <div class="group">
+    <button type="button" class="module theme-toggle" data-theme-toggle title="Switch to light theme"><i class="fa-solid fa-sun" aria-hidden="true"></i></button>
     {{ range .Site.Params.socialLinks }}
     <a class="module" href="{{ .url }}" title="{{ .title }}" target="_blank" rel="noopener me">{{ if .image }}<img class="module-icon" src="{{ .image | relURL }}" alt="{{ .title }}">{{ else }}<i class="{{ .icon }}" aria-hidden="true"></i>{{ end }}</a>
     {{ end }}

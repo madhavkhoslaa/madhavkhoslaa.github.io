@@ -1,6 +1,35 @@
 (function () {
   "use strict";
 
+  /* theme toggle: dark (default) <-> light, persisted in localStorage */
+  var root = document.documentElement;
+  var toggles = document.querySelectorAll("[data-theme-toggle]");
+
+  function currentTheme() {
+    return root.getAttribute("data-theme") === "light" ? "light" : "dark";
+  }
+
+  function updateToggle(btn) {
+    var icon = btn.querySelector("i");
+    var light = currentTheme() === "light";
+    if (icon) icon.className = light ? "fa-solid fa-moon" : "fa-solid fa-sun";
+    btn.title = light ? "Switch to dark theme" : "Switch to light theme";
+  }
+
+  toggles.forEach(function (btn) {
+    updateToggle(btn);
+    btn.addEventListener("click", function () {
+      var next = currentTheme() === "light" ? "dark" : "light";
+      if (next === "light") {
+        root.setAttribute("data-theme", "light");
+      } else {
+        root.removeAttribute("data-theme");
+      }
+      try { localStorage.setItem("theme", next); } catch (e) {}
+      toggles.forEach(updateToggle);
+    });
+  });
+
   /* waybar clock */
   var clockEl = document.querySelector("[data-clock]");
   if (clockEl) {
