@@ -1,0 +1,549 @@
+/* =========================================================
+   termrice — waybar header + terminal-window content
+   Palette lifted 1:1 from ~/.config/waybar/colors-active.css
+   ========================================================= */
+
+@font-face {
+  font-family: 'Monocraft';
+  src: url('/fonts/Monocraft.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --base:    #0d0d0d;
+  --mantle:  #161616;
+  --crust:   #050505;
+  --surface: #2b2b2b;
+  --overlay: #8a8a8a;
+  --text:    #f5f5f5;
+  --subtext: #c9c9c9;
+  --red:     #ffffff;
+  --green:   #ffffff;
+  --yellow:  #d8d8d8;
+  --blue:    #ffffff;
+  --mauve:   #ffffff;
+  --teal:    #ffffff;
+  --peach:   #b0b0b0;
+
+  --font-mono: "JetBrainsMono Nerd Font", "JetBrains Mono", "Monocraft", "Fira Mono", monospace;
+
+  --waybar-h: 52px;
+  --social-bar-h: 44px;
+  --radius: 6px;
+  --border: 1px solid rgba(248, 248, 242, 0.12);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 14px;
+  color: var(--text);
+  background-color: var(--base);
+  min-height: 100vh;
+}
+
+a {
+  color: var(--blue);
+  text-decoration: none;
+}
+a:hover {
+  color: var(--mauve);
+  text-decoration: underline;
+}
+
+::selection {
+  background: var(--mauve);
+  color: var(--crust);
+}
+
+/* ---------------------------------------------------------
+   Wallpaper
+   --------------------------------------------------------- */
+.wallpaper {
+  position: fixed;
+  inset: 0;
+  height: 100vh;
+  height: 100lvh;
+  z-index: -2;
+  background-color: var(--base);
+  background-image:
+    linear-gradient(rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.65)),
+    url('/images/wallpaper.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+/* =========================================================
+   Waybar-style header
+   ========================================================= */
+.waybar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--waybar-h);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 10px;
+  font-size: 14px;
+  z-index: 100;
+  pointer-events: none;
+}
+
+.waybar .group {
+  display: flex;
+  align-items: center;
+  height: calc(var(--waybar-h) - 12px);
+  background-color: rgba(20, 20, 20, 0.45);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 12px;
+  margin: 6px;
+  pointer-events: auto;
+  border: 1px solid rgba(248, 248, 242, 0.06);
+}
+
+.waybar .group.center {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.waybar .module {
+  padding: 0 14px;
+  margin: 0 2px;
+  color: var(--text);
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: font-size 0.15s ease;
+}
+
+.waybar .module:hover {
+  font-size: 16px;
+}
+
+.waybar .module.logo {
+  color: var(--mauve);
+  font-weight: bold;
+}
+
+.waybar .module.logo a {
+  color: inherit;
+}
+
+.waybar .module.logo .logo-mobile {
+  display: none;
+}
+
+.waybar a.module {
+  color: var(--text);
+}
+
+.waybar .module.active {
+  color: var(--green);
+  font-weight: bold;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.waybar .module.clock {
+  font-weight: bold;
+}
+
+.waybar .group.right .module:last-child {
+  margin-right: 4px;
+}
+
+.waybar nav.modules-left,
+.waybar nav.modules-right {
+  display: contents;
+}
+
+/* Bottom social bar: mobile-only, hidden on desktop */
+.waybar-bottom {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  justify-content: center;
+  padding: 6px;
+  pointer-events: none;
+}
+.waybar-bottom .group {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  height: calc(var(--social-bar-h) - 12px);
+  background-color: rgba(20, 20, 20, 0.45);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 12px;
+  padding: 0 26px;
+  pointer-events: auto;
+  border: 1px solid rgba(248, 248, 242, 0.06);
+}
+
+/* =========================================================
+   Page shell
+   ========================================================= */
+/* Every page fits in one viewport, no page-level scroll.
+   The term-window(s) grow to fill remaining space and scroll
+   internally if their content overflows. */
+body {
+  height: 100vh;
+  height: 100svh;
+  overflow: hidden;
+}
+main.shell {
+  max-width: 1200px;
+  margin: 0 auto;
+  height: 100vh;
+  height: 100svh;
+  min-height: 0;
+  padding: calc(var(--waybar-h) + 16px) 20px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  overflow: hidden;
+}
+footer.term-footer {
+  display: none;
+}
+.about-window {
+  flex: 0 0 auto;
+}
+.posts-window,
+.page-window {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 0;
+}
+.posts-window .term-body,
+.page-window .term-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+/* mobile: drop the clock, keep logo + nav on top,
+   move socials to a fixed bar at the bottom */
+@media (max-width: 640px) {
+  .waybar .group.center,
+  .waybar .group.right {
+    display: none;
+  }
+  .waybar .group.left {
+    flex: 1 1 auto;
+    justify-content: space-between;
+  }
+  .waybar .module {
+    padding: 0 6px;
+    margin: 0;
+    font-size: 12px;
+  }
+  .waybar .module.logo {
+    padding-right: 14px;
+  }
+  .waybar .module.logo .logo-desktop {
+    display: none;
+  }
+  .waybar .module.logo .logo-mobile {
+    display: inline;
+  }
+  .waybar-bottom {
+    display: flex;
+    bottom: 6px;
+  }
+  main.shell {
+    padding-top: calc(var(--waybar-h) + 8px);
+    padding-bottom: calc(var(--social-bar-h) + 20px);
+    gap: 10px;
+  }
+  .about-window .term-body {
+    padding: 12px 14px 14px;
+  }
+  .about__description {
+    margin-bottom: 8px;
+  }
+}
+
+/* =========================================================
+   Terminal window
+   ========================================================= */
+.term-window {
+  background-color: rgba(20, 20, 20, 0.72);
+  backdrop-filter: blur(18px) saturate(140%);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
+  border: var(--border);
+  border-radius: var(--radius);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45);
+  margin-bottom: 20px;
+  overflow: hidden;
+}
+
+.term-titlebar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 12px;
+  background-color: rgba(20, 20, 20, 0.35);
+  border-bottom: var(--border);
+  font-size: 12px;
+  color: var(--subtext);
+}
+
+.term-titlebar .path {
+  color: var(--overlay);
+}
+.term-titlebar .path .user {
+  color: var(--green);
+}
+.term-titlebar .path .at {
+  color: var(--subtext);
+}
+.term-titlebar .path .host {
+  color: var(--blue);
+}
+.term-titlebar .path .sep {
+  color: var(--subtext);
+}
+.term-titlebar .path .dir {
+  color: var(--mauve);
+  font-weight: bold;
+}
+
+.term-titlebar .close {
+  color: var(--overlay);
+  cursor: pointer;
+  padding: 0 4px;
+  border-radius: 3px;
+}
+.term-titlebar .close:hover {
+  color: var(--red);
+  background: rgba(255, 255, 255, 0.14);
+}
+
+.term-body {
+  padding: 18px 20px 22px;
+  line-height: 1.65;
+}
+
+.term-body h1,
+.term-body h2,
+.term-body h3 {
+  color: var(--mauve);
+  line-height: 1.3;
+}
+
+.term-body h1 { font-size: 1.5em; }
+.term-body h2 { font-size: 1.25em; }
+.term-body h3 { font-size: 1.05em; }
+
+.term-body code {
+  background: rgba(0, 0, 0, 0.3);
+  color: var(--peach);
+  padding: 0.1em 0.35em;
+  border-radius: 3px;
+  font-size: 0.9em;
+}
+
+.term-body pre {
+  background: rgba(0, 0, 0, 0.35);
+  border: var(--border);
+  border-radius: var(--radius);
+  padding: 12px 14px;
+  overflow-x: auto;
+}
+.term-body pre code {
+  background: none;
+  padding: 0;
+  color: var(--text);
+}
+
+.term-body blockquote {
+  border-left: 3px solid var(--overlay);
+  margin: 1em 0;
+  padding: 0.2em 1em;
+  color: var(--subtext);
+}
+
+.term-body img {
+  max-width: 100%;
+  border-radius: 4px;
+}
+
+.prompt-line {
+  color: var(--overlay);
+  margin-bottom: 10px;
+}
+.prompt-line .sigil {
+  color: var(--green);
+}
+.prompt-line .cmd {
+  color: var(--text);
+}
+
+/* about window */
+.about__logo {
+  color: var(--mauve);
+}
+.about__title {
+  margin: 0 0 4px;
+  color: var(--text);
+}
+.about__description {
+  color: var(--subtext);
+  margin: 0 0 14px;
+}
+/* =========================================================
+   File-listing (posts / archive)
+   ========================================================= */
+ul.ls-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+ul.ls-list li {
+  display: grid;
+  grid-template-columns: 92px 1fr;
+  grid-template-areas:
+    "date title"
+    "tags tags";
+  column-gap: 14px;
+  row-gap: 4px;
+  align-items: baseline;
+  padding: 7px 0;
+  border-bottom: 1px dashed rgba(248, 248, 242, 0.08);
+}
+ul.ls-list li:last-child {
+  border-bottom: none;
+}
+ul.ls-list .ls-date {
+  grid-area: date;
+  color: var(--overlay);
+  font-size: 0.85em;
+  white-space: nowrap;
+}
+ul.ls-list .ls-title {
+  grid-area: title;
+}
+ul.ls-list .ls-title a {
+  color: var(--text);
+}
+ul.ls-list .ls-title a::before {
+  content: "./";
+  color: var(--green);
+}
+ul.ls-list .ls-title a:hover {
+  color: var(--mauve);
+}
+ul.ls-list .ls-tags {
+  grid-area: tags;
+  grid-column: 1 / -1;
+  color: var(--peach);
+  font-size: 0.78em;
+  opacity: 0.85;
+  line-height: 1.5;
+}
+ul.ls-list .ls-tags:empty {
+  display: none;
+}
+
+@media (max-width: 560px) {
+  ul.ls-list li {
+    grid-template-columns: 1fr;
+    grid-template-areas: "date" "title" "tags";
+  }
+}
+
+/* =========================================================
+   Modal overlay (blog post opens over blurred backdrop)
+   ========================================================= */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: none;
+  align-items: flex-start;
+  justify-content: center;
+  padding: calc(var(--waybar-h) + 30px) 20px 40px;
+  overflow-y: auto;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+.modal-overlay.open {
+  display: flex;
+}
+.modal-overlay .term-window {
+  width: 80vw;
+  max-width: 1600px;
+  animation: modal-in 0.16s ease-out;
+}
+
+@media (max-width: 700px) {
+  .modal-overlay .term-window {
+    width: 95vw;
+  }
+}
+
+.modal-overlay .term-body {
+  max-width: 860px;
+  margin: 0 auto;
+}
+@keyframes modal-in {
+  from { opacity: 0; transform: translateY(10px) scale(0.98); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+.modal-overlay .term-titlebar .home-link {
+  color: var(--green);
+  margin-right: 10px;
+  cursor: pointer;
+}
+.modal-overlay .term-titlebar .home-link:hover {
+  color: var(--mauve);
+}
+.modal-loading {
+  color: var(--overlay);
+  padding: 20px;
+}
+
+body.modal-locked {
+  overflow: hidden;
+}
+
+/* =========================================================
+   Footer
+   ========================================================= */
+footer.term-footer {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px 40px;
+  color: var(--overlay);
+  font-size: 12px;
+  text-align: center;
+}
+footer.term-footer a {
+  color: var(--overlay);
+}
+footer.term-footer a:hover {
+  color: var(--mauve);
+}
