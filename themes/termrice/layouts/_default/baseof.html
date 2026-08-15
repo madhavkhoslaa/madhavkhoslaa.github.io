@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="{{ .Site.LanguageCode | default "en" }}">
+<head>
+  {{ partial "head.html" . }}
+</head>
+<body data-home="{{ "/" | relLangURL }}">
+  <div class="wallpaper"></div>
+  {{ partial "waybar.html" . }}
+  <main class="shell">
+    {{ block "main" . }}{{ end }}
+  </main>
+  {{ partial "footer.html" . }}
+
+  <div class="modal-overlay">
+    <div class="term-window modal-panel"></div>
+  </div>
+
+  <script src="{{ "js/rice.js" | relURL }}" defer></script>
+</body>
+</html>

@@ -1,0 +1,12 @@
+{{ define "main" }}
+<div class="term-window page-window">
+  <div class="term-titlebar">
+    <span class="path"><span class="dir">~</span></span>
+  </div>
+  <div class="term-body">
+    <p class="prompt-line"><span class="sigil">❯</span> <span class="cmd">cd {{ .RelPermalink }}</span></p>
+    <p>bash: cd: {{ .RelPermalink }}: No such file or directory</p>
+    <p class="prompt-line" style="margin-top:14px;"><a href="{{ "/" | relLangURL }}">→ cd ~</a></p>
+  </div>
+</div>
+{{ end }}

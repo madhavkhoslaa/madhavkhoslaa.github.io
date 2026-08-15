@@ -1,0 +1,10 @@
+name = "termrice"
+license = "MIT"
+description = "A terminal-window / waybar-inspired Hugo theme with a blurred wallpaper backdrop and modal post overlays."
+homepage = "https://madhavkhoslaa.github.io/"
+tags = ["dark", "terminal", "minimal", "blog"]
+features = ["taxonomies", "rss"]
+min_version = "0.100.0"
+
+[author]
+  name = "Madhav Khosla"

@@ -1,0 +1,28 @@
+{{ define "main" }}
+<div class="term-window page-window">
+  <div class="term-titlebar">
+    <span class="path">{{ partial "prompt-path.html" . }}</span>
+  </div>
+  <div class="term-body">
+    <h1>{{ .Title | markdownify }}</h1>
+    {{ with .Content }}{{ . }}{{ end }}
+
+    <ul class="ls-list">
+      {{ range .Pages }}
+      {{ $modal := or (eq .Section "posts") (eq .Section "archive") }}
+      <li>
+        <span class="ls-date">{{ if not .Date.IsZero }}{{ .Date.Format "2006-01-02" }}{{ end }}</span>
+        <span class="ls-title">
+          {{ if $modal }}
+          <a href="{{ .RelPermalink }}" data-modal-link data-title="{{ .Title }}">{{ .Title | markdownify }}</a>
+          {{ else }}
+          <a href="{{ .RelPermalink }}">{{ .Title | markdownify }}</a>
+          {{ end }}
+        </span>
+        <span class="ls-tags">{{ range .Params.tags }}#{{ . }} {{ end }}</span>
+      </li>
+      {{ end }}
+    </ul>
+  </div>
+</div>
+{{ end }}

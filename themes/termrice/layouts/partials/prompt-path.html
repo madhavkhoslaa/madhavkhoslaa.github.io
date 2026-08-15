@@ -1,0 +1,5 @@
+{{- $p := "~" -}}
+{{- if not .IsHome -}}
+  {{- $p = printf "~/%s" (strings.TrimSuffix "/" (strings.TrimPrefix "/" .RelPermalink)) -}}
+{{- end -}}
+<span class="dir">{{ $p }}</span>

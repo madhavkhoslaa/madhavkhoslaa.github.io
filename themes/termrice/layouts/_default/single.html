@@ -1,0 +1,14 @@
+{{ define "main" }}
+{{ $back := .Parent }}
+<div class="term-window page-window">
+  <div class="term-titlebar">
+    <span class="path">{{ partial "prompt-path.html" . }}</span>
+    {{ if and $back (not $back.IsHome) }}<a class="close" href="{{ $back.RelPermalink }}" title="back to {{ $back.Title }}">[x]</a>{{ end }}
+  </div>
+  <div class="term-body">
+    <h1>{{ .Title | markdownify }}</h1>
+    {{ if not .Date.IsZero }}<p class="prompt-line">{{ .Date.Format "2 Jan 2006" }}{{ with .Params.tags }} · {{ range . }}#{{ . }} {{ end }}{{ end }}</p>{{ end }}
+    {{ .Content }}
+  </div>
+</div>
+{{ end }}

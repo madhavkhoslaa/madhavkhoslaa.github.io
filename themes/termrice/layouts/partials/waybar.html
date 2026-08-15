@@ -1,0 +1,24 @@
+{{ $current := . }}
+<header class="waybar">
+  <div class="group left">
+    <a href="{{ "/" | relLangURL }}" class="module logo"><span class="logo-desktop">λ {{ .Site.Params.about.title | default .Site.Title }}</span><span class="logo-mobile">Home</span></a>
+    {{ range .Site.Menus.main }}
+    <a class="module{{ if or ($current.IsMenuCurrent "main" .) ($current.HasMenuCurrent "main" .) (eq $current.RelPermalink (.URL | relLangURL)) }} active{{ end }}" href="{{ .URL | relLangURL }}">{{ .Name }}</a>
+    {{ end }}
+  </div>
+  <div class="group center">
+    <span class="module clock" data-clock>--:--</span>
+  </div>
+  <div class="group right">
+    {{ range .Site.Params.socialLinks }}
+    <a class="module" href="{{ .url }}" title="{{ .title }}" target="_blank" rel="noopener me"><i class="{{ .icon }}" aria-hidden="true"></i></a>
+    {{ end }}
+  </div>
+</header>
+<nav class="waybar-bottom">
+  <div class="group">
+    {{ range .Site.Params.socialLinks }}
+    <a class="module" href="{{ .url }}" title="{{ .title }}" target="_blank" rel="noopener me"><i class="{{ .icon }}" aria-hidden="true"></i></a>
+    {{ end }}
+  </div>
+</nav>

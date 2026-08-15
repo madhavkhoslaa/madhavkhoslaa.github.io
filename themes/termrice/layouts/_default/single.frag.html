@@ -1,0 +1,10 @@
+<div class="term-titlebar">
+  <span class="tb-left"><span class="home-link" data-home-link title="back to home">~</span> <span class="path">{{ partial "prompt-path.html" . }}</span></span>
+  <span class="close" data-close title="close">[x]</span>
+</div>
+<div class="term-body">
+  <h1>{{ .Title | markdownify }}</h1>
+  {{ if not .Date.IsZero }}<p class="prompt-line">{{ .Date.Format "2 Jan 2006" }}{{ with .Params.tags }} · {{ range . }}#{{ . }} {{ end }}{{ end }}</p>{{ end }}
+  {{ .Content }}
+  <p class="prompt-line" style="margin-top:18px;"><a href="{{ .Permalink }}">→ permalink</a></p>
+</div>
