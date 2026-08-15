@@ -84,6 +84,24 @@ a:hover {
   background-repeat: no-repeat;
 }
 
+.wallpaper-cat {
+  position: fixed;
+  right: 12px;
+  bottom: 12px;
+  width: 130px;
+  height: auto;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.85;
+}
+
+@media (max-width: 640px) {
+  .wallpaper-cat {
+    width: 90px;
+    bottom: calc(var(--social-bar-h) + 12px);
+  }
+}
+
 /* =========================================================
    Waybar-style header
    ========================================================= */
@@ -143,6 +161,13 @@ a:hover {
 
 .waybar .module.logo a {
   color: inherit;
+}
+
+.logo-gif {
+  height: 1.6em;
+  width: auto;
+  vertical-align: middle;
+  border-radius: 4px;
 }
 
 .waybar .module.logo .logo-mobile {
