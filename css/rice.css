@@ -168,6 +168,11 @@ a:hover {
   margin-right: 4px;
 }
 
+.waybar .module-icon {
+  height: 1em;
+  width: auto;
+}
+
 .waybar nav.modules-left,
 .waybar nav.modules-right {
   display: contents;
