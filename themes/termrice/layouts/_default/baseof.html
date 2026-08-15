@@ -5,6 +5,7 @@
 </head>
 <body data-home="{{ "/" | relLangURL }}">
   <div class="wallpaper"></div>
+  <img class="wallpaper-cat" src="{{ "images/catbounce.gif" | relURL }}" alt="" aria-hidden="true">
   {{ partial "waybar.html" . }}
   <main class="shell">
     {{ block "main" . }}{{ end }}
