@@ -37,6 +37,8 @@
   --wallpaper-url:   url('/images/wallpaper.png');
   --wallpaper-grad-1: rgba(0, 0, 0, 0.45);
   --wallpaper-grad-2: rgba(0, 0, 0, 0.65);
+  --grid-dot-color:  rgba(255, 255, 255, 0.16);
+  --grid-dot-size:   24px;
 
   --panel-bg:        rgba(20, 20, 20, 0.45);
   --panel-bg-soft:   rgba(20, 20, 20, 0.35);
@@ -71,6 +73,7 @@
   --wallpaper-url:   url('/images/white-theme.jpg');
   --wallpaper-grad-1: rgba(255, 255, 255, 0.25);
   --wallpaper-grad-2: rgba(255, 255, 255, 0.5);
+  --grid-dot-color:  rgba(20, 20, 20, 0.14);
 
   --panel-bg:        rgba(255, 255, 255, 0.55);
   --panel-bg-soft:   rgba(255, 255, 255, 0.4);
@@ -126,11 +129,12 @@ a:hover {
   z-index: -2;
   background-color: var(--base);
   background-image:
+    radial-gradient(var(--grid-dot-color) 1px, transparent 1px),
     linear-gradient(var(--wallpaper-grad-1), var(--wallpaper-grad-2)),
     var(--wallpaper-url);
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
+  background-size: var(--grid-dot-size) var(--grid-dot-size), cover, cover;
+  background-position: 0 0, center, center;
+  background-repeat: repeat, no-repeat, no-repeat;
 }
 
 .wallpaper-cat {
