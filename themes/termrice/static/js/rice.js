@@ -61,6 +61,92 @@
   var homeURL = document.body.getAttribute("data-home") || "/";
   var baseTitle = document.title;
 
+  /* ---------------------------------------------------------
+     In-page navigation: clicking a top-nav link (Posts, Archive,
+     About, Tags, Draft, the logo) used to be a plain <a href>,
+     causing a full page reload for every section change - flash,
+     clock reset, bongo-cat restart, wallpaper re-decode. Fetch the
+     target page instead and swap in just the <main> content, like
+     the post modal already does for individual posts.
+     --------------------------------------------------------- */
+  var mainEl = document.querySelector("main.shell");
+
+  function syncNav(pathname) {
+    var navLinks = document.querySelectorAll(".waybar .group.left a.module:not(.logo)");
+    var activeLink = null;
+    navLinks.forEach(function (a) {
+      var href = a.getAttribute("href");
+      var isActive = href === pathname || (href !== "/" && pathname.indexOf(href) === 0);
+      a.classList.toggle("active", isActive);
+      if (isActive) activeLink = a;
+    });
+    var bongo = document.querySelector(".logo-gif");
+    var target = activeLink || document.querySelector(".waybar .module.logo");
+    if (bongo && target && bongo.parentElement !== target) {
+      target.insertBefore(bongo, target.firstChild);
+    }
+  }
+
+  function loadPage(url, opts) {
+    opts = opts || {};
+    fetch(url)
+      .then(function (res) {
+        if (!res.ok) throw new Error("nav fetch failed");
+        return res.text();
+      })
+      .then(function (html) {
+        var doc = new DOMParser().parseFromString(html, "text/html");
+        var newMain = doc.querySelector("main.shell");
+        if (!newMain || !mainEl) throw new Error("no main in response");
+
+        if (overlay.classList.contains("open")) {
+          overlay.classList.remove("open");
+          document.body.classList.remove("modal-locked");
+        }
+
+        mainEl.innerHTML = newMain.innerHTML;
+        document.title = doc.title;
+        syncNav(new URL(url, location.href).pathname);
+        window.scrollTo(0, 0);
+
+        if (opts.push) {
+          history.pushState({ page: true, url: url }, "", url);
+        }
+      })
+      .catch(function () {
+        window.location.href = url;
+      });
+  }
+
+  document.body.addEventListener("click", function (e) {
+    if (e.defaultPrevented) return;
+    if (e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+
+    var link = e.target.closest("a[href]");
+    if (!link) return;
+    if (link.closest("[data-modal-link]")) return;
+    if (link.target && link.target !== "_self") return;
+    if (link.hasAttribute("download")) return;
+    if (link.getAttribute("rel") === "external") return;
+
+    var url;
+    try { url = new URL(link.href, location.href); } catch (err) { return; }
+    if (url.origin !== location.origin) return;
+    if (url.pathname === location.pathname && url.hash) return;
+
+    e.preventDefault();
+    loadPage(url.href, { push: true });
+  });
+
+  window.addEventListener("popstate", function () {
+    if (overlay.classList.contains("open")) {
+      overlay.classList.remove("open");
+      document.body.classList.remove("modal-locked");
+      document.title = baseTitle;
+    }
+    loadPage(location.href, { push: false });
+  });
+
   function openModal(html, url, title) {
     panel.innerHTML = html;
     overlay.classList.add("open");
@@ -127,14 +213,6 @@
   document.addEventListener("keydown", function (e) {
     if (e.key === "Escape" && overlay.classList.contains("open")) {
       closeModal(true);
-    }
-  });
-
-  window.addEventListener("popstate", function () {
-    if (overlay.classList.contains("open")) {
-      overlay.classList.remove("open");
-      document.body.classList.remove("modal-locked");
-      document.title = baseTitle;
     }
   });
 })();
