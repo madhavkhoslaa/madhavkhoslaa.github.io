@@ -445,7 +445,7 @@ footer.term-footer {
 }
 
 .term-body {
-  padding: 18px 20px 22px;
+  padding: 18px 16px 22px;
   line-height: 1.65;
 }
 
@@ -594,7 +594,7 @@ ul.ls-list .ls-tags:empty {
   display: none;
   align-items: flex-start;
   justify-content: center;
-  padding: calc(var(--waybar-h) + 30px) 20px 40px;
+  padding: calc(var(--waybar-h) + 30px) 6px 40px;
   overflow-y: auto;
   background: var(--modal-backdrop);
   backdrop-filter: blur(6px);
@@ -604,19 +604,19 @@ ul.ls-list .ls-tags:empty {
   display: flex;
 }
 .modal-overlay .term-window {
-  width: 80vw;
-  max-width: 1600px;
+  width: 99vw;
+  max-width: none;
   animation: modal-in 0.16s ease-out;
 }
 
 @media (max-width: 700px) {
   .modal-overlay .term-window {
-    width: 95vw;
+    width: 99vw;
   }
 }
 
 .modal-overlay .term-body {
-  max-width: 860px;
+  max-width: 100%;
   margin: 0 auto;
 }
 @keyframes modal-in {
