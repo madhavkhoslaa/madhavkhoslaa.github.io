@@ -278,6 +278,7 @@ button.theme-toggle {
   right: 0;
   z-index: 100;
   justify-content: center;
+  gap: 10px;
   padding: 6px;
   pointer-events: none;
 }
