@@ -27,7 +27,7 @@ Creational design patterns aid in the instantiation of objects by providing suit
 
 They are important when a system grows large and require how objects are constructed rather than what objects are constructed. They are a step above a normal hardcoded instantiation like `const instance = new SomeClass()`
 
-![image](/images/dmLLnXo.jpeg)
+![image](/images/creation-of-adam.png)
 
 ---
 
