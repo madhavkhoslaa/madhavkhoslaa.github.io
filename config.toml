@@ -74,16 +74,6 @@ ignoreErrors = ["error-remote-getjson"]
     name = "About"
     url = "/about/"
     weight = 3
-  [[menu.main]]
-    identifier = "tags"
-    name = "Tags"
-    url = "/tags/"
-    weight = 4
-  [[menu.main]]
-    identifier = "draft"
-    name = "Draft"
-    url = "/draft/"
-    weight = 5
 
 [taxonomies]
   tag = "tags"
