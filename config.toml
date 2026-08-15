@@ -49,6 +49,7 @@ ignoreErrors = ["error-remote-getjson"]
 
 [[params.socialLinks]]
   icon = "fa-brands fa-twitter"
+  image = "images/x-logo.png"
   title = "Twitter"
   url = "https://x.com/futexmaxxing"
 
