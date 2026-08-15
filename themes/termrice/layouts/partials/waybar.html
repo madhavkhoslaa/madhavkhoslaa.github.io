@@ -1,9 +1,17 @@
 {{ $current := . }}
+{{ $bongoSrc := "images/bongo.gif" | relURL }}
+{{ $navActive := false }}
+{{ range .Site.Menus.main }}
+  {{ if or ($current.IsMenuCurrent "main" .) ($current.HasMenuCurrent "main" .) (eq $current.RelPermalink (.URL | relLangURL)) }}
+    {{ $navActive = true }}
+  {{ end }}
+{{ end }}
 <header class="waybar">
   <div class="group left">
-    <a href="{{ "/" | relLangURL }}" class="module logo"><img class="logo-gif" src="{{ "images/bongo.gif" | relURL }}" alt=""><span class="logo-desktop">{{ .Site.Params.about.title | default .Site.Title }}</span><span class="logo-mobile">Home</span></a>
+    <a href="{{ "/" | relLangURL }}" class="module logo">{{ if not $navActive }}<img class="logo-gif" src="{{ $bongoSrc }}" alt="">{{ end }}<span class="logo-desktop">{{ .Site.Params.about.title | default .Site.Title }}</span><span class="logo-mobile">Home</span></a>
     {{ range .Site.Menus.main }}
-    <a class="module{{ if or ($current.IsMenuCurrent "main" .) ($current.HasMenuCurrent "main" .) (eq $current.RelPermalink (.URL | relLangURL)) }} active{{ end }}" href="{{ .URL | relLangURL }}">{{ .Name }}</a>
+    {{ $isActive := or ($current.IsMenuCurrent "main" .) ($current.HasMenuCurrent "main" .) (eq $current.RelPermalink (.URL | relLangURL)) }}
+    <a class="module{{ if $isActive }} active{{ end }}" href="{{ .URL | relLangURL }}">{{ if $isActive }}<img class="logo-gif" src="{{ $bongoSrc }}" alt="">{{ end }}{{ .Name }}</a>
     {{ end }}
   </div>
   <div class="group center">
