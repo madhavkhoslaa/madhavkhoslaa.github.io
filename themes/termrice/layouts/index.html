@@ -26,7 +26,7 @@
       {{ range first 10 (sort $posts "Date" "desc") }}
       <li>
         <span class="ls-date">{{ .Date.Format "2006-01-02" }}</span>
-        <span class="ls-title"><a href="{{ .RelPermalink }}" data-modal-link data-title="{{ .Title }}">{{ .Title | markdownify }}</a></span>
+        <span class="ls-title"><a href="{{ .RelPermalink }}">{{ .Title | markdownify }}</a></span>
         {{ if ne .Section "archive" }}<span class="ls-tags">{{ range .Params.tags }}#{{ . }} {{ end }}</span>{{ end }}
       </li>
       {{ end }}

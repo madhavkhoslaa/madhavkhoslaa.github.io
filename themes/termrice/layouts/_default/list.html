@@ -9,15 +9,10 @@
 
     <ul class="ls-list">
       {{ range .Pages }}
-      {{ $modal := or (eq .Section "posts") (eq .Section "archive") }}
       <li>
         <span class="ls-date">{{ if not .Date.IsZero }}{{ .Date.Format "2006-01-02" }}{{ end }}</span>
         <span class="ls-title">
-          {{ if $modal }}
-          <a href="{{ .RelPermalink }}" data-modal-link data-title="{{ .Title }}">{{ .Title | markdownify }}</a>
-          {{ else }}
           <a href="{{ .RelPermalink }}">{{ .Title | markdownify }}</a>
-          {{ end }}
         </span>
         <span class="ls-tags">{{ range .Params.tags }}#{{ . }} {{ end }}</span>
       </li>
