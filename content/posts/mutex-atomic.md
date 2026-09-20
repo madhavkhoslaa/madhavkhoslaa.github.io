@@ -27,6 +27,53 @@ the problem; it is not a prediction of what a racy C program will do.
 We are going to write a **spin mutex**. Waiting threads keep checking the lock
 instead of going to sleep. No futex. Just C atomics and an x86 instruction.
 
+### Example 2 | pthread_create updates a value alone
+
+Before we lock anything, here is the smallest pthread program: one worker
+thread updates an ordinary `uint64_t`. No mutex yet.
+
+```c
+#include <inttypes.h>
+#include <pthread.h>
+#include <stdint.h>
+#include <stdio.h>
+
+static void *add_one(void *arg)
+{
+    uint64_t *value = arg; /* The worker updates the caller's value. */
+    *value += 1;
+    return NULL;
+}
+
+int main(void)
+{
+    uint64_t value = 0;
+    pthread_t thread;
+
+    if (pthread_create(&thread, NULL, add_one, &value) != 0) {
+        perror("pthread_create");
+        return 1;
+    }
+    pthread_join(thread, NULL); /* Wait for the worker to finish. */
+
+    printf("value: %" PRIu64 "\n", value);
+    return 0;
+}
+```
+
+`pthread_create` takes four arguments: the `pthread_t` to fill in, attributes
+(`NULL` means defaults), the function to run in the new thread, and the single
+argument passed to that function. Here the argument is `&value`, so `add_one`
+updates the same `uint64_t` that `main` owns.
+
+`pthread_join` blocks until the worker thread has finished. After it returns,
+`main` can safely read `value`.
+
+Only one thread ever touches `value`, so this is not a data race and no lock is
+needed. The race appears when several threads update the same value at once,
+which is exactly the whiteboard example above. The mutex we are about to write
+will protect those concurrent updates.
+
 ## How do we represent ownership? | Let's talk Code.
 
 This.
