@@ -1,0 +1,201 @@
+<!doctype html><html lang=en><head><meta charset=UTF-8><script>(function(){try{localStorage.getItem("theme")==="light"&&document.documentElement.setAttribute("data-theme","light")}catch{}})()</script><title>Writing a Mutex in C: Atomics and x86 &ndash; Madhav Khosla</title><meta name=description content="Systems Engineering | Backend"><meta name=viewport content="width=device-width,initial-scale=1"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin=anonymous referrerpolicy=no-referrer><link rel=stylesheet href="/css/rice.css?v=1789894348"><meta property="og:title" content="Writing a Mutex in C: Atomics and x86 &ndash; Madhav Khosla"><meta property="og:url" content="https://madhavkhoslaa.github.io/posts/mutex-atomic/"><meta property="og:description" content="Writing a spin mutex with C11 atomics, testing it with 16 threads, and looking at the x86-64 assembly."><meta property="og:locale" content="en"></head><body data-home=/><div class=wallpaper></div><img class=wallpaper-cat src=/images/catbounce.gif alt aria-hidden=true><header class=waybar><div class="group left"><a href=/ class="module logo"><img class=logo-gif src=/images/bongo.gif alt><span class=logo-desktop>Madhav Khosla</span><span class=logo-mobile>Home</span></a>
+<a class=module href=/posts/>Posts</a>
+<a class=module href=/archive/>Archive</a>
+<a class=module href=/about/>About</a></div><div class="group center"><span class="module clock" data-clock>--:--</span></div><div class=right-cluster><div class=group><button type=button class="module theme-toggle" data-theme-toggle title="Switch to light theme"><i class="fa-solid fa-sun" aria-hidden=true></i></button></div><div class="group right"><a class=module href=https://github.com/madhavkhoslaa title=GitHub target=_blank rel="noopener me"><i class="fa-brands fa-github" aria-hidden=true></i></a>
+<a class=module href=https://x.com/futexmaxxing title=Twitter target=_blank rel="noopener me"><img class=module-icon src=/images/x-logo.png alt=Twitter></a>
+<a class=module href=https://www.linkedin.com/in/madhavkhoslaa/ title=LinkedIn target=_blank rel="noopener me"><i class="fa-brands fa-linkedin" aria-hidden=true></i></a></div></div></header><nav class=waybar-bottom><div class=group><button type=button class="module theme-toggle" data-theme-toggle title="Switch to light theme"><i class="fa-solid fa-sun" aria-hidden=true></i></button></div><div class=group><a class=module href=https://github.com/madhavkhoslaa title=GitHub target=_blank rel="noopener me"><i class="fa-brands fa-github" aria-hidden=true></i></a>
+<a class=module href=https://x.com/futexmaxxing title=Twitter target=_blank rel="noopener me"><img class=module-icon src=/images/x-logo.png alt=Twitter></a>
+<a class=module href=https://www.linkedin.com/in/madhavkhoslaa/ title=LinkedIn target=_blank rel="noopener me"><i class="fa-brands fa-linkedin" aria-hidden=true></i></a></div></nav><main class=shell><div class="term-window page-window"><div class=term-titlebar><span class=path><span class=dir>~/posts/mutex-atomic</span>
+</span><a class=close href=/posts/ title="back to Posts">[x]</a></div><div class=term-body><h1>Writing a Mutex in C: Atomics and x86</h1><p class=prompt-line>20 Sep 2026 · #C #Atomics #Mutex #x86 #Assembly</p><h2 id=mutex-what-is-it>Mutex, What is it?</h2><h3 id=example-1>Example 1</h3><p>Imagine two people updating the same number on a whiteboard. The number is 0
+and both have to increment it by 1.</p><p>The answer should be 2. But what if both read 0 before either writes anything?
+Both calculate 1. Both write 1.</p><p>So the important thing is not just how we increment the number. It is <strong>who
+gets to update it right now</strong>.</p><p>A mutex gives one thread ownership of a critical section. Everyone else has to
+wait. In C, accessing a shared ordinary counter this way without synchronization
+is a data race, which is undefined behavior. The whiteboard example explains
+the problem; it is not a prediction of what a racy C program will do.</p><p>We are going to write a <strong>spin mutex</strong>. Waiting threads keep checking the lock
+instead of going to sleep. No futex. Just C atomics and an x86 instruction.</p><h2 id=how-do-we-represent-ownership--lets-talk-code>How do we represent ownership? | Let&rsquo;s talk Code.</h2><p>This.</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=line><span class=cl><span class=cp>#include</span> <span class=cpf>&lt;stdbool.h&gt;</span><span class=cp>
+</span></span></span><span class=line><span class=cl><span class=cp>#include</span> <span class=cpf>&lt;stdatomic.h&gt;</span><span class=cp>
+</span></span></span><span class=line><span class=cl><span class=cp>#include</span> <span class=cpf>&lt;immintrin.h&gt;</span><span class=cp>
+</span></span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=nf>_Static_assert</span><span class=p>(</span><span class=n>ATOMIC_INT_LOCK_FREE</span> <span class=o>==</span> <span class=mi>2</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>               <span class=s>&#34;Requires lock-free unsigned int atomics&#34;</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>typedef</span> <span class=k>struct</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=n>atomic_uint</span> <span class=n>state</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span> <span class=n>spin_mutex</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=cp>#define SPIN_MUTEX_INITIALIZER { .state = 0u }
+</span></span></span></code></pre></div><p>Two states:</p><ol><li><code>0</code>: nobody owns the mutex.</li><li><code>1</code>: somebody owns the mutex.</li></ol><p>The static assertion checks that these integer atomics are always lock-free on
+our target. That does not make our mutex a lock-free algorithm. A thread can
+still wait indefinitely for the owner!</p><p>Initialize the mutex before sharing it between threads.</p><h2 id=why-not-check-for-0-and-then-write-1>Why not check for 0 and then write 1?</h2><p>Because two threads could both see 0 before either writes 1. We have recreated
+the whiteboard problem, except now the number is our lock.</p><p>We need one <strong>atomic operation</strong> that writes 1 and tells us what was there
+before. That is what <code>atomic_exchange_explicit</code> does.</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=line><span class=cl><span class=kt>void</span> <span class=nf>spin_mutex_lock</span><span class=p>(</span><span class=n>spin_mutex</span> <span class=o>*</span><span class=n>m</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>while</span> <span class=p>(</span><span class=nf>atomic_exchange_explicit</span><span class=p>(</span><span class=o>&amp;</span><span class=n>m</span><span class=o>-&gt;</span><span class=n>state</span><span class=p>,</span> <span class=mi>1u</span><span class=p>,</span> <span class=n>memory_order_acquire</span><span class=p>))</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=k>while</span> <span class=p>(</span><span class=nf>atomic_load_explicit</span><span class=p>(</span><span class=o>&amp;</span><span class=n>m</span><span class=o>-&gt;</span><span class=n>state</span><span class=p>,</span> <span class=n>memory_order_relaxed</span><span class=p>))</span>
+</span></span><span class=line><span class=cl>            <span class=nf>_mm_pause</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div><p>If the exchange returns 0, we acquired the mutex. The outer loop ends.</p><p>If it returns 1, somebody already owns it. We enter the inner loop and wait.</p><p>An obvious question here is: why do we need <strong>two loops</strong>?</p><h3 id=the-inner-loop>The inner loop</h3><p>Repeatedly exchanging would keep requesting exclusive ownership of the cache
+line containing <code>state</code>. Imagine everyone repeatedly grabbing the same sign to
+check whether it says occupied.</p><p>Instead, the inner loop just reads. Waiting cores can share the cache line
+until an update invalidates their copies. This pattern is called
+<em>test-and-test-and-set</em>.</p><p>When a load sees 0, we try the exchange again. Seeing 0 is not ownership.
+Somebody else might get there first.</p><p>And <code>_mm_pause()</code>? It emits x86 <code>PAUSE</code>, a hint that we are in a spin loop. It
+can reduce spin-loop penalties and pressure on a sibling hardware thread. It
+does not put our thread to sleep, and it is not a memory fence.</p><h2 id=what-are-acquire-and-release-doing-here>What are acquire and release doing here?</h2><p>Let&rsquo;s first look at unlocking.</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=line><span class=cl><span class=kt>void</span> <span class=nf>spin_mutex_unlock</span><span class=p>(</span><span class=n>spin_mutex</span> <span class=o>*</span><span class=n>m</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=nf>atomic_store_explicit</span><span class=p>(</span><span class=o>&amp;</span><span class=n>m</span><span class=o>-&gt;</span><span class=n>state</span><span class=p>,</span> <span class=mi>0u</span><span class=p>,</span> <span class=n>memory_order_release</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div><p>Setting the state to 0 makes the mutex available. But ownership is only half
+the problem. The next owner also needs to see the previous owner&rsquo;s work.</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-text data-lang=text><span class=line><span class=cl>Thread A: acquire =&gt; update protected data =&gt; release
+</span></span><span class=line><span class=cl>                                                |
+</span></span><span class=line><span class=cl>Thread B:                  acquire reads that 0 =&gt; read protected data
+</span></span></code></pre></div><p>The release store and the successful acquire exchange establish a
+<em>happens-before</em> relationship. Thread A&rsquo;s protected writes become visible to
+Thread B after it acquires the mutex.</p><p>The inner polling loop uses <code>memory_order_relaxed</code> because it only decides
+when to retry. We do not access protected data until the exchange succeeds.</p><p>So yes, the data inside the critical section can be ordinary, non-atomic data.
+Every concurrent access to it must follow the same locking discipline.
+<code>volatile</code> is not a replacement for this.</p><h2 id=what-if-i-do-not-want-to-wait>What if I do not want to wait?</h2><p>Use <code>trylock</code>.</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=line><span class=cl><span class=kt>bool</span> <span class=nf>spin_mutex_trylock</span><span class=p>(</span><span class=n>spin_mutex</span> <span class=o>*</span><span class=n>m</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=kt>unsigned</span> <span class=n>expected</span> <span class=o>=</span> <span class=mi>0u</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=nf>atomic_compare_exchange_strong_explicit</span><span class=p>(</span>
+</span></span><span class=line><span class=cl>        <span class=o>&amp;</span><span class=n>m</span><span class=o>-&gt;</span><span class=n>state</span><span class=p>,</span> <span class=o>&amp;</span><span class=n>expected</span><span class=p>,</span> <span class=mi>1u</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=n>memory_order_acquire</span><span class=p>,</span> <span class=n>memory_order_relaxed</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div><p>Compare the state with 0. If it matches, atomically replace it with 1 and return
+<code>true</code>. Otherwise return <code>false</code>. No waiting loop.</p><h2 id=using-our-mutex--lets-create-16-threads>Using our mutex | Let&rsquo;s create 16 threads.</h2><p>Let&rsquo;s go back to the whiteboard example. This time we have 16 threads, each
+adding 5 to the same total 100,000 times.</p><p>What should the final value be?</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-text data-lang=text><span class=line><span class=cl>16 threads x 100,000 additions x 5 = 8,000,000
+</span></span></code></pre></div><p>The mutex implementation is in <a href=https://github.com/madhavkhoslaa/mutex-atomic/blob/master/mutex.c><code>mutex.c</code></a>.
+Put the following example in <a href=https://github.com/madhavkhoslaa/mutex-atomic/blob/master/main.c><code>main.c</code></a>,
+next to it. We include <code>mutex.c</code> directly so this small example needs no
+separate header. Compile <code>main.c</code> alone: the include already brings in the
+mutex implementation.</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=line><span class=cl><span class=cp>#include</span> <span class=cpf>&lt;inttypes.h&gt;</span><span class=cp>
+</span></span></span><span class=line><span class=cl><span class=cp>#include</span> <span class=cpf>&lt;pthread.h&gt;</span><span class=cp>
+</span></span></span><span class=line><span class=cl><span class=cp>#include</span> <span class=cpf>&lt;stdio.h&gt;</span><span class=cp>
+</span></span></span><span class=line><span class=cl><span class=cp>#include</span> <span class=cpf>&lt;stdlib.h&gt;</span><span class=cp>
+</span></span></span><span class=line><span class=cl><span class=cp>#include</span> <span class=cpf>&lt;string.h&gt;</span><span class=cp>
+</span></span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=cm>/* Include the implementation once; compile main.c on its own. */</span>
+</span></span><span class=line><span class=cl><span class=cp>#include</span> <span class=cpf>&#34;mutex.c&#34;</span><span class=cp>
+</span></span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>enum</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=n>THREAD_COUNT</span> <span class=o>=</span> <span class=mi>16</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=n>ADDITIONS_PER_THREAD</span> <span class=o>=</span> <span class=mi>100000</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=n>VALUE_PER_ADDITION</span> <span class=o>=</span> <span class=mi>5</span>
+</span></span><span class=line><span class=cl><span class=p>};</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>static</span> <span class=n>spin_mutex</span> <span class=n>mutex</span> <span class=o>=</span> <span class=n>SPIN_MUTEX_INITIALIZER</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=k>static</span> <span class=n>atomic_bool</span> <span class=n>start</span> <span class=o>=</span> <span class=nb>false</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=k>static</span> <span class=kt>uint64_t</span> <span class=n>total</span> <span class=o>=</span> <span class=mi>0</span><span class=p>;</span> <span class=cm>/* Ordinary data, protected by the mutex. */</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>static</span> <span class=kt>void</span> <span class=o>*</span><span class=nf>add_value</span><span class=p>(</span><span class=kt>void</span> <span class=o>*</span><span class=n>arg</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=p>(</span><span class=kt>void</span><span class=p>)</span><span class=n>arg</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=cm>/* Wait until main has created all worker threads. */</span>
+</span></span><span class=line><span class=cl>    <span class=k>while</span> <span class=p>(</span><span class=o>!</span><span class=nf>atomic_load_explicit</span><span class=p>(</span><span class=o>&amp;</span><span class=n>start</span><span class=p>,</span> <span class=n>memory_order_acquire</span><span class=p>))</span>
+</span></span><span class=line><span class=cl>        <span class=nf>_mm_pause</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=k>for</span> <span class=p>(</span><span class=kt>unsigned</span> <span class=n>i</span> <span class=o>=</span> <span class=mi>0</span><span class=p>;</span> <span class=n>i</span> <span class=o>&lt;</span> <span class=n>ADDITIONS_PER_THREAD</span><span class=p>;</span> <span class=o>++</span><span class=n>i</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=nf>spin_mutex_lock</span><span class=p>(</span><span class=o>&amp;</span><span class=n>mutex</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>        <span class=n>total</span> <span class=o>+=</span> <span class=n>VALUE_PER_ADDITION</span><span class=p>;</span> <span class=cm>/* The addition is inside the mutex. */</span>
+</span></span><span class=line><span class=cl>        <span class=nf>spin_mutex_unlock</span><span class=p>(</span><span class=o>&amp;</span><span class=n>mutex</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=nb>NULL</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>static</span> <span class=kt>void</span> <span class=nf>check_pthread</span><span class=p>(</span><span class=kt>int</span> <span class=n>error</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>if</span> <span class=p>(</span><span class=n>error</span> <span class=o>!=</span> <span class=mi>0</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=nf>fprintf</span><span class=p>(</span><span class=n>stderr</span><span class=p>,</span> <span class=s>&#34;pthread: %s</span><span class=se>\n</span><span class=s>&#34;</span><span class=p>,</span> <span class=nf>strerror</span><span class=p>(</span><span class=n>error</span><span class=p>));</span>
+</span></span><span class=line><span class=cl>        <span class=nf>exit</span><span class=p>(</span><span class=n>EXIT_FAILURE</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kt>int</span> <span class=nf>main</span><span class=p>(</span><span class=kt>void</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=kt>pthread_t</span> <span class=n>threads</span><span class=p>[</span><span class=n>THREAD_COUNT</span><span class=p>];</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=k>for</span> <span class=p>(</span><span class=kt>unsigned</span> <span class=n>i</span> <span class=o>=</span> <span class=mi>0</span><span class=p>;</span> <span class=n>i</span> <span class=o>&lt;</span> <span class=n>THREAD_COUNT</span><span class=p>;</span> <span class=o>++</span><span class=n>i</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>        <span class=nf>check_pthread</span><span class=p>(</span><span class=nf>pthread_create</span><span class=p>(</span><span class=o>&amp;</span><span class=n>threads</span><span class=p>[</span><span class=n>i</span><span class=p>],</span> <span class=nb>NULL</span><span class=p>,</span> <span class=n>add_value</span><span class=p>,</span> <span class=nb>NULL</span><span class=p>));</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=nf>atomic_store_explicit</span><span class=p>(</span><span class=o>&amp;</span><span class=n>start</span><span class=p>,</span> <span class=nb>true</span><span class=p>,</span> <span class=n>memory_order_release</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=k>for</span> <span class=p>(</span><span class=kt>unsigned</span> <span class=n>i</span> <span class=o>=</span> <span class=mi>0</span><span class=p>;</span> <span class=n>i</span> <span class=o>&lt;</span> <span class=n>THREAD_COUNT</span><span class=p>;</span> <span class=o>++</span><span class=n>i</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>        <span class=nf>check_pthread</span><span class=p>(</span><span class=nf>pthread_join</span><span class=p>(</span><span class=n>threads</span><span class=p>[</span><span class=n>i</span><span class=p>],</span> <span class=nb>NULL</span><span class=p>));</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=k>const</span> <span class=kt>uint64_t</span> <span class=n>expected</span> <span class=o>=</span>
+</span></span><span class=line><span class=cl>        <span class=p>(</span><span class=kt>uint64_t</span><span class=p>)</span><span class=n>THREAD_COUNT</span> <span class=o>*</span> <span class=n>ADDITIONS_PER_THREAD</span> <span class=o>*</span> <span class=n>VALUE_PER_ADDITION</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=cm>/* All workers have finished, so these reads need no lock. */</span>
+</span></span><span class=line><span class=cl>    <span class=nf>printf</span><span class=p>(</span><span class=s>&#34;Threads: %d</span><span class=se>\n</span><span class=s>&#34;</span><span class=p>,</span> <span class=n>THREAD_COUNT</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=nf>printf</span><span class=p>(</span><span class=s>&#34;Additions per thread: %d</span><span class=se>\n</span><span class=s>&#34;</span><span class=p>,</span> <span class=n>ADDITIONS_PER_THREAD</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=nf>printf</span><span class=p>(</span><span class=s>&#34;Value per addition: %d</span><span class=se>\n</span><span class=s>&#34;</span><span class=p>,</span> <span class=n>VALUE_PER_ADDITION</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=nf>printf</span><span class=p>(</span><span class=s>&#34;Expected: %&#34;</span> <span class=n>PRIu64</span> <span class=s>&#34;</span><span class=se>\n</span><span class=s>&#34;</span><span class=p>,</span> <span class=n>expected</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=nf>printf</span><span class=p>(</span><span class=s>&#34;Actual:   %&#34;</span> <span class=n>PRIu64</span> <span class=s>&#34;</span><span class=se>\n</span><span class=s>&#34;</span><span class=p>,</span> <span class=n>total</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=nf>printf</span><span class=p>(</span><span class=s>&#34;Result: %s</span><span class=se>\n</span><span class=s>&#34;</span><span class=p>,</span> <span class=n>total</span> <span class=o>==</span> <span class=n>expected</span> <span class=o>?</span> <span class=s>&#34;PASS&#34;</span> <span class=o>:</span> <span class=s>&#34;FAIL&#34;</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=n>total</span> <span class=o>==</span> <span class=n>expected</span> <span class=o>?</span> <span class=nl>EXIT_SUCCESS</span> <span class=p>:</span> <span class=n>EXIT_FAILURE</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div><p>Notice where <code>total += VALUE_PER_ADDITION</code> is. <strong>Between lock and unlock.</strong>
+The read, addition, and write all belong inside the critical section. Locking
+only around the final write would not protect the whole operation.</p><p><code>total</code> is an ordinary integer. The mutex protects it. The separate atomic
+<code>start</code> flag holds workers until all threads have been created; it does not
+protect the addition.</p><p>We use pthreads to create and join threads. The lock itself still uses our C
+atomics and x86 <code>PAUSE</code>. Once every <code>pthread_join</code> has returned successfully,
+the workers are finished and main can read the total without taking the lock.</p><h3 id=compile-and-run>Compile and run</h3><p>The complete example is in <a href=https://github.com/madhavkhoslaa/mutex-atomic>mutex-atomic</a>.
+Clone it and run:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-sh data-lang=sh><span class=line><span class=cl>git clone https://github.com/madhavkhoslaa/mutex-atomic.git
+</span></span><span class=line><span class=cl><span class=nb>cd</span> mutex-atomic
+</span></span><span class=line><span class=cl>gcc -std<span class=o>=</span>c11 -O2 -Wall -Wextra -Wpedantic -Werror main.c -pthread -o mutex-demo
+</span></span><span class=line><span class=cl>./mutex-demo
+</span></span></code></pre></div><h3 id=output>Output</h3><div class=highlight><pre tabindex=0 class=chroma><code class=language-text data-lang=text><span class=line><span class=cl>Threads: 16
+</span></span><span class=line><span class=cl>Additions per thread: 100000
+</span></span><span class=line><span class=cl>Value per addition: 5
+</span></span><span class=line><span class=cl>Expected: 8000000
+</span></span><span class=line><span class=cl>Actual:   8000000
+</span></span><span class=line><span class=cl>Result: PASS
+</span></span></code></pre></div><p>The program also returns a failure exit status if the total does not match.</p><h2 id=what-did-the-compiler-actually-generate-assembly-ahead>What did the compiler actually generate? [ASSEMBLY AHEAD!]</h2><p>Run these commands from the directory containing <code>mutex.c</code>:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-sh data-lang=sh><span class=line><span class=cl>gcc -std<span class=o>=</span>c11 -O2 -Wall -Wextra -Wpedantic -Werror -c mutex.c -o mutex.o
+</span></span><span class=line><span class=cl>objdump -d -Mintel mutex.o &gt; mutex.asm
+</span></span></code></pre></div><p>We use <code>-c</code> because this file provides the mutex functions, not a <code>main()</code>.</p><h3 id=output-1>Output</h3><p>This is the actual GCC 16.2.1 (<code>20260810</code>) output on Linux/x86-64, shown in
+Intel syntax. I have omitted instruction bytes and alignment NOPs here.
+The commands above write the complete dump to <code>mutex.asm</code>. The mutex pointer
+is in <code>rdi</code>.</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-asm data-lang=asm><span class=line><span class=cl><span class=err>0000000000000000</span> <span class=err>&lt;</span><span class=nf>spin_mutex_lock</span><span class=err>&gt;</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>   <span class=err>0:</span> <span class=nf>mov</span>    <span class=no>eax</span><span class=p>,</span><span class=mi>0x1</span>
+</span></span><span class=line><span class=cl>   <span class=err>5:</span> <span class=nf>xchg</span>   <span class=no>DWORD</span> <span class=no>PTR</span> <span class=p>[</span><span class=no>rdi</span><span class=p>],</span><span class=no>eax</span>
+</span></span><span class=line><span class=cl>   <span class=err>7:</span> <span class=nf>test</span>   <span class=no>eax</span><span class=p>,</span><span class=no>eax</span>
+</span></span><span class=line><span class=cl>   <span class=err>9:</span> <span class=nf>je</span>     <span class=mh>20</span> <span class=p>&lt;</span><span class=no>spin_mutex_lock</span><span class=p>+</span><span class=mi>0x20</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>  <span class=err>10:</span> <span class=nf>mov</span>    <span class=no>eax</span><span class=p>,</span><span class=no>DWORD</span> <span class=no>PTR</span> <span class=p>[</span><span class=no>rdi</span><span class=p>]</span>
+</span></span><span class=line><span class=cl>  <span class=err>12:</span> <span class=nf>test</span>   <span class=no>eax</span><span class=p>,</span><span class=no>eax</span>
+</span></span><span class=line><span class=cl>  <span class=err>14:</span> <span class=nf>je</span>     <span class=mh>0</span> <span class=p>&lt;</span><span class=no>spin_mutex_lock</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>  <span class=err>16:</span> <span class=nf>pause</span>
+</span></span><span class=line><span class=cl>  <span class=err>18:</span> <span class=nf>jmp</span>    <span class=mh>10</span> <span class=p>&lt;</span><span class=no>spin_mutex_lock</span><span class=p>+</span><span class=mi>0x10</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>  <span class=err>20:</span> <span class=nf>ret</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=err>0000000000000030</span> <span class=err>&lt;</span><span class=nf>spin_mutex_trylock</span><span class=err>&gt;</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>  <span class=err>30:</span> <span class=nf>xor</span>    <span class=no>eax</span><span class=p>,</span><span class=no>eax</span>
+</span></span><span class=line><span class=cl>  <span class=err>32:</span> <span class=nf>mov</span>    <span class=no>edx</span><span class=p>,</span><span class=mi>0x1</span>
+</span></span><span class=line><span class=cl>  <span class=err>37:</span> <span class=na>lock</span> <span class=nf>cmpxchg</span> <span class=no>DWORD</span> <span class=no>PTR</span> <span class=p>[</span><span class=no>rdi</span><span class=p>],</span><span class=no>edx</span>
+</span></span><span class=line><span class=cl>  <span class=err>3</span><span class=nl>b:</span> <span class=nf>sete</span>   <span class=no>al</span>
+</span></span><span class=line><span class=cl>  <span class=err>3</span><span class=nl>e:</span> <span class=nf>ret</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=err>0000000000000040</span> <span class=err>&lt;</span><span class=nf>spin_mutex_unlock</span><span class=err>&gt;</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>  <span class=err>40:</span> <span class=nf>mov</span>    <span class=no>DWORD</span> <span class=no>PTR</span> <span class=p>[</span><span class=no>rdi</span><span class=p>],</span><span class=mi>0x0</span>
+</span></span><span class=line><span class=cl>  <span class=err>46:</span> <span class=nf>ret</span>
+</span></span></code></pre></div><h3 id=where-is-the-lock-prefix-on-xchg>Where is the lock prefix on xchg?</h3><p>Memory <code>xchg</code> is implicitly locked. So <code>xchg [rdi], eax</code> already performs an
+atomic exchange. It puts 1 into the state and the old state into <code>eax</code>.
+<code>test eax, eax</code> checks whether we got 0.</p><p>The inner C loop became <code>mov</code>, <code>test</code>, a branch, and <code>pause</code>.</p><p>For <code>trylock</code>, we get <code>lock cmpxchg</code>. It compares memory with the expected zero
+in <code>eax</code>. <code>sete al</code> turns the comparison result into our boolean return value.</p><h3 id=unlock-is-just-a-mov>Unlock is just a mov?</h3><p>Yes!</p><p>For a naturally aligned atomic integer in ordinary write-back RAM, x86 already
+provides the hardware ordering needed for this release store. The C atomic
+operation also constrains compiler reordering. No <code>mfence</code> is needed here.</p><p>This does not mean we can replace the C atomic with an ordinary assignment.
+We still need the C memory-model guarantees. It also does not extend this
+argument to MMIO or non-temporal stores.</p><h2 id=one-last-thing-about-spinning>One last thing about spinning</h2><p>If the owner gets descheduled, everyone else keeps waiting and consuming CPU.
+Keep the critical section short. This mutex is non-recursive, must be unlocked
+by its owner, and does not guarantee fairness. Keep the object naturally
+aligned and do not copy it while it is in use.</p><p>The <code>main.c</code> example above passed both an optimized GCC build and a
+ThreadSanitizer build. In each run, 16 threads completed 1,600,000 protected
+additions and produced exactly 8,000,000. ThreadSanitizer reported no data
+races.</p><p>To run the same check:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-sh data-lang=sh><span class=line><span class=cl>gcc -std<span class=o>=</span>c11 -O1 -g -fsanitize<span class=o>=</span>thread main.c -pthread -o mutex-demo-tsan
+</span></span><span class=line><span class=cl>./mutex-demo-tsan
+</span></span></code></pre></div><p>The tests are useful evidence. The atomic exchange and acquire/release
+relationship are why the mutex works.</p><h2 id=sources>Sources</h2><ul><li><a href=https://en.cppreference.com/w/c/atomic/atomic_exchange>C atomic exchange</a></li><li><a href=https://en.cppreference.com/w/c/atomic/memory_order>C memory ordering</a></li><li><a href=https://www.felixcloutier.com/x86/xchg>x86 XCHG instruction reference</a></li><li><a href=https://www.felixcloutier.com/x86/pause>x86 PAUSE instruction reference</a></li></ul></div></div></main><footer class=term-footer>© Madhav Khosla · built with Hugo</footer><div class=modal-overlay><div class="term-window modal-panel"></div></div><script src=/js/rice.js defer></script></body></html>
