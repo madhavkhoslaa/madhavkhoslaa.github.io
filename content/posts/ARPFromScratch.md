@@ -3,7 +3,7 @@ title: "Writing ARP From Scratch and My Learnings"
 date: 2026-09-03T02:01:58+05:30
 description: "Implementing Address Resolution Protocol and Sharing My Learnings on network programming."
 tags: [Networking, C, Rust, Internet Protocol, Switch]
-draft: true
+draft: false
 ---
 
 ![image](/images/arp.jpg)
@@ -77,16 +77,25 @@ Step 2: I(hardware address) own this protocol address(IP).
 ### host.rs and boot.rs
 #### host.rs
 ##### Steps
-1. Opens a socket.
-2. Reads raw socket
-3. TODO
+1. Opens a socket: `AF_PACKET` + `SOCK_RAW` so the kernel hands us every raw ethernet frame (filtered to `ETH_P_ALL`).
+2. Loop: `recv` raw frames into a 2048-byte buffer.
+3. Skip frames shorter than the 14-byte ethernet header, then keep only ARP frames (EtherType `0x0806` at bytes 12..14).
+4. Parse what we need: src MAC (bytes 6..12), sender IP (bytes 28..31), target IP (bytes 38..41).
+5. **Passive learning** - every ARP frame tells us `sender_ip -> src_mac`, no matter who it is addressed to. We install that mapping into the kernel's ARP table via the `SIOCSARP` ioctl. Even an ARP request meant for someone else leaves us smarter.
+6. **Reply** - if the frame is a broadcast (`ff:ff:ff:ff:ff:ff`) asking for *our* IP, build an ARP reply (opcode 2) and `sendto` it through a `sockaddr_ll` so the kernel knows which interface and target MAC to use.
 #### boot.rs
 ##### Reason
 To populate the mac table in the switch. On boot the host just sends an marker broadcast that it is present at a particular IP. This helps the switch and other host in the network to build a mac table or update the ARP tables.
 ##### Steps
-1. On boot TODO
+1. Read our own IP and MAC from the interface.
+2. Open a raw socket filtered to `ETH_P_ARP`.
+3. Build a *gratuitous ARP* frame: an unsolicited announcement of "my MAC is at my IP", addressed to the broadcast MAC `ff:ff:ff:ff:ff:ff` (opcode 1, target = ourselves).
+4. `sendto` it once and close the socket.
+
 ![image](/lebearp.png)
 source: host.rs
+
+That single frame does a lot of work: the switch learns `src MAC -> inbound port`, and every other host's ARP cache learns our IP - so nobody ever has to request us. It is the "hello, I am here" of layer 2.
 ### First experience with endianness
 * While putting the protocol in the filter for the socket to read all ETH ARP requests I put the protocol directly into the socket and nothing ever logged.After spending some time, I figured it out that it was because of the little and big endianness. network bits are read in a little endian order and most architectures work on little endian.
 
@@ -99,12 +108,46 @@ source: host.rs
 4. Learn mac address and interface name passively.
 #### Switch.rs
 ##### Reason
-
+A switch is a layer-2 device: it forwards frames purely by MAC address, has no IP and sends no ARP of its own. It is a *passive learner* - it reads every frame crossing its ports and records `src MAC -> inbound port`. Real switches keep this map in CAM; ours is just a `HashMap`.
 ##### Steps
-
-
+1. Open one raw socket (`AF_PACKET`, `ETH_P_ALL`) per port (`eth0`, `eth1`, `eth2`) and put each interface into promiscuous mode (`SIOCGIFFLAGS` / `SIOCSIFFLAGS` + `IFF_PROMISC`) so we see every frame on the wire, not just those addressed to our own MAC.
+2. Loop over the ports, `recv` with `MSG_DONTWAIT` so one chatty port does not block the others.
+3. Keep only ARP (`0x0806`) and IPv4 (`0x0800`) frames. Drop multicast but keep broadcast - the docker host's multicast traffic would otherwise storm the loop.
+4. **Learn** - record `src MAC (bytes 6..12) -> inbound port` in `mac_table`.
+5. **Forward** by destination MAC:
+   - broadcast (`ff:ff:ff:ff:ff:ff`) -> flood every port except the inbound one
+   - unicast with a known dest -> forward out the port that dest was learned on
+   - unicast with an unknown dest -> flood the rest (like broadcast), which is also how the switch learns the return path.
 
 ## Docker Networking Setup
+
 ### Topology
+```
+            ┌── net-alice-switch ── alice (10.0.1.10)
+ switch ────┼── net-switch-bob ──── bob   (10.0.2.10)
+            └── net-switch-carol ── carol (10.0.3.10)
+```
+
+Each docker network has exactly two members, so it behaves as a point-to-point link rather than a shared segment. alice, bob and carol are never on the same network - the only path between any two of them is through the switch container. That forces the switch to have three ports, which is exactly why it needs a real MAC table instead of relaying "whatever comes in one port goes out the other".
+
 ### Hosts
+- alice, bob and carol are Debian containers with `iproute2`, `tcpdump` and `ping`/`arping`. Each runs the `host` binary (bind-mounted from `arp/target/debug/host`) against its `eth0`.
+- Kernel ARP is disabled on every interface (`ip link set eth0 arp off`) so the kernel can't answer requests or fill its neighbor cache behind our backs - our implementation owns ARP on the link, exclusively.
+- The docker-assigned IPs (10.0.1.10 / 10.0.2.10 / 10.0.3.10) are the addresses the raw sockets actually operate on. The interface mask is widened to `/16` so all three nodes treat each other as directly attached despite sitting on different docker networks.
+- Interfaces get fixed, recognizable MACs (alice `02:a1:1c:e0:00:0a`, bob `02:b0:b0:00:00:0b`, carol `02:ca:20:10:00:0c`) so frames in tcpdump are easy to tell apart.
+
 ### Switch
+- The switch container has three interfaces - `eth0`, `eth1`, `eth2`, one per link, each with its own fixed MAC (`02:00:00:00:00:e0/e1/e2`) - and runs the `switch` binary.
+- Kernel ARP is off on the switch ports too.
+- Containers get `NET_ADMIN` and `NET_RAW`: the raw sockets and the ioctls (`SIOCSARP`, promisc-mode) need them.
+
+## Try it
+
+```sh
+./docker/up.sh                                # build binaries + bring topology up
+docker compose logs -f switch                 # watch the switch learn MACs
+docker exec alice tcpdump -ni eth0 arp        # a host's view of the wire
+docker exec alice ping -c1 10.0.2.10          # alice resolves bob via OUR ARP
+```
+
+With kernel ARP off, nothing works until your host code resolves neighbours and your switch code forwards frames. Ping failing until you get it right is a pretty good unit test.
