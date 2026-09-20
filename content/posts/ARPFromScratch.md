@@ -97,7 +97,7 @@ source: host.rs
 
 That single frame does a lot of work: the switch learns `src MAC -> inbound port`, and every other host's ARP cache learns our IP - so nobody ever has to request us. It is the "hello, I am here" of layer 2.
 ### First experience with endianness
-* While putting the protocol in the filter for the socket to read all ETH ARP requests I put the protocol directly into the socket and nothing ever logged.After spending some time, I figured it out that it was because of the little and big endianness. network bits are read in a little endian order and most architectures work on little endian.
+* While putting the protocol in the filter for the socket(so the kernel hands me only ETH ARP traffic) I passed the value in directly and nothing ever logged. After spending some time, I figured it out. Network byte order is big-endian, but the CPUs I code on are little-endian. The socket compares your filter value against the on-wire ethertype, so the constant has to be converted with `.to_be()` before it goes to the kernel. The same gotcha bites whenever you hand a multi-byte value to the network.
 
 ## Coding our own switch
 
@@ -145,7 +145,7 @@ Each docker network has exactly two members, so it behaves as a point-to-point l
 
 ```sh
 ./docker/up.sh                                # build binaries + bring topology up
-docker compose logs -f switch                 # watch the switch learn MACs
+docker compose -f docker/docker-compose.yml logs -f switch   # watch the switch learn MACs
 docker exec alice tcpdump -ni eth0 arp        # a host's view of the wire
 docker exec alice ping -c1 10.0.2.10          # alice resolves bob via OUR ARP
 ```
