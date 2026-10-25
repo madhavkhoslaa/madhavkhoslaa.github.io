@@ -14,6 +14,7 @@ tags:
     Redis,
     Redirect
   ]
+summary: "How to make a URL shortner"
 ---
 
 # What is a URL shortner ?

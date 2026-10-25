@@ -12,9 +12,11 @@ tags:
     loops,
     Not C++
   ]
---- 
+summary: "Static and Dynamic Dispatch in Rust"
+---
 # Static and Dynamic Dispatch in Rust
 
+summary: "Static and Dynamic Dispatch in Rust"
 ---
 
 ---

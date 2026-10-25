@@ -3,6 +3,7 @@ title: "Caching: My lessons on it"
 date: 2022-03-19T02:01:58+05:30
 description: "Caching is a cheap way to scale a system's performance in very less time. Being cheap and easy it also brings some problems such as invalidation and infrastructure for setting up the cache itself. Here I plan to talk about some lessons on caching that I've learnt in a few months."
 tags: [Caching, Redis, Memcached]
+summary: "Caching is a cheap way to scale a system's performance in very less time. Being cheap and easy it also brings some problems such as invalidation and infrastructure for setting up the cache itself. Here I plan to talk about some lessons on caching that I've learnt in a few months."
 ---
 
 Caching is a cheap way to scale a system's performance in very less time. Being cheap and easy to implement on the top of a existing system it also brings some problems such as invalidation and infrastructure for setting up the cache itself. Here I plan to talk about some lessons on caching that I've learnt in a few months.

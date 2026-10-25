@@ -13,6 +13,7 @@ tags:
     Ferris,
     Blazingly Fast
   ]
+summary: "It is a Programming Paradigm where you use functions to solve what you are building. The most common features that you might have used FP in any language will be Map and Reduce. Where you pass in a function what iterates in the collection you run map or reduce on."
 ---
 ![image](/images/y0nqC0G.jpg)
 

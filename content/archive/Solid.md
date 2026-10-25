@@ -3,6 +3,7 @@ title: "SOLID Patterns: My lessons on it"
 date: 2022-06-07T04:01:25+05:30
 description: "SOLID Patterns are a general guideline and recommended patterns that you can use in your codebase to be extensible, easy to modify in the future, and easy to fix. These aren't hard-bound rules just general recommendations. Here, I'll talk about them in detail."
 tags: [SOLID, Design Patterns, Uncle Bob]
+summary: "SOLID Patterns are a general guideline and recommended patterns that you can use in your codebase to be extensible, easy to modify in the future, and easy to fix. These aren't hard-bound rules just general recommendations. Here, I'll talk about them in detail."
 ---
 
 SOLID is just an acronym for a few principles that Robert C. Martin compiled together. SOLID Design principles aim to make your code base extensible, easy to modify in the future, and easy to debug and fix. They are _not rules_ just a bunch of thought ideas of segregation of logic and how to organize your code.

@@ -4,6 +4,7 @@ date: 2026-09-20T12:00:00+05:30
 draft: false
 description: "Writing a spin mutex with C11 atomics, testing it with 16 threads, and looking at the x86-64 assembly."
 tags: [C, Atomics, Mutex, x86, Assembly]
+summary: "Writing a spin mutex with C11 atomics, testing it with 16 threads, and looking at the x86-64 assembly."
 ---
 
 ## Mutex, What is it?

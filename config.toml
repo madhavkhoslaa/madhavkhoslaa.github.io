@@ -1,7 +1,7 @@
 baseURL = 'https://madhavkhoslaa.github.io/'
-languageCode = 'en'
+locale = 'en'
 title = 'Madhav Khosla'
-theme = "termrice"
+theme = "no-fate"
 author = "Madhav Khosla"
 copyright = "© Madhav Khosla"
 
@@ -23,20 +23,29 @@ ignoreErrors = ["error-remote-getjson"]
     [server.headers.values]
       Cache-Control = "no-cache, no-store, must-revalidate"
 
-# fragment output used by the modal overlay to fetch a post's
-# body via JS without a full page navigation
-[outputFormats]
-  [outputFormats.FRAG]
-    mediaType = "text/html"
-    baseName = "fragment"
-    isPlainText = false
-    notAlternative = true
-
 [outputs]
-  page = ["HTML", "FRAG"]
+  home = ["HTML", "RSS", "JSON"]
 
 [params]
   noindex = false
+  description = "Systems Engineering | Backend"
+  defaultTheme = "auto"
+  mainSections = ["posts"]
+  ShowReadingTime = true
+  ShowBreadCrumbs = true
+  ShowPostNavLinks = true
+  ShowCodeCopyButtons = true
+  ShowToc = true
+
+[params.noFate]
+  style = "clean"
+  defaultMode = "editorial"
+  showThemeToggle = true
+  showSearch = true
+  showReadingTime = true
+
+[params.noFate.home]
+  modules = ["opening", "selected_writing"]
 
 [params.about]
   title = "Madhav Khosla"
@@ -74,6 +83,11 @@ ignoreErrors = ["error-remote-getjson"]
     name = "About"
     url = "/about/"
     weight = 3
+  [[menu.main]]
+    identifier = "search"
+    name = "Search"
+    url = "/search/"
+    weight = 4
 
 [taxonomies]
   tag = "tags"

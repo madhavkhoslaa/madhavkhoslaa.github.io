@@ -4,6 +4,7 @@ draft: false
 date: 2023-11-09T02:01:58+05:30
 description: "All of us have downloaded torrent files and files using those torrent files, but probably most of us have not even opened a .torrent file and observe how it works"
 tags: [Bittorrent, torrent]
+summary: "All of us have downloaded torrent files and files using those torrent files, but probably most of us have not even opened a .torrent file and observe how it works"
 ---
 
 ![image](/images/NQFCFTC.jpeg)

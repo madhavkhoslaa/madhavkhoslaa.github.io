@@ -1,0 +1,3 @@
+[submodule "themes/no-fate"]
+	path = themes/no-fate
+	url = https://github.com/OliverObst/no-fate

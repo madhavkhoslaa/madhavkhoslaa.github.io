@@ -15,6 +15,7 @@ tags:
     "stack",
     "pointers",
   ]
+summary: "Ownership is one of the features that make it different than so many programming languages and what makes it memory safe and a good language for concurrent programming. It solves problems like null pointers, dangling pointers and data races."
 ---
 
 Ownership is one of the features that make it different than so many programming languages and what makes it memory safe and a good language for concurrent programming. It solves problems like null pointers, dangling pointers and data races without a garbage collector at the run time.
