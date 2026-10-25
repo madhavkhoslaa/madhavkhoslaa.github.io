@@ -13,7 +13,7 @@ pygmentsUseClasses = true
 ignoreErrors = ["error-remote-getjson"]
 
 [pagination]
-  pagerSize = 5
+  pagerSize = 20
 
 # dev server only: stop phones/browsers on the LAN from caching
 # stale HTML/CSS while iterating on layout changes
@@ -29,7 +29,8 @@ ignoreErrors = ["error-remote-getjson"]
 [params]
   noindex = false
   description = "Systems Engineering | Backend"
-  defaultTheme = "auto"
+  defaultTheme = "light"
+  disableThemeToggle = true
   mainSections = ["posts"]
   ShowReadingTime = true
   ShowBreadCrumbs = true
@@ -38,14 +39,15 @@ ignoreErrors = ["error-remote-getjson"]
   ShowToc = true
 
 [params.noFate]
-  style = "clean"
+  style = "wild"
   defaultMode = "editorial"
-  showThemeToggle = true
+  showThemeToggle = false
   showSearch = true
   showReadingTime = true
 
-[params.noFate.home]
-  modules = ["opening", "selected_writing"]
+[params.noFate.wild]
+  masthead = "Backend and systems engineer"
+  issue = "Kernel / eBPF / networking"
 
 [params.about]
   title = "Madhav Khosla"
@@ -74,20 +76,25 @@ ignoreErrors = ["error-remote-getjson"]
     url = "/posts/"
     weight = 1
   [[menu.main]]
+    identifier = "projects"
+    name = "Projects & OSS"
+    url = "/projects/"
+    weight = 2
+  [[menu.main]]
     identifier = "archive"
     name = "Archive"
     url = "/archive/"
-    weight = 2
+    weight = 3
   [[menu.main]]
     identifier = "about"
     name = "About"
     url = "/about/"
-    weight = 3
+    weight = 4
   [[menu.main]]
     identifier = "search"
     name = "Search"
     url = "/search/"
-    weight = 4
+    weight = 5
 
 [taxonomies]
   tag = "tags"
