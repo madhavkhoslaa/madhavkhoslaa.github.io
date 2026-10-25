@@ -1,1 +1,3 @@
 User-agent: *
+Disallow:
+Sitemap: https://madhavkhoslaa.github.io/sitemap.xml
