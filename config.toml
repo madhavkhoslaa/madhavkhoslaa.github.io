@@ -1,19 +1,14 @@
 baseURL = 'https://madhavkhoslaa.github.io/'
 locale = 'en'
 title = 'Madhav Khosla'
-theme = "no-fate"
-author = "Madhav Khosla"
+theme = "hugo-theme-yue"
 copyright = "© Madhav Khosla"
 
 enableInlineShortcodes = true
 enableRobotsTXT = true
 enableEmoji = true
-pygmentsUseClasses = true
 
 ignoreErrors = ["error-remote-getjson"]
-
-[pagination]
-  pagerSize = 20
 
 # dev server only: stop phones/browsers on the LAN from caching
 # stale HTML/CSS while iterating on layout changes
@@ -23,86 +18,55 @@ ignoreErrors = ["error-remote-getjson"]
     [server.headers.values]
       Cache-Control = "no-cache, no-store, must-revalidate"
 
-[outputs]
-  home = ["HTML", "RSS", "JSON"]
+[frontmatter]
+  lastmod = ['lastmod', ':default']
 
 [params]
-  noindex = false
-  description = "Systems Engineering | Backend"
-  defaultTheme = "light"
-  disableThemeToggle = true
+  _merge = "deep"
+  description = "Systems engineer. Linux kernel, eBPF, networking. C and Rust."
   mainSections = ["posts"]
-  ShowReadingTime = true
-  ShowBreadCrumbs = true
-  ShowPostNavLinks = true
-  ShowCodeCopyButtons = true
-  ShowToc = true
+  dateFormat = "Jan 02, 2006"
+  author = "Madhav Khosla"
+  rssFullContent = true
+  homePagerSize = 10
+  sectionPagerSize = 10000
+  [params.footer.copyright]
+    yearStart = 2019
+    author = "Madhav Khosla"
 
-[params.noFate]
-  style = "wild"
-  defaultMode = "editorial"
-  showThemeToggle = false
-  showSearch = true
-  showReadingTime = true
-
-[params.noFate.wild]
-  masthead = "Backend and systems engineer"
-  issue = "Kernel / eBPF / networking"
-
-[params.about]
-  title = "Madhav Khosla"
-  description = "Systems Engineering | Backend"
-
-[[params.socialLinks]]
-  icon = "fa-brands fa-github"
-  title = "GitHub"
-  url = "https://github.com/madhavkhoslaa"
-
-[[params.socialLinks]]
-  icon = "fa-brands fa-twitter"
-  image = "images/x-logo.png"
-  title = "Twitter"
-  url = "https://x.com/futexmaxxing"
-
-[[params.socialLinks]]
-  icon = "fa-brands fa-linkedin"
-  title = "LinkedIn"
-  url = "https://www.linkedin.com/in/madhavkhoslaa/"
-
-[menu]
-  [[menu.main]]
-    identifier = "posts"
+[menus]
+  [[menus.main]]
+    name = "Home"
+    pageRef = "/"
+    weight = 10
+  [[menus.main]]
     name = "Posts"
-    url = "/posts/"
-    weight = 1
-  [[menu.main]]
-    identifier = "projects"
+    pageRef = "/posts"
+    weight = 20
+  [[menus.main]]
     name = "Projects & OSS"
-    url = "/projects/"
-    weight = 2
-  [[menu.main]]
-    identifier = "archive"
+    pageRef = "/projects"
+    weight = 30
+  [[menus.main]]
     name = "Archive"
-    url = "/archive/"
-    weight = 3
-  [[menu.main]]
-    identifier = "about"
+    pageRef = "/archive"
+    weight = 40
+  [[menus.main]]
+    name = "Tags"
+    pageRef = "/tags"
+    weight = 50
+  [[menus.main]]
     name = "About"
-    url = "/about/"
-    weight = 4
-  [[menu.main]]
-    identifier = "search"
-    name = "Search"
-    url = "/search/"
-    weight = 5
+    pageRef = "/about"
+    weight = 60
 
 [taxonomies]
   tag = "tags"
 
 [markup]
+  _merge = "deep"
   [markup.goldmark.renderer]
     unsafe = true
   [markup.tableOfContents]
     startLevel = 2
     endLevel = 3
-    ordered = true
